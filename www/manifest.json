@@ -1,0 +1,23 @@
+{
+    "name" : "WEB VDCS Latest",
+    "short_name" : "WEB VDCS",
+    "description" : "WEB VDCS Latest",
+    "scope" : ".",
+    "start_url" : "/",
+    "display" : "fullscreen",
+    "orientation" : "portrait",
+    "theme_color" : "#ffffff",
+    "background_color" : "#ffffff",
+    "icon" : [
+        {
+            "src" : "/images/document.png",
+            "sizes" : "192x192",
+            "type" : "image/png"
+        },
+        {
+            "src" : "/images/document.png",
+            "sizes" : "512x512",
+            "type" : "image/png"
+        }
+    ]
+}
