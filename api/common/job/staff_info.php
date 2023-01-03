@@ -46,7 +46,7 @@ SELECT
     , ML.MOD_DATE
     --, DECODE(ML.COMP_TYPE, 'H', DECODE(ML.FUNC_CODE, 80, '>0000') || fc.SORT_NO_PATH || '>' || u.duty_id, ML.sort_no) AS sort_no
     , DECODE(ML.COMP_TYPE, 'H', 
-        DECODE(ML.FUNC_CODE, 80, '>0000') || '>' || LPAD(ML.FUNC_CODE, 4, '0') || '>' || LPAD(C.VAL5, 6, '0') || '>' || LPAD(ML.AREA, 4, '0') || '>' || LPAD(U.DEPT_CD, 6, '0') || '>' || LPAD(DUTY_VIEW_ORDER, 4, '0') || '>' || LPAD(U.USER_NAME, 10, '0')  || '>' || ML.SORT_NO
+        DECODE(ML.FUNC_CODE, 80, '>0000') || '>' || LPAD(ML.FUNC_CODE, 4, '0') || '>' || LPAD(ML.AREA, 4, '0') || '>' || LPAD(C.VAL5, 6, '0') || '>' || LPAD(U.DEPT_CD, 6, '0') || '>' || LPAD(DUTY_VIEW_ORDER, 4, '0') || '>' || LPAD(U.USER_NAME, 10, '0')  || '>' || ML.SORT_NO
         --DECODE(ML.FUNC_CODE, 80, '>0000') || '>' || ML.FUNC_CODE || '>' || ML.AREA || '>' || C.VAL5 || '>' || U.DEPT_CD || '>' || U.DUTY_VIEW_ORDER || '>' || U.USER_NAME  || '>' || ML.SORT_NO
         , CASE C.VAL4
             WHEN 'PM' THEN '01>'    || LPAD(OG.ROWNO, 4, '0') || ML.CHARGE || '>' || C.VAL5 || '>' || ML.SORT_NO
@@ -87,7 +87,7 @@ else
 
 $SQL = "{$StaffSQL}
 SELECT ROWNUM RNUM
-    , ROW_NUMBER () OVER (ORDER BY SORT_NO, CHARGE_SORT_VAL, CHARGE, AREA, REG_DATE) ROWNO
+    , ROW_NUMBER () OVER (ORDER BY SORT_NO, CHARGE_SORT_VAL, AREA, CHARGE, REG_DATE) ROWNO
     , DECODE(COMP_TYPE, 'H', 'Internal', 'External') COMP_TYPE_STR
     , DECODE(COMP_TYPE, 'H', '계약자 조직', '사업주 조직') COMP_TYPE_NAME
     , A.*
