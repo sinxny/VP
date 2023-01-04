@@ -543,7 +543,7 @@ var vm = new Vue({
                     <tbody>
                         <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
                             <td class="text-center"><input type="checkbox" v-model="selectList" :value="doc.doc_no"/></td>
-                            <td class="text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_func_cd }}</td>
+                            <td class="text-center" @click="docRowClick(doc.ms_no)">{{ doc.tr_func_cd }}</td>
                             <td @click="docRowClick(doc.ms_no)" style="width:230px" :title="doc.doc_num"><div class="text-ellipsis so_doc_no">{{ doc.doc_num }}</div></td>
                             <td class="text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_rev_num }}</td>
                         </tr>
@@ -634,7 +634,7 @@ var vm = new Vue({
             <tbody>
                 <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
                     <td class="text-center" style="white-space: nowrap;min-width: 1rem"><input type="checkbox" v-model="selectList" :value="doc.doc_no"/></td>
-                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_func_cd }}</td>
+                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.tr_func_cd }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_num }}</td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_rev_num }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_title }}</td>
