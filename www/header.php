@@ -8,13 +8,13 @@
 <meta name="google" content="notranslate">
 <link rel="manifest" href="manifest.json">
 <title>VDCS Latest</title>
-<link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="/fontawesome-6.0.0-web/css/all.css">
-<link rel="stylesheet" href="/jquery/jquery-ui-1.13.0/jquery-ui.min.css" />
-<script type="text/javascript" src="/jquery/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="/jquery/jquery-ui-1.13.0/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/jquery/jquery-ui-1.13.0/i18n/datepicker-ko.js"></script>
-<script type="text/javascript" src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="fontawesome-6.0.0-web/css/all.css">
+<link rel="stylesheet" href="jquery/jquery-ui-1.13.0/jquery-ui.min.css" />
+<script type="text/javascript" src="jquery/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="jquery/jquery-ui-1.13.0/jquery-ui.min.js"></script>
+<script type="text/javascript" src="jquery/jquery-ui-1.13.0/i18n/datepicker-ko.js"></script>
+<script type="text/javascript" src="vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="jqwidgets-ver14.0.0-src/jqxcore.js"></script>
 <script type="text/javascript" src="jqwidgets-ver14.0.0-src/jqxwindow.js"></script>
 <script type="text/javascript" src="jqwidgets-ver14.0.0-src/jqxbuttons.js"></script>
@@ -41,8 +41,8 @@
 <script type="text/javascript" src="jqwidgets-ver14.0.0-src/globalization/globalize.js"></script>
 <script type="text/javascript" src="jqwidgets-ver14.0.0-src/jqxgrid.filter.js"></script>
 <link rel="stylesheet" href="jqwidgets-ver14.0.0-src/styles/jqx.base.css" type="text/css" />
-<link rel="stylesheet" href="/css/style.css" />
-<script type="text/javascript" src="/js/grp.js"></script>
+<link rel="stylesheet" href="css/style.css" />
+<script type="text/javascript" src="js/grp.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <style>
@@ -272,7 +272,7 @@ function showContent(subMenu) {
 //Job List 가져오기
 function importJobList() {
     //JOB LIST
-    var url = "/common/job_list_data.php";
+    var url = "common/job_list_data.php";
     // prepare the data
     var source =
     {
