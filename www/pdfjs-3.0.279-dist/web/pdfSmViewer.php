@@ -33,7 +33,7 @@
       <li class='page-item' id="last"><a class="page-link pdfLink"><i class='fas fa-angle-double-right'></i></a></li>
     </ul>
     <div>
-      <button type="button" id="btnExpand" class="btn btn-sm btn btn-outline-dark"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <button type="button" id="btnExpand" class="btn btn-sm btn btn-outline-dark" title="크게보기"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
   </div>
   <input type="hidden" id="jno" name="jno" value="<?php echo $jno ?>">

@@ -401,8 +401,8 @@ var vm = new Vue({
                     var value = response["data"]["Value"];
                     $("#confirmModal .modal-body").html(`전체 다운로드는 대용량인 관계로 전일 22시를 기준으로 생성됩니다.<br />
                                                         이점 감안하시기 바랍니다.<br /><br />
-                                                        파일 생성일자 - ${value["file_date_str"]}<br />
-                                                        파일 크기 - ${value["file_size_str"]}`);
+                                                        - 파일 생성일자 : ${value["file_date_str"]}<br />
+                                                        - 파일 크기 : ${value["file_size_str"]}`);
                     $("#confirmModal").modal("show");
                     var url = "/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=LATEST_ZIP_DOWNLOAD&jno=" + data.jno;
                     $("#btnConfirm").on("click", function() {
@@ -440,13 +440,13 @@ var vm = new Vue({
     </div>
     <div class="col-md text-right">
         <span v-show="jno">
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="selDocDownload" :disabled="selectList.length == 0">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="selDocDownload" :disabled="selectList.length == 0" title="선택 다운로드">
                 <i class="fa-solid fa-check" style="font-size:large"></i> 선택 다운로드
             </button>
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="allDocDownload" :disabled="latestList.length == 0">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="allDocDownload" :disabled="latestList.length == 0" title="전체 다운로드">
                 <i class="fa-solid fa-floppy-disk" style="font-size:large"></i> 전체 다운로드
             </button>
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="exportLatestExcel" :disabled="latestList.length == 0">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="exportLatestExcel" :disabled="latestList.length == 0" title="목록 내보내기">
                 <i class="fa-solid fa-file-export" style="font-size:large"></i> 목록 내보내기
             </button>
         </span>
@@ -472,7 +472,7 @@ var vm = new Vue({
                         <input type="date" class="form-control ml-2 text-center" v-model="sd_end_date"/>
                     </div>
                 </div>
-                <div class="col-md-2" style="padding:0 !important">
+                <div class="col-md-2" style="padding-left:0 !important">
                     <div class="row" style="float:right">
                         <select class="form-control mr-2" style="width:min-content" v-model="so_dc" @click="btnSearchClick">
                             <option value="">공종(Disc.)</option>
@@ -511,12 +511,12 @@ var vm = new Vue({
                         </div>
                         <input type="text" class="form-control" v-model="researchText" @keydown.enter.prevent="btnSearchClick"/>
                         <div class="input-group-append">
-                            <button class="btn btn-info" id="btnSearch" @click.prevent="btnSearchClick"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            <button type="button" class="btn btn-info" id="btnSearch" @click="btnSearchClick" :disabled="!jno" title="검색"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-1 text-right" style="padding:0 !important; padding-top:0.2rem !important">
-                    <div class="custom-control custom-switch" style="padding:0 !important">
+                    <div class="custom-control custom-switch" style="padding:0 !important" title="결과 내 재검색">
                         <input type="checkbox" class="custom-control-input" id="rebrowsing" v-model="isRebrowsing" @click="isUseRebrowsing">
                         <label class="custom-control-label" for="rebrowsing">결과 내 재검색</label>
                     </div>
@@ -686,8 +686,8 @@ var vm = new Vue({
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.hist_distribute_date_str }}</td>
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.hist_reply_date_str }}</td>
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.doc_status_nick }}</td>
-                        <td class="downloadImg text-center" @click="distributeDownload(history.doc_no)"><img src="../../../images/preview.png" /></td>
-                        <td class="text-center"><span class="downloadImg" v-show="history.doc_status && history.doc_status_nick != 'F'" @click="IssueDownload(history.doc_no)"><img src="../../../images/outlook.png"/></span></td>
+                        <td class="text-center"><span class="downloadImg" @click="distributeDownload(history.doc_no)" title="배포문서 다운로드"><img src="../../../images/preview.png" /></span></td>
+                        <td class="text-center"><span class="downloadImg" v-show="history.doc_status && history.doc_status_nick != 'F'" @click="IssueDownload(history.doc_no)" title="회신문서 다운로드"><img src="../../../images/outlook.png"/></span></td>
                     </tr>
                 </tbody>
             </table>
@@ -697,8 +697,8 @@ var vm = new Vue({
         </div>
     </div>
 </div>
-<div class="alert alert-success" v-show="!jno">
-  <strong>JOB을 선택하세요.</strong>
+<div class="alert alert-success text-center" v-show="!jno">
+  <strong>PROJECT을 선택하세요.</strong>
 </div>
 <div id="modalLoading" class="modal modal-loading" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">

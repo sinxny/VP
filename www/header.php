@@ -324,7 +324,7 @@ function importJobList() {
             { text: 'JOB No.', datafield: 'jobNo', width: 160, cellsalign: 'center', align: 'center' },
             { text: 'End-User', datafield: 'compName', width: 150, cellsalign: 'center', align: 'center' },
             { text: 'Client', datafield: 'orderCompName', width: 150, cellsalign: 'center', align: 'center' },
-            { text: 'JOB 명', datafield: 'jobName', align: 'center' },
+            { text: 'PROJECT 명', datafield: 'jobName', align: 'center' },
             { text: 'PM', datafield: 'userName', width: 75, cellsalign: 'center', align: 'center' },
             { text: '시작일', datafield: 'jobSd', width: 100, cellsalign: 'center', align: 'center' },
             { text: '종료일', datafield: 'jobEd', width: 100, cellsalign: 'center', align: 'center' },
@@ -553,7 +553,7 @@ function collapseTree(obj) {
 <nav id="navHeader" class="navbar-nav-main-menu navbar navbar-expand-sm navbar-dark fixed-top nav-color nav-main-link row">
     <div class="col-6">
         <a class="navbar-brand" href="javascript:void(0);" onclick="location.reload()" style="padding: 14.5px 0px">
-            <img src="images/ft_logo.png" alt="Logo" style="margin-top: -4.2px;margin-left: 3.5px;width: 112px;" />
+            <img src="images/ft_logo.png" alt="Logo" style="margin-top: -4.2px;margin-left: 3.5px;width: 112px;" alt="HiTech Engineering"/>
             <span style="font-size:large;margin-left: 2rem;">VDCS - Latest</span>
         </a>
     </div>
@@ -566,8 +566,8 @@ function collapseTree(obj) {
         PROJECT NAME
     </div>
     <div class="col">
-        <div class="input-group selJob">
-            <input type="text" class="form-control" id="pjtJobName" placeholder="Job을 선택하세요" readonly />
+        <div class="input-group selJob" title="PROJECT SELECT">
+            <input type="text" class="form-control" id="pjtJobName" value="PROJECT을 선택하세요" readonly />
             <div class="input-group-append" id="btnStaffOnly" style="display:none">
                 <button class="btn btn-info" id="btnPjtSelect"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
@@ -583,18 +583,18 @@ function collapseTree(obj) {
             </div> -->
         </li>
         <li class="nav-item nav-pc" style="display:none">
-             <a class="nav-link" onclick="location.reload()" href="#">
+             <a class="nav-link" onclick="location.reload()" href="#" title="새로고침">
                 <span class="fa-solid fa-arrows-rotate fa-2x"></span>
             </a>
         </li>
         <li class="nav-item organization" style="display:none" onclick="organizationOpen()">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="#" title="조직도">
                 <i class="fa-solid fa-sitemap fa-2x"></i>
             </a>
         </li>
         <!-- Dropdown -->
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-white" href="#" id="navbardrop" data-toggle="dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="navbardrop" data-toggle="dropdown" title="로그아웃">
                 <span class="fa-stack">
                     <i class="far fa-circle fa-stack-2x"></i>
                     <i class="fas fa-user fa-stack-1x"></i>
@@ -638,7 +638,7 @@ function collapseTree(obj) {
     <div id="mainDemoContainer">
         <div id="jobSelWindow">
             <div id="jobSelWindowHeader">
-                <span>Job 선택</span>
+                <span>PROJECT 선택</span>
             </div>
             <div style="overflow: hidden;" id="jobSelWindowContent">
                 <div class="container-fluid p-3 my-3 border" id="selJobFilter">
@@ -738,7 +738,7 @@ function collapseTree(obj) {
       <div class="modal-content">
         
         <!-- Modal body -->
-        <div class="modal-body text-center my-4">
+        <div class="modal-body m-4">
         </div>
         
         <!-- Modal footer -->
