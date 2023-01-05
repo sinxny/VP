@@ -11,6 +11,12 @@
  * $Id: db_oci8.inc,v 1.4 2000/07/12 18:22:34 kk Exp $
  *
  */
+enum DB_PDO_OCI_CHARSET : string
+{
+    case UTF8 = "UTF8";
+    case KO16MSWIN949 = "KO16MSWIN949";
+    //case EUCKR = "KO16MSWIN949";
+}
 
 class DB_PDO_OCI {
     public $Debug    =  0;
@@ -20,6 +26,7 @@ class DB_PDO_OCI {
     protected $Database = "";
     protected $User     = "";
     private $Password = "";
+    protected $Charset = null;
 
     protected $Conn   = null;
     public $Record = array();
@@ -38,13 +45,20 @@ class DB_PDO_OCI {
 
     public function connect() {
         global $Fun;
+		
         if ( is_null($this->Conn) ) {
+			
             if($this->Debug) {
                 printf("<br>Connecting to $this->Database...<br>\n");
             }
             try{
                 $db_passwd = $Fun->Decrypt($this->Password, _CRYPT_KEY_);
-                $this->Conn=new PDO("oci:dbname=".$this->Database, $this->User, $db_passwd);
+                $db_name = $this->Database;
+                if(isset($this->Charset) && !is_null($this->Charset) && $this->Charset)
+                {
+                    $db_name .= ";charset=" . $this->Charset;
+                }
+                $this->Conn=new PDO("oci:dbname=".$db_name, $this->User, $db_passwd);
                 $this->Conn->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
                 $this->Conn->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_TO_STRING);
             }

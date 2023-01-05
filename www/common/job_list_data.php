@@ -11,7 +11,7 @@ if($jobCondition == "STAFF") {
 
 $jobList = array();
 
-$url = "http://vp.htenc.co.kr/api/common/job/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY={$getCondition}";
+$url = _API_URL_ . "common/job/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY={$getCondition}";
 
 $curl = curl_init();
 
@@ -28,6 +28,7 @@ curl_setopt_array($curl, array(
         "cache-control: no-cache",
         "content-type: text/plain; charset=utf-8"
     ),
+    CURLOPT_SSL_VERIFYPEER => false
 ));
 
 $response = curl_exec($curl);

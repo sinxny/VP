@@ -37,10 +37,17 @@ if (!$isSessionFlag)
 
 define("_DB_Class_", "oci8");
 if (!$isLocal) {
+    $server         = "ora01.htenc.co.kr";
+    $port           = 1521;
+    $service_name   = "ORCL";
+    //$sid            = "ORCL";
+    //$dbtns          = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = $server)(PORT = $port)) (CONNECT_DATA = (SERVICE_NAME = $service_name) (SID = $sid)))";
+    $dbtns          = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = $server)(PORT = $port)) (CONNECT_DATA = (SERVICE_NAME = $service_name) ))";
+    
     define("_DB_Host_Oracle_"    , false);
     define("_DB_User_Oracle_"    , "hibiz");//61.33.147.38
     define("_DB_Pass_Oracle_"    , "VGsFPFJnVD1ReAI2WDdUZ1A2Vjc=");
-    define("_DB_Name_Oracle_"    , "ORCL");
+    define("_DB_Name_Oracle_"    , $dbtns);
 }
 else {
     $server         = "testdb.htenc.co.kr";
@@ -88,14 +95,19 @@ class DB extends DB_PDO_OCI
         //$this->Password = _DB_Pass_Oracle_;
         $this->setPassword(_DB_Pass_Oracle_);
         $this->Database = _DB_Name_Oracle_;
+		$this->Charset = DB_PDO_OCI_CHARSET::KO16MSWIN949->value;
     }
     
-    public function connection($user, $password, $database) {
+    public function connection($user, $password, $database, $charset = null) {
         //$this->Host = $host;
         $this->User = $user;
         //$this->Password = $password;
         $this->setPassword($password);
         $this->Database = $database;
+		if(isset($charset) && !is_null($charset) && !$charset)
+		{
+			$this->Charset = $charset;
+		}
         parent::connect();
     }
 
