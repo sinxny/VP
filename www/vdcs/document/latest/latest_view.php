@@ -394,6 +394,7 @@ var vm = new Vue({
         // 전체 다운로드
         allDocDownload() {
             var data = this;
+            // 다운로드 파일 정보 가져오기
             var url = "/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=LATEST_ZIP_INFO&jno=" + data.jno;
             axios.post(url)
             .then(function(response) {
@@ -418,9 +419,9 @@ var vm = new Vue({
                         allDownload.onload = function() {
                             var endDown = new Date();
                             var downTime = endDown - startDown;
-                            setTimeout(function() {
+                            // setTimeout(function() {
                                 $("#modalLoading").modal("hide");
-                            }, downTime);
+                            // }, downTime);
                         }
                     });
                 }

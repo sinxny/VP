@@ -41,6 +41,7 @@ if(isset($post) && is_array($post) && array_key_exists("doc_no", $post))
 }
 
 //BEGIN SQL ==================
+/*
 $SQL_DocInfo = "SELECT BIND_JNO JNO, TR_NO
     , DOC_NO, DOC_NUM, DOC_REV_NUM, DOC_TITLE
     , DOC_FILE_CHECK, DOC_FILE_NAME, DOC_FILE_SAVE, DOC_FILE_PATH, DOC_FILE_SIZE, DOC_FILE_TYPE
@@ -50,20 +51,28 @@ $SQL_DocInfo = "SELECT BIND_JNO JNO, TR_NO
 FROM " . VDCS_TABLES::VDCS_VPDC_SET . " 
 WHERE BIND_JNO = {$jno} 
 ";
-
+*/
 $SQL_DocInfo = "WITH A AS(
     SELECT 
         DC.BIND_JNO JNO, J.JOB_NO, DC.TR_NO, DC.DOC_NO, DC.DOC_NUM, DC.DOC_REV_NUM, DC.DOC_TITLE
+        , TR.TR_FUNC_NO, TFT.FUNC_CD TR_FUNC_CD
         , DC.DOC_FUNC_NO, DFT.FUNC_CD DOC_FUNC_CD
         , DC.DOC_STATUS, DRT.CODE_NAME DOC_STATUS_NAME, DRT.CODE_NAME_NICK DOC_STATUS_NICK, DRT.DESCR DOC_STATUS_DESCR
         , DC.DEPLOY_DATE, DC.DEPLOY_UNO , DC.DEPLOY_FILE_CHECK, DC.DEPLOY_FILE_NAME, DC.DEPLOY_FILE_SAVE, DC.DEPLOY_FILE_PATH, DC.DEPLOY_FILE_SIZE, DC.DEPLOY_FILE_TYPE 
         , DC.DOC_FILE_CHECK, DC.DOC_FILE_NAME, DC.DOC_FILE_SAVE, DC.DOC_FILE_PATH, DC.DOC_FILE_SIZE, DC.DOC_FILE_TYPE 
         , DC.IS_USE, DC.REG_DATE, DC.MOD_DATE 
     FROM " . VDCS_TABLES::VDCS_VPDC_SET . " DC
+        , " . VDCS_TABLES::VDCS_VPTR_SET . " TR
         , " . VDCS_TABLES::JOB_INFO . " J
         , " . VDCS_TABLES::SYS_FUNC_TYPE . " DFT
+        , " . VDCS_TABLES::SYS_FUNC_TYPE . " TFT
         , (SELECT * FROM " . VDCS_TABLES::SYS_DOC_RESULT_TYPE . " WHERE CODE_GROUP_NO = 7) DRT
-    WHERE DC.BIND_JNO = J.JNO(+) AND DC.DOC_FUNC_NO = DFT.FUNC_NO(+) AND DC.DOC_STATUS = DRT.CODE_CD(+)
+    WHERE 1 = 1
+        AND DC.TR_NO = TR.TR_NO
+        AND TR.JNO = J.JNO(+) 
+        AND DC.DOC_FUNC_NO = DFT.FUNC_NO(+) 
+        AND TR.TR_FUNC_NO = TFT.FUNC_NO(+) 
+        AND DC.DOC_STATUS = DRT.CODE_CD(+)
 )
 SELECT * FROM A
 WHERE 1 = 1
@@ -180,7 +189,7 @@ else if($requestVdcsModelType == RequestVdcsModelType::DocLatestDownload)
 {
     if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
     {
-	//echo $SQL;
+        //$Fun->print_($SQL);
 	//exit;
     }
     $db->query($SQL);
@@ -201,7 +210,7 @@ else if($requestVdcsModelType == RequestVdcsModelType::DocLatestDownload)
             $job_no = $db->f("job_no");
             if($db->f("doc_status") && $db->f("deploy_file_save"))
             {
-                $strRuleBaseFileName = "{$db->f("doc_func_cd")}\\{$db->f("doc_num")}_r{$db->f("doc_rev_num")} {$db->f("doc_title")}【RE-{$db->f("doc_status_nick")}】.pdf";
+                $strRuleBaseFileName = "{$db->f("tr_func_cd")}\\{$db->f("doc_num")}_r{$db->f("doc_rev_num")} {$db->f("doc_title")}【RE-{$db->f("doc_status_nick")}】.pdf";
                 $rec = array(
                     "file_check" => $db->f("deploy_file_check"),
                     "file_name" => $strRuleBaseFileName, //$db->f("deploy_file_name"),
@@ -214,7 +223,7 @@ else if($requestVdcsModelType == RequestVdcsModelType::DocLatestDownload)
             
             if(!$rec)
             {
-                $strRuleBaseFileName = "{$db->f("doc_func_cd")}\\{$db->f("doc_num")}_r{$db->f("doc_rev_num")} {$db->f("doc_title")}【DE】.pdf";
+                $strRuleBaseFileName = "{$db->f("tr_func_cd")}\\{$db->f("doc_num")}_r{$db->f("doc_rev_num")} {$db->f("doc_title")}【DE】.pdf";
                 $rec = array(
                     "file_check" => $db->f("doc_file_check"),
                     "file_name" => $strRuleBaseFileName, //$db->f("doc_file_name"),

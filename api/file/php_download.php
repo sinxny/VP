@@ -27,10 +27,11 @@ if(!isset($SaveName) || !$SaveName)
 $SaveName = iconv("UTF-8","EUC-KR//TRANSLIT", $SaveName);
 $SaveName = rawurlencode($SaveName);
 
-//@header("Content-type: application/octet-stream");
-header("Content-type: application/force-download");
+//header("Content-Type: application/octet-stream");
+header("Content-Type: application/force-download");
+header('Content-Transfer-Encoding: binary');
 header("Content-Disposition: attachment; filename=\"" . basename($SaveName) . "\"");
-
+/*
 if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], 'Edge') !== false)) 
 {
         header('Cache-Control: private, no-transform, no-store, must-revalidate');
@@ -50,22 +51,41 @@ else
         //@header("Content-Disposition: attachment; filename=\"" . $SaveName . "\"");
         @header('Pragma: no-cache');
 }
+*/
+header("Cache-Control:cache,must-revalidate");
+header("Pragma:no-cache");
 
-@header('Expires: 0');
-@header('Content-Transfer-Encoding: binary');
-@header('Accept-Ranges: bytes');
+header('Expires: 0');
+//header('Accept-Ranges: bytes');
 
 $FileSize = filesize($FileFullName);
 if(isset($FileSize) && !is_null($FileSize) && $FileSize && intval($FileSize) > 0)
 {
-    @header("Content-Length: {$FileSize}");
+    header("Content-Length: {$FileSize}");
 }
 
 ob_clean();
 flush();
+//ob_end_clean();
 //$contents = base64_decode($retvalDownloadFileWeb->DownloadFileWebResult->FileBinary);
-
-readfile($FileFullName);
+//readfile($FileFullName);
+if ($fp = fopen($FileFullName, "rb")) //isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221" && 
+{
+    //fpassthru($fp);
+    //@fclose($fp);
+    while(!feof($fp)){
+        //set_time_limit(0);
+        $buf = fread($fp,8192); //4096 = 4MB, 8192 = 8MB
+        $read = strlen($buf);
+        print($buf);
+        //ob_flush();
+        //flush();
+    }
+    @fclose($fp);
+}
+else
+{
+    readfile($FileFullName);
+}
 //echo $contents;
 die();
-
