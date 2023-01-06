@@ -1,6 +1,7 @@
 <?php
   $jno = $_GET["jno"];
   $doc_no = $_GET["doc_no"];
+  $pdfPageNo = $_GET["pdfPage"];
 ?>
 <html dir="ltr" mozdisallowselectionprint>
   <head>
@@ -282,9 +283,9 @@
                 </div>
                 <span id="scaleSelectContainer" class="dropdownToolbarButton">
                   <select id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom">
-                    <option id="pageAutoOption" title="" value="auto" selected="selected" data-l10n-id="page_scale_auto">Automatic Zoom</option>
+                    <option id="pageAutoOption" title="" value="auto" data-l10n-id="page_scale_auto">Automatic Zoom</option>
                     <option id="pageActualOption" title="" value="page-actual" data-l10n-id="page_scale_actual">Actual Size</option>
-                    <option id="pageFitOption" title="" value="page-fit" data-l10n-id="page_scale_fit">Page Fit</option>
+                    <option id="pageFitOption" title="" value="page-fit" data-l10n-id="page_scale_fit" selected="selected">Page Fit</option>
                     <option id="pageWidthOption" title="" value="page-width" data-l10n-id="page_scale_width">Page Width</option>
                     <option id="customScaleOption" title="" value="custom" disabled="disabled" hidden="true"></option>
                     <option title="" value="0.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 50 }'>50%</option>
@@ -438,8 +439,6 @@
 /* 1 */
 /***/ ((__unused_webpack_module, exports) => {
 
-
-
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
@@ -465,7 +464,7 @@ exports.removeNullCharacters = removeNullCharacters;
 exports.roundToDivide = roundToDivide;
 exports.scrollIntoView = scrollIntoView;
 exports.watchScroll = watchScroll;
-const DEFAULT_SCALE_VALUE = "auto";
+const DEFAULT_SCALE_VALUE = "page-fit";
 exports.DEFAULT_SCALE_VALUE = DEFAULT_SCALE_VALUE;
 const DEFAULT_SCALE = 1.0;
 exports.DEFAULT_SCALE = DEFAULT_SCALE;
@@ -1339,6 +1338,7 @@ class PDFLinkService {
       if (!pageNumber) {
         this.pdfDocument.getPageIndex(destRef).then(pageIndex => {
           this.cachePageRef(pageIndex + 1, destRef);
+          console.log(pageIndex);
           this.#goToDestinationHelper(rawDest, namedDest, explicitDest);
         }).catch(() => {
           console.error(`PDFLinkService.#goToDestinationHelper: "${destRef}" is not ` + `a valid page reference, for dest="${rawDest}".`);
@@ -2445,7 +2445,7 @@ const PDFViewerApplication = {
     const pdfThumbnailViewer = this.pdfThumbnailViewer;
     pdfThumbnailViewer.setDocument(pdfDocument);
     const storedPromise = (this.store = new _view_history.ViewHistory(pdfDocument.fingerprints[0])).getMultiple({
-      page: null,
+      page: <?php echo $pdfPageNo ?> - 1,
       zoom: _ui_utils.DEFAULT_SCALE_VALUE,
       scrollLeft: "0",
       scrollTop: "0",
@@ -12355,10 +12355,10 @@ class ViewHistory {
   }
   async _writeToStorage() {
     const databaseStr = JSON.stringify(this.database);
-    localStorage.setItem("pdfjs.history", databaseStr);
+    // localStorage.setItem("pdfjs.history", databaseStr);
   }
   async _readFromStorage() {
-    return localStorage.getItem("pdfjs.history");
+    // return localStorage.getItem("pdfjs.history");
   }
   async set(name, val) {
     await this._initializedPromise;
@@ -12409,10 +12409,10 @@ const GenericCom = {};
 exports.GenericCom = GenericCom;
 class GenericPreferences extends _preferences.BasePreferences {
   async _writeToStorage(prefObj) {
-    localStorage.setItem("pdfjs.preferences", JSON.stringify(prefObj));
+    // localStorage.setItem("pdfjs.preferences", JSON.stringify(prefObj));
   }
   async _readFromStorage(prefObj) {
-    return JSON.parse(localStorage.getItem("pdfjs.preferences"));
+    // return JSON.parse(localStorage.getItem("pdfjs.preferences"));
   }
 }
 class GenericExternalServices extends _app.DefaultExternalServices {

@@ -38,6 +38,7 @@
   </div>
   <input type="hidden" id="jno" name="jno" value="<?php echo $jno ?>">
   <input type="hidden" id="doc_no" name="doc_no" value="<?php echo $doc_no ?>">
+  <input type="hidden" id="pdfPage" name="pdfPage" value="1">
 </html>
 <script>
 // If absolute URL from the remote server is provided, configure the CORS
@@ -105,6 +106,7 @@ function renderPage(num) {
 
   // Update page counters
   document.getElementById('page_num').textContent = num;
+  $("#pdfPage").val(num);
 }
 
 /**

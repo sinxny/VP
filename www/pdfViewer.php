@@ -10,6 +10,7 @@ ini_set("display_errors", 1);
 $_src = null;
 $jno = null;
 $doc_no = null;
+$pdfPage = null;
 
 if( isset($_REQUEST) && !is_null($_REQUEST) )
 {
@@ -21,7 +22,11 @@ if( isset($_REQUEST) && !is_null($_REQUEST) )
 	{
 		$doc_no = $_REQUEST["doc_no"];
 	}
-	$_src = "/pdfjs-3.0.279-dist/web/viewer.php?model=DOC_LE_DOWNLOAD&jno={$jno}&doc_no={$doc_no}&webview=Y";
+	if(array_key_exists("pdfPage", $_REQUEST))
+	{
+		$pdfPage = $_REQUEST["pdfPage"];
+	}
+	$_src = "/pdfjs-3.0.279-dist/web/viewer.php?model=DOC_LE_DOWNLOAD&jno={$jno}&doc_no={$doc_no}&webview=Y&pdfPage={$pdfPage}";
 	//echo $_src;
 }
 if( !isset($_src) || is_null($_src) || !$_src ) exit;
