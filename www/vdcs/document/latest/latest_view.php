@@ -375,21 +375,21 @@ var vm = new Vue({
         exportLatestExcel() {
             var url = '/vdcs/document/latest/latest_list_download_excel.php?jno=' + this.jno + "&jobName=" + this.jobName;
             location.href = url;
-            
-            const excelDown = new XMLHttpRequest();
-            excelDown.open("GET", url, true);
-            
+            var data = this;
+
             $("#modalLoading").modal("show");
-            
-            excelDown.send();
-            var startDown = new Date();
-            excelDown.onload = function() {
-                var endDown = new Date();
-                var downTime = endDown - startDown;
-                setTimeout(function() {
-                    $("#modalLoading").modal("hide");
-                }, downTime);
-            }
+
+            var loadingBar = setInterval(function() {
+                var name = "fileDownload";
+                var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+                if(value) {
+                    if(value[2] == 1) {
+                        $("#modalLoading").modal("hide");
+                        data.deleteCookie(name);
+                        clearInterval(loadingBar);
+                    }
+                }
+            }, 1000)
         },
         // 전체 다운로드
         allDocDownload() {
@@ -408,7 +408,22 @@ var vm = new Vue({
                     var url = "/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=LATEST_ZIP_DOWNLOAD&jno=" + data.jno;
                     $("#btnConfirm").on("click", function() {
                         location.href = url;
-            
+
+                        $("#modalLoading").modal("show");
+
+                        // var loadingBar = setInterval(function() {
+                        //     var name = "fileDownload";
+                        //     var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+                        //     console.log(document.cookie);
+                        //     if(value) {
+                        //         if(value[2] == 1) {
+                        //             $("#modalLoading").modal("hide");
+                        //             data.deleteCookie(name);
+                        //             clearInterval(loadingBar);
+                        //         }
+                        //     }
+                        // }, 1000)
+
                         const allDownload = new XMLHttpRequest();
                         allDownload.open("GET", url, true);
             
@@ -419,9 +434,9 @@ var vm = new Vue({
                         allDownload.onload = function() {
                             var endDown = new Date();
                             var downTime = endDown - startDown;
-                            // setTimeout(function() {
+                            setTimeout(function() {
                                 $("#modalLoading").modal("hide");
-                            // }, downTime);
+                            }, downTime);
                         }
                     });
                 }
@@ -429,6 +444,10 @@ var vm = new Vue({
             .catch(function(error){
                 console.log(error);
             });
+        },
+        // 쿠키 삭제
+        deleteCookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
         }
     }
 })

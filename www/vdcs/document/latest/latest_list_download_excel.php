@@ -179,6 +179,7 @@ $sheet->getSheetView()->setZoomScale(90);
 $today = new DateTime();
 $title = $jno . "_VDCS_Latest_List";
 
+setcookie("fileDownload", true, 0, "/");
 // Rename worksheet
 $sheet->setTitle($title);
 // Redirect output to a client’s web browser (Excel2007)

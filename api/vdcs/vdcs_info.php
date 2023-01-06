@@ -176,7 +176,7 @@ function GetQueryWhereStringCase($col, $val)
                 $return .= "   OR UPPER(doc_tag_item) LIKE '%{$val}%' ";
                 $return .= "   OR UPPER(doc_rfq_num) LIKE '%{$val}%' ";
                 $return .= "   OR UPPER(doc_rfq_title) LIKE '%{$val}%' ";
-                $return .= "   OR UPPER(doc_func_cd) = '{$val}' ";
+                $return .= "   OR UPPER(tr_func_cd) = '{$val}' ";
                 $return .= "   OR UPPER(doc_status_nick) = '{$val}' ";
                 $return .= " ) ";
                 break;
@@ -1014,7 +1014,7 @@ if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
             {
                 $SQL .= " " . $m_where;
             }
-            $SQL .= " ORDER BY JNO, DOC_FUNC_NO, DOC_NUM, TR_NO, DOC_NO";
+            $SQL .= " ORDER BY JNO, TR_FUNC_NO, DOC_RFQ_NUM, DOC_NUM, TR_DOC_NUM, TR_NO, DOC_NO";
             
         break;
     }
