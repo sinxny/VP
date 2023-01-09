@@ -425,7 +425,7 @@ var vm = new Vue({
                         // }, 1000)
 
                         const allDownload = new XMLHttpRequest();
-                        allDownload.open("GET", url, true);
+                        allDownload.open("HEAD", url, true);
             
                         $("#modalLoading").modal("show");
             

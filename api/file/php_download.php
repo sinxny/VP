@@ -66,18 +66,30 @@ if(isset($FileSize) && !is_null($FileSize) && $FileSize && intval($FileSize) > 0
 
 ob_clean();
 flush();
+
+/*
+readfile($FileFullName);
+setcookie("fileDownload", true, 0, "/");
+ob_flush();
+flush();
+die();
+*/
 //ob_end_clean();
 //$contents = base64_decode($retvalDownloadFileWeb->DownloadFileWebResult->FileBinary);
 //readfile($FileFullName);
+
 if ($fp = fopen($FileFullName, "rb")) //isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221" && 
 {
     //fpassthru($fp);
     //@fclose($fp);
     while(!feof($fp)){
-        //set_time_limit(0);
         $buf = fread($fp,8192); //4096 = 4MB, 8192 = 8MB
         $read = strlen($buf);
         print($buf);
+        //ob_flush();
+        //flush();
+        //
+        //echo fgets($fp);
         //ob_flush();
         //flush();
     }
@@ -88,4 +100,7 @@ else
     readfile($FileFullName);
 }
 //echo $contents;
+setcookie("fileDownload", true, 0, "/");
+flush();
+sleep(2);
 die();
