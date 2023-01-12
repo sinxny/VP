@@ -407,37 +407,43 @@ var vm = new Vue({
                     $("#confirmModal").modal("show");
                     var url = "/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=LATEST_ZIP_DOWNLOAD&jno=" + data.jno;
                     $("#btnConfirm").on("click", function() {
-                        location.href = url;
-
                         $("#modalLoading").modal("show");
+                        axios({
+                            url: "/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=LATEST_ZIP_DOWNLOAD&jno=" + data.jno,
+                            method: "GET", // 혹은 'POST'
+                            responseType: "blob", // 응답 데이터 타입 정의
+                        }).then((response) => {
+                            // 다운로드 파일 이름을 추출하는 함수
+                            const extractDownloadFilename = (response) => {
+                                const disposition = response.headers["content-disposition"];
+                                const fileName = decodeURI(
+                                disposition
+                                    .match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1]
+                                    .replace(/['"]/g, "")
+                                );
+                                return fileName;
+                            };
+                            const blob = new Blob([response.data]);
+                            const fileObjectUrl = window.URL.createObjectURL(blob);
 
-                        // var loadingBar = setInterval(function() {
-                        //     var name = "fileDownload";
-                        //     var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-                        //     console.log(document.cookie);
-                        //     if(value) {
-                        //         if(value[2] == 1) {
-                        //             $("#modalLoading").modal("hide");
-                        //             data.deleteCookie(name);
-                        //             clearInterval(loadingBar);
-                        //         }
-                        //     }
-                        // }, 1000)
+                            const link = document.createElement("a");
+                            link.href = fileObjectUrl;
+                            link.style.display = "none";
+                            link.download = extractDownloadFilename(response);
 
-                        const allDownload = new XMLHttpRequest();
-                        allDownload.open("HEAD", url, true);
-            
-                        $("#modalLoading").modal("show");
-            
-                        allDownload.send();
-                        var startDown = new Date();
-                        allDownload.onload = function() {
-                            var endDown = new Date();
-                            var downTime = endDown - startDown;
-                            setTimeout(function() {
-                                $("#modalLoading").modal("hide");
-                            }, downTime);
-                        }
+                            // 다운로드 파일의 이름은 직접 지정 할 수 있습니다.
+                            // link.download = "sample-file.xlsx";
+
+                            // 링크를 body에 추가하고 강제로 click 이벤트를 발생시켜 파일 다운로드를 실행시킵니다.
+                            document.body.appendChild(link);
+                            link.click();
+                            link.remove();
+
+                            // 다운로드가 끝난 리소스(객체 URL)를 해제합니다.
+                            window.URL.revokeObjectURL(fileObjectUrl);
+                        }).finally(function() {
+                            $("#modalLoading").modal("hide");
+                        })
                     });
                 }
             })
