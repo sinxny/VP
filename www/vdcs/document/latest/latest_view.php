@@ -411,7 +411,7 @@ var vm = new Vue({
                 console.log(error);
             });
 
-            $("#btnConfirm").on("click", async function() {
+            $("#btnConfirm").on("click", function() {
                 $("#modalLoading").modal("show");
 
                 axios({
