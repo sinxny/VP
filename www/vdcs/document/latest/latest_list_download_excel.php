@@ -78,6 +78,7 @@ for( $i=1, $col='N'; $i <=$maxSeq; $i++,$col++) {
     $lastCol = $nextCol;
     $col++;
 }
+
 // 헤더 틀 고정
 $spreadsheet->getActiveSheet()->freezePane("A4");
 
@@ -158,6 +159,17 @@ if($responseResult->ResultType = "Success") {
     }
 }
 
+// 10차수 이상일 경우 숨기기
+if($maxSeq > 10) {
+    for($col='AH'; true; $col++) {
+        // $sheet->getRowDimension($col)->setOutlineLevel(1);
+        $sheet->getColumnDimension($col)->setVisible(false);
+        if($col == $lastCol) {
+            break;
+        }
+    }
+}
+
 // 들여쓰기
 $sheet->getStyle('B3:B'.$rowCnt)->getAlignment()->setIndent(1);
 $sheet->getStyle('D3:D'.$rowCnt)->getAlignment()->setIndent(1);
@@ -217,6 +229,7 @@ $sheet->getColumnDimension('K')->setWidth(60);
 $sheet->getColumnDimension('L')->setWidth(6);
 $sheet->getColumnDimension('M')->setWidth(7);
 
+// 배포일/회신일 history 너비
 for($col='N'; true; $col++) {
     $sheet->getColumnDimension($col)->setAutoSize(true);
     if($col == $lastCol) {
