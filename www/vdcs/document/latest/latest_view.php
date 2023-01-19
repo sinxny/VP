@@ -50,7 +50,9 @@ var vm = new Vue({
         so_dc : '',
         so_rc : '',
         noData : false,
-        researchSave : ''
+        researchSave : '',
+        historyDateList: {},
+        maxSeq: 0
     },
     created() {
         // 최신문서 데이터 불러오기
@@ -373,23 +375,68 @@ var vm = new Vue({
         },
         // 최신목록 내보내기
         exportLatestExcel() {
-            var url = '/vdcs/document/latest/latest_list_download_excel.php?jno=' + this.jno + "&jobName=" + this.jobName;
-            location.href = url;
-            var data = this;
-
             $("#modalLoading").modal("show");
+            var data = this;
+            axios.get('/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&mode=doc_history&jno='+ this.jno).then(
+                function(response) {
+                    var historyList = response["data"];
+                    if(historyList["Message"] == "Success") {
+                        var historyList = historyList["Value"];
+                        let msList = [];
+                        var hisCnt = 0;
+                        $.each(historyList, function(i, info) {
+                            msList.push(info["ms_no"]);
 
-            var loadingBar = setInterval(function() {
-                var name = "fileDownload";
-                var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-                if(value) {
-                    if(value[2] == 1) {
-                        $("#modalLoading").modal("hide");
-                        data.deleteCookie(name);
-                        clearInterval(loadingBar);
-                    }
+                            msList = msList.filter((element, index) => {
+                                return msList.indexOf(element) === index;
+                            });
+                        });
+
+                        let tempArray = [];
+                        let maxSeq = 0;
+                        $.each(msList, function(j, ms_no) {
+                            tempArray = [];
+                            $.each(historyList, function(i, info) {
+                                if(ms_no == info["ms_no"]) {
+                                    tempArray.push({hist_distribute_date_str: info["hist_distribute_date_str"], hist_reply_date_str: info["hist_reply_date_str"]});
+                                }
+                            });
+                            tempArray = tempArray.reverse();
+                            data.historyDateList[ms_no] = tempArray;
+                            // 최대 차수
+                            var seq = data.historyDateList[ms_no].length;
+                            if(maxSeq < seq) {
+                                maxSeq = seq;
+                            }
+                        });
+                        data.maxSeq = maxSeq;
+                        // 다운로드 시작
+                        var url = '/vdcs/document/latest/latest_list_download_excel.php';
+                        data.axiosDownload("excelDown" ,url, "POST");
+                    };
                 }
-            }, 1000)
+            ).catch(function(error) {
+                console.log(error);
+                $("#modalLoading").modal("hide");
+            });
+            
+            // var url = '/vdcs/document/latest/latest_list_download_excel.php?jno=' + this.jno + "&jobName=" + this.jobName;
+            // location.href = url;
+            // var data = this;
+
+            // $("#modalLoading").modal("show");
+
+            // var loadingBar = setInterval(function() {
+            //     var name = "fileDownload";
+            //     var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+            //     if(value) {
+            //         if(value[2] == 1) {
+            //             $("#modalLoading").modal("hide");
+            //             data.deleteCookie(name);
+            //             clearInterval(loadingBar);
+            //         }
+            //     }
+            // }, 1000)
         },
         // 전체 다운로드
         allDocDownload() {
@@ -411,50 +458,73 @@ var vm = new Vue({
                 console.log(error);
             });
 
+            // 확인 버튼 클릭
             $("#btnConfirm").on("click", function() {
                 $("#modalLoading").modal("show");
 
-                axios({
-                    url: "/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=LATEST_ZIP_DOWNLOAD&jno=" + data.jno,
-                    method: "GET", // 혹은 'POST'
-                    responseType: "blob", // 응답 데이터 타입 정의
-                }).then((response) => {
-                    // 다운로드 파일 이름을 추출하는 함수
-                    const extractDownloadFilename = (response) => {
-                        const disposition = response.headers["content-disposition"];
-                        const fileName = decodeURI(
-                        disposition
-                            .match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1]
-                            .replace(/['"]/g, "")
-                        );
-                        return fileName;
-                    };
-                    const blob = new Blob([response.data]);
-                    const fileObjectUrl = window.URL.createObjectURL(blob);
-
-                    const link = document.createElement("a");
-                    link.href = fileObjectUrl;
-                    link.style.display = "none";
-                    link.download = extractDownloadFilename(response);
-
-                    // 다운로드 파일의 이름은 직접 지정 할 수 있습니다.
-                    // link.download = "sample-file.xlsx";
-
-                    // 링크를 body에 추가하고 강제로 click 이벤트를 발생시켜 파일 다운로드를 실행시킵니다.
-                    document.body.appendChild(link);
-                    link.click();
-                    link.remove();
-
-                    // 다운로드가 끝난 리소스(객체 URL)를 해제합니다.
-                    window.URL.revokeObjectURL(fileObjectUrl);
-                }).finally(function() {
-                    $("#modalLoading").modal("hide");
-                })
+                // 다운 시작
+                var url = "/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=LATEST_ZIP_DOWNLOAD&jno=" + data.jno
+                data.axiosDownload("allDocDown" ,url, "GET");
             });
         },
         // 쿠키 삭제
         deleteCookie(name) {
             document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+        },
+        // axios 다운로드
+        axiosDownload(type, url, method) {
+            if(type == "excelDown") {
+                var data = {
+                    jno: this.jno,
+                    jobName: this.jobName,
+                    historyDateList: this.historyDateList,
+                    maxSeq: this.maxSeq
+                }
+            } else {
+                var data = '';
+            }
+            axios({
+                url: url,
+                data: data,
+                method: method,
+                responseType: "blob" // 응답 데이터 타입 정의
+            })
+            .then(function(response) {
+                // 다운로드 파일 이름을 추출하는 함수
+                const extractDownloadFilename = (response) => {
+                    const disposition = response.headers["content-disposition"];
+                    const fileName = decodeURI(
+                    disposition
+                        .match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1]
+                        .replace(/['"]/g, "")
+                    );
+                    return fileName;
+                };
+                const blob = new Blob([response.data]);
+                const fileObjectUrl = window.URL.createObjectURL(blob);
+
+                const link = document.createElement("a");
+                link.href = fileObjectUrl;
+                link.style.display = "none";
+                link.download = extractDownloadFilename(response);
+
+                // 다운로드 파일의 이름은 직접 지정 할 수 있습니다.
+                // link.download = "sample-file.xlsx";
+
+                // 링크를 body에 추가하고 강제로 click 이벤트를 발생시켜 파일 다운로드를 실행시킵니다.
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+
+                // 다운로드가 끝난 리소스(객체 URL)를 해제합니다.
+                window.URL.revokeObjectURL(fileObjectUrl);
+            })
+            .catch(function(error){
+                console.log(error);
+            })
+            .finally(function() {
+                $("#modalLoading").modal("hide");
+            });
         }
     }
 })

@@ -5,6 +5,10 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 // require_once "../../../_inc.php";
 require_once "../../../vendor/autoload.php";
+require_once "../../../common/func.php";
+
+$request_body = file_get_contents('php://input');
+$data = json_decode($request_body, true);
 
 // Create new Spreadsheet object
 $spreadsheet = new Spreadsheet();
@@ -20,15 +24,14 @@ $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSet
 $sheet->getPageSetup()->setFitToWidth(1);
 $sheet->getPageSetup()->setFitToHeight(0);
 
-//폰트사이즈
+// 폰트사이즈
 $spreadsheet->getDefaultStyle()->getFont()->setSize(10);
-// 헤더 폰트 굵게
-$sheet->getStyle('A1:O2')->getFont()->setBold(true);
 
 $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(2, 2);
 
-$jno = $_GET["jno"];
-$jobName = $_GET["jobName"];
+$jno = $data["jno"];
+$jobName = $data["jobName"];
+$maxSeq = $data["maxSeq"];
 
 // 헤더
 $sheet->setCellValue('A1', "JNO : " . $jno );
@@ -48,11 +51,41 @@ $sheet->setCellValue('K2', "Item / Tag No.");
 $sheet->setCellValue('L2', "Count");
 $sheet->setCellValue('M2', "Result #");
 
+// 헤더 병합
+$sheet->mergeCells("A2:A3");
+$sheet->mergeCells("B2:B3");
+$sheet->mergeCells("C2:C3");
+$sheet->mergeCells("D2:D3");
+$sheet->mergeCells("E2:E3");
+$sheet->mergeCells("F2:F3");
+$sheet->mergeCells("G2:G3");
+$sheet->mergeCells("H2:H3");
+$sheet->mergeCells("I2:I3");
+$sheet->mergeCells("J2:J3");
+$sheet->mergeCells("K2:K3");
+$sheet->mergeCells("L2:L3");
+$sheet->mergeCells("M2:M3");
+
+// 배포, 회신 history 헤더
+$lastCol = '';
+for( $i=1, $col='N'; $i <=$maxSeq; $i++,$col++) {
+    $sheet->setCellValue($col."2", numberToOrdinal($i));
+    $nextCol = $col;
+    $nextCol++;
+    $sheet->mergeCells("{$col}2:{$nextCol}2");
+    $sheet->setCellValue($col."3", "배포일");
+    $sheet->setCellValue($nextCol."3", "회신일");
+    $lastCol = $nextCol;
+    $col++;
+}
 // 헤더 틀 고정
-$spreadsheet->getActiveSheet()->freezePane("A3");
+$spreadsheet->getActiveSheet()->freezePane("A4");
 
 // 헤더 배경색 지정
-$sheet->getStyle('A2:M2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('DCDCDC');
+$sheet->getStyle("A2:{$lastCol}3")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('DCDCDC');
+
+// 헤더 폰트 굵게
+$sheet->getStyle("A1:{$lastCol}3")->getFont()->setBold(true);
 
 $url = "http://vp.htenc.co.kr/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&jno={$jno}&mode=latest";
 
@@ -80,7 +113,7 @@ curl_close($curl);
 $responseResult = json_decode($response);
 
 if($responseResult->ResultType = "Success") {
-    $rowCnt = 3;
+    $rowCnt = 4;
     for($i=0; $i < count($responseResult->Value); $i++) {
     $latestData = $responseResult->Value;
 
@@ -111,6 +144,16 @@ if($responseResult->ResultType = "Success") {
         // Rslt #
         $sheet->setCellValue('M'.$rowCnt, $latestData[$i]->doc_status_nick);
 
+        $ms_no = $latestData[$i]->ms_no;
+
+        $col='N';
+        foreach($data["historyDateList"][$ms_no] as $value) {
+            $sheet->setCellValue("{$col}{$rowCnt}", $value["hist_distribute_date_str"]);
+            $col++;
+            $sheet->setCellValue("{$col}{$rowCnt}", $value["hist_reply_date_str"]);
+            $col++;
+        }
+
         $rowCnt++;
     }
 }
@@ -128,19 +171,20 @@ $spreadsheet->getActiveSheet()->setAutoFilter('A2:M'.$rowCnt);
 
 // 표 그리기
 $rowCnt--;
-$sheet->getStyle('A2:M'.$rowCnt)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("A2:{$lastCol}{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
 // 헤더 칼럼 가운데 정렬
 $sheet->getStyle('G1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle('H1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
-$sheet->getStyle('A2:M2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle("A2:{$lastCol}3")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
 // 행 가운데 정렬
-$sheet->getStyle('A3:A'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('C3:C'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('E3:E'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('G3:H'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('L3:M'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('A4:A'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('C4:C'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('E4:E'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('G4:H'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('L4:M'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle("N4:{$lastCol}{$rowCnt}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
 // 셀 높이
 for($i = 1; $i <= $rowCnt; $i++) {
@@ -164,8 +208,8 @@ $sheet->getColumnDimension('E')->setWidth(16);
 $sheet->getColumnDimension('F')->setWidth(28);
 $sheet->getColumnDimension('G')->setWidth(11);
 $sheet->getColumnDimension('H')->setWidth(11);
-// $sheet->getColumnDimension('I')->setWidth(18);
-$sheet->getColumnDimension('I')->setAutoSize(true);
+$sheet->getColumnDimension('I')->setWidth(18);
+// $sheet->getColumnDimension('I')->setAutoSize(true);
 // $sheet->getColumnDimension('J')->setAutoSize(true);
 $sheet->getColumnDimension('J')->setWidth(35);
 $sheet->getColumnDimension('K')->setWidth(60);
@@ -173,13 +217,19 @@ $sheet->getColumnDimension('K')->setWidth(60);
 $sheet->getColumnDimension('L')->setWidth(6);
 $sheet->getColumnDimension('M')->setWidth(7);
 
+for($col='N'; true; $col++) {
+    $sheet->getColumnDimension($col)->setAutoSize(true);
+    if($col == $lastCol) {
+        break;
+    }
+}
+
 // 확대/축소
 $sheet->getSheetView()->setZoomScale(90);
 
 $today = new DateTime();
 $title = $jno . "_VDCS_Latest_List";
 
-setcookie("fileDownload", true, 0, "/");
 // Rename worksheet
 $sheet->setTitle($title);
 // Redirect output to a client’s web browser (Excel2007)

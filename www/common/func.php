@@ -75,4 +75,16 @@ function getPageList($pageNo, $totalCnt, $customPageUnit, $componentName = "") {
 
     return $pageList;
 }
+// 숫자->영어 서수로 변경
+function numberToOrdinal($num) {
+    if($num == 1) {
+        return $num . "st";
+    } else if ($num == 2) {
+        return $num . "nd";
+    } else if ($num == 3) {
+        return $num . "rd";
+    } else {
+        return $num . "th";
+    }
+}
 ?>
