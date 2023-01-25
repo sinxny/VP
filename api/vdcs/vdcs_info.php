@@ -1066,7 +1066,7 @@ WHERE 1 = 1
 ";
             
             
-            $SQL .= " ORDER BY JNO, MS_NO, TR_NO, DOC_NO DESC";
+            $SQL .= " ORDER BY JNO, MS_NO, TR_NO DESC, DOC_NO DESC";
 if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
 {
 	//echo $SQL;

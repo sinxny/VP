@@ -52,7 +52,8 @@ var vm = new Vue({
         noData : false,
         researchSave : '',
         historyDateList: {},
-        maxSeq: 0
+        maxSeq: 0,
+        isDownError: false
     },
     created() {
         // 최신문서 데이터 불러오기
@@ -401,7 +402,7 @@ var vm = new Vue({
                                     tempArray.push({hist_distribute_date_str: info["hist_distribute_date_str"], hist_reply_date_str: info["hist_reply_date_str"]});
                                 }
                             });
-                            tempArray = tempArray.reverse();
+                            // tempArray = tempArray.reverse();
                             data.historyDateList[ms_no] = tempArray;
                             // 최대 차수
                             var seq = data.historyDateList[ms_no].length;
@@ -458,13 +459,13 @@ var vm = new Vue({
                 console.log(error);
             });
 
+            var data = this;
             // 확인 버튼 클릭
             $("#btnConfirm").on("click", function() {
-                $("#modalLoading").modal("show");
+                var url = "/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=LATEST_ZIP_DOWNLOAD&jno=" + data.jno;
 
                 // 다운 시작
-                var url = "/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=LATEST_ZIP_DOWNLOAD&jno=" + data.jno
-                data.axiosDownload("allDocDown" ,url, "GET");
+                data.ajaxDownload(url);
             });
         },
         // 쿠키 삭제
@@ -524,6 +525,75 @@ var vm = new Vue({
             })
             .finally(function() {
                 $("#modalLoading").modal("hide");
+            });
+        },
+        // percenatage
+        showPer(per) {
+            $("#percent").text(per + "%");
+            $("#percent").show();
+        },
+        // 파일 다운로드
+        ajaxDownload(url) {
+            var data = this;
+            var downInfo = $.ajax({
+                url: url,
+                type : 'GET',
+                xhrFields: {  //response 데이터를 바이너리로 처리한다.
+                responseType: 'blob'
+                },
+                beforeSend: function() {
+                    $("#modalLoading").modal("show");
+                    data.showPer(0);
+                },
+                xhr: function() {  //XMLHttpRequest 재정의 가능
+                    var xhr = $.ajaxSettings.xhr();
+                    xhr.onprogress = function(e) {
+                        data.showPer(Math.floor(e.loaded / e.total * 100));
+                    };
+                    return xhr;
+                },  
+                success : function(response) {
+                    // 다운로드 파일 이름을 추출하는 함수
+                    const extractDownloadFilename = (response) => {
+                        const disposition = downInfo.getResponseHeader('Content-Disposition');
+                        const fileName = decodeURI(
+                        disposition
+                            .match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1]
+                            .replace(/['"]/g, "")
+                        );
+                        return fileName;
+                    };
+                    const blob = new Blob([response]);
+                    const fileObjectUrl = window.URL.createObjectURL(blob);
+
+                    const link = document.createElement("a");
+                    link.href = fileObjectUrl;
+                    link.style.display = "none";
+                    link.download = extractDownloadFilename(response);
+
+                    // 다운로드 파일의 이름은 직접 지정 할 수 있습니다.
+                    // link.download = "sample-file.xlsx";
+
+                    // 링크를 body에 추가하고 강제로 click 이벤트를 발생시켜 파일 다운로드를 실행시킵니다.
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+
+                    // 다운로드가 끝난 리소스(객체 URL)를 해제합니다.
+                    window.URL.revokeObjectURL(fileObjectUrl);
+                },
+                complete: function() {
+                    if(data.isDownError) {
+                        data.isDownError = false;
+                    } else {
+                        $("#modalLoading").modal("hide");
+                        $("#percent").hide();
+                    }
+                },
+                error:function(request,status,error){
+                    data.isDownError = true;
+                    data.ajaxDownload(url);
+                }
             });
         }
     }
@@ -801,6 +871,7 @@ var vm = new Vue({
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <i class="fa fa-spinner fa-pulse fa-3x text-primary"></i>
+            <div id="percent" style="padding:1rem;color:white;display:none"></div>
         </div>
     </div>
 </div>
