@@ -388,6 +388,7 @@ var vm = new Vue({
                         $.each(historyList, function(i, info) {
                             msList.push(info["ms_no"]);
 
+                            // 중복 제거
                             msList = msList.filter((element, index) => {
                                 return msList.indexOf(element) === index;
                             });
@@ -395,11 +396,12 @@ var vm = new Vue({
 
                         let tempArray = [];
                         let maxSeq = 0;
+
                         $.each(msList, function(j, ms_no) {
                             tempArray = [];
                             $.each(historyList, function(i, info) {
                                 if(ms_no == info["ms_no"]) {
-                                    tempArray.push({hist_distribute_date_str: info["hist_distribute_date_str"], hist_reply_date_str: info["hist_reply_date_str"]});
+                                    tempArray.push({hist_distribute_date_str: info["hist_distribute_date_str"], hist_reply_date_str: info["hist_reply_date_str"], doc_no: info["doc_no"]});
                                 }
                             });
                             // tempArray = tempArray.reverse();

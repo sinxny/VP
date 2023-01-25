@@ -10,6 +10,9 @@ require_once "../../../common/func.php";
 $request_body = file_get_contents('php://input');
 $data = json_decode($request_body, true);
 
+// 도메인
+$domain = $_SERVER["HTTP_HOST"];
+
 // Create new Spreadsheet object
 $spreadsheet = new Spreadsheet();
 
@@ -113,6 +116,14 @@ curl_close($curl);
 
 $responseResult = json_decode($response);
 
+// 하이퍼 링크
+$link_style_array = array(
+    'font'  => array(
+        'color' => array('rgb' => '0000FF'),
+        'underline' => 'single'
+    )
+);
+
 if($responseResult->ResultType = "Success") {
     $rowCnt = 4;
     for($i=0; $i < count($responseResult->Value); $i++) {
@@ -132,8 +143,14 @@ if($responseResult->ResultType = "Success") {
         $sheet->setCellValue('F'.$rowCnt, $latestData[$i]->tr_doc_num);
         // 배포일
         $sheet->setCellValue('G'.$rowCnt, $latestData[$i]->doc_distribute_date_str);
+        $sheet->getCell('G'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_DE_DOWNLOAD&jno={$jno}&doc_no={$latestData[$i]->doc_no}");
+        $sheet->getStyle('G'.$rowCnt)->applyFromArray($link_style_array);
         // 회신일
         $sheet->setCellValue('H'.$rowCnt, $latestData[$i]->doc_reply_date_str);
+        if($latestData[$i]->doc_reply_date_str) {
+            $sheet->getCell('H'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_RE_DOWNLOAD&jno={$jno}&doc_no={$latestData[$i]->doc_no}");
+            $sheet->getStyle('H'.$rowCnt)->applyFromArray($link_style_array);
+        }
         // RFQ. No.
         $sheet->setCellValue('I'.$rowCnt, $latestData[$i]->doc_rfq_num);
         // RFQ. Title
@@ -147,11 +164,18 @@ if($responseResult->ResultType = "Success") {
 
         $ms_no = $latestData[$i]->ms_no;
 
+        // 배포일/회신일 history 목록
         $col='N';
         foreach($data["historyDateList"][$ms_no] as $value) {
             $sheet->setCellValue("{$col}{$rowCnt}", $value["hist_distribute_date_str"]);
+            $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_DE_DOWNLOAD&jno={$jno}&doc_no={$value['doc_no']}");
+            $sheet->getStyle("{$col}{$rowCnt}")->applyFromArray($link_style_array);
             $col++;
             $sheet->setCellValue("{$col}{$rowCnt}", $value["hist_reply_date_str"]);
+            if($value["hist_reply_date_str"]) {
+                $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_RE_DOWNLOAD&jno={$jno}&doc_no={$value['doc_no']}");
+                $sheet->getStyle("{$col}{$rowCnt}")->applyFromArray($link_style_array);
+            }
             $col++;
         }
 
@@ -204,7 +228,7 @@ for($i = 1; $i <= $rowCnt; $i++) {
 }
 
 // 텍스트 맞춤
-$sheet->getStyle('A1:M'.$rowCnt)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+$sheet->getStyle("A1:{$lastCol}{$rowCnt}")->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
 //자동 줄바꿈
 $sheet->getStyle('A3:M'.$rowCnt)->getAlignment()->setWrapText(true);
@@ -216,14 +240,14 @@ $sheet->getColumnDimension('B')->setAutoSize(true);
 $sheet->getColumnDimension('C')->setWidth(5);
 $sheet->getColumnDimension('D')->setAutoSize(true);
 // $sheet->getColumnDimension('D')->setWidth(50);
-$sheet->getColumnDimension('E')->setWidth(16);
+$sheet->getColumnDimension('E')->setWidth(20);
 $sheet->getColumnDimension('F')->setWidth(28);
 $sheet->getColumnDimension('G')->setWidth(11);
 $sheet->getColumnDimension('H')->setWidth(11);
-$sheet->getColumnDimension('I')->setWidth(18);
+$sheet->getColumnDimension('I')->setWidth(20);
 // $sheet->getColumnDimension('I')->setAutoSize(true);
-// $sheet->getColumnDimension('J')->setAutoSize(true);
-$sheet->getColumnDimension('J')->setWidth(35);
+$sheet->getColumnDimension('J')->setAutoSize(true);
+// $sheet->getColumnDimension('J')->setWidth(35);
 $sheet->getColumnDimension('K')->setWidth(60);
 // $sheet->getColumnDimension('K')->setAutoSize(true);
 $sheet->getColumnDimension('L')->setWidth(6);
