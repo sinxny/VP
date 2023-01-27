@@ -203,7 +203,7 @@ $sheet->getStyle('J3:J'.$rowCnt)->getAlignment()->setIndent(1);
 $sheet->getStyle('K3:K'.$rowCnt)->getAlignment()->setIndent(1);
 
 // 자동 필터
-$spreadsheet->getActiveSheet()->setAutoFilter('A2:M'.$rowCnt);
+$spreadsheet->getActiveSheet()->setAutoFilter("A3:{$lastCol}{$rowCnt}");
 
 // 표 그리기
 $rowCnt--;
