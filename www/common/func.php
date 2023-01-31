@@ -77,11 +77,11 @@ function getPageList($pageNo, $totalCnt, $customPageUnit, $componentName = "") {
 }
 // 숫자->영어 서수로 변경
 function numberToOrdinal($num) {
-    if($num == 1) {
+    if((substr($num, -1) == 1) && ($num != 11)) {
         return $num . "st";
-    } else if ($num == 2) {
+    } else if ((substr($num, -1) == 2) && ($num != 12)) {
         return $num . "nd";
-    } else if ($num == 3) {
+    } else if ((substr($num, -1) == 3) && ($num != 13)) {
         return $num . "rd";
     } else {
         return $num . "th";

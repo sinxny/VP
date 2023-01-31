@@ -37,8 +37,12 @@ $jobName = $data["jobName"];
 $maxSeq = $data["maxSeq"];
 
 // 헤더
+$today = new DateTime();
+$dateTime = $today->format('Y-m-d H:i');
 $sheet->setCellValue('A1', "JNO : " . $jno );
 $sheet->setCellValue('C1', "PROJECT : " . $jobName);
+$sheet->setCellValue('K1', "기준일시 : " . $dateTime);
+$sheet->getStyle('K1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 
 $sheet->setCellValue('A2', "공종");
 $sheet->setCellValue('B2', "문서번호");
@@ -46,13 +50,16 @@ $sheet->setCellValue('C2', "Rev.");
 $sheet->setCellValue('D2', "문서제목");
 $sheet->setCellValue('E2', "Vendor");
 $sheet->setCellValue('F2', "TR No.");
-$sheet->setCellValue('G2', "배포일");
-$sheet->setCellValue('H2', "회신일");
+$sheet->setCellValue('G2', "배포일\n(Latest)");
+$sheet->setCellValue('H2', "회신일\n(Latest)");
 $sheet->setCellValue('I2', "RFQ. NO.");
 $sheet->setCellValue('J2', "RFQ. Title");
 $sheet->setCellValue('K2', "Item / Tag No.");
 $sheet->setCellValue('L2', "Count");
 $sheet->setCellValue('M2', "Result #");
+
+$sheet->getStyle("G2")->getAlignment()->setWrapText(true);
+$sheet->getStyle("H2")->getAlignment()->setWrapText(true);
 
 // 헤더 병합
 $sheet->mergeCells("A2:A3");
@@ -71,7 +78,7 @@ $sheet->mergeCells("M2:M3");
 
 // 배포, 회신 history 헤더
 $lastCol = '';
-for( $i=1, $col='N'; $i <=$maxSeq; $i++,$col++) {
+for( $i=1, $col='N'; $i <= $maxSeq; $i++,$col++) {
     $sheet->setCellValue($col."2", numberToOrdinal($i));
     $nextCol = $col;
     $nextCol++;
@@ -143,12 +150,14 @@ if($responseResult->ResultType = "Success") {
         $sheet->setCellValue('F'.$rowCnt, $latestData[$i]->tr_doc_num);
         // 배포일
         $sheet->setCellValue('G'.$rowCnt, $latestData[$i]->doc_distribute_date_str);
-        $sheet->getCell('G'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_DE_DOWNLOAD&jno={$jno}&doc_no={$latestData[$i]->doc_no}");
+        // $sheet->getCell('G'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_DE_DOWNLOAD&jno={$jno}&doc_no={$latestData[$i]->doc_no}&webview=Y");
+        $sheet->getCell('G'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_DE_DOWNLOAD");
         $sheet->getStyle('G'.$rowCnt)->applyFromArray($link_style_array);
         // 회신일
         $sheet->setCellValue('H'.$rowCnt, $latestData[$i]->doc_reply_date_str);
         if($latestData[$i]->doc_reply_date_str) {
-            $sheet->getCell('H'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_RE_DOWNLOAD&jno={$jno}&doc_no={$latestData[$i]->doc_no}");
+            // $sheet->getCell('H'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_RE_DOWNLOAD&jno={$jno}&doc_no={$latestData[$i]->doc_no}&webview=Y");
+            $sheet->getCell('H'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_LE_DOWNLOAD");
             $sheet->getStyle('H'.$rowCnt)->applyFromArray($link_style_array);
         }
         // RFQ. No.
@@ -168,12 +177,14 @@ if($responseResult->ResultType = "Success") {
         $col='N';
         foreach($data["historyDateList"][$ms_no] as $value) {
             $sheet->setCellValue("{$col}{$rowCnt}", $value["hist_distribute_date_str"]);
-            $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_DE_DOWNLOAD&jno={$jno}&doc_no={$value['doc_no']}");
+            // $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_DE_DOWNLOAD&jno={$jno}&doc_no={$value['doc_no']}&webview=Y");
+            $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/pdfViewer.php?jno={$jno}&doc_no={$value['doc_no']}&pdfPage=1&model=DOC_DE_DOWNLOAD");
             $sheet->getStyle("{$col}{$rowCnt}")->applyFromArray($link_style_array);
             $col++;
             $sheet->setCellValue("{$col}{$rowCnt}", $value["hist_reply_date_str"]);
             if($value["hist_reply_date_str"]) {
-                $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_RE_DOWNLOAD&jno={$jno}&doc_no={$value['doc_no']}");
+                // $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_RE_DOWNLOAD&jno={$jno}&doc_no={$value['doc_no']}&webview=Y");
+                $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/pdfViewer.php?jno={$jno}&doc_no={$value['doc_no']}&pdfPage=1&model=DOC_LE_DOWNLOAD");
                 $sheet->getStyle("{$col}{$rowCnt}")->applyFromArray($link_style_array);
             }
             $col++;
@@ -264,7 +275,7 @@ for($col='N'; true; $col++) {
 // 확대/축소
 $sheet->getSheetView()->setZoomScale(90);
 
-$today = new DateTime();
+// 파일명
 $title = $jno . "_VDCS_Latest_List";
 
 // Rename worksheet

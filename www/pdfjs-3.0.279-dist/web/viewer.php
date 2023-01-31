@@ -2,6 +2,7 @@
   $jno = $_GET["jno"];
   $doc_no = $_GET["doc_no"];
   $pdfPageNo = $_GET["pdfPage"];
+  $model = $_GET["model"];
 ?>
 <html dir="ltr" mozdisallowselectionprint>
   <head>
@@ -1151,7 +1152,7 @@ const defaultOptions = {
 };
 {
   defaultOptions.defaultUrl = {
-    value: '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_LE_DOWNLOAD&jno=' + '<?php echo $jno ?>' + '&doc_no=' + '<?php echo $doc_no ?>' + '&webview=Y',
+    value: '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model='+ '<?php echo $model ?>' +'&jno=' + '<?php echo $jno ?>' + '&doc_no=' + '<?php echo $doc_no ?>' + '&webview=Y',
     kind: OptionKind.VIEWER
   };
   defaultOptions.disablePreferences = {

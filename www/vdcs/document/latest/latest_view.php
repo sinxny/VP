@@ -867,7 +867,7 @@ var vm = new Vue({
     </div>
 </div>
 <div class="alert alert-success text-center" v-show="!jno">
-  <strong>PROJECT을 선택하세요.</strong>
+  <strong>PROJECT를 선택하세요.</strong>
 </div>
 <div id="modalLoading" class="modal modal-loading" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
