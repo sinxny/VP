@@ -41,8 +41,9 @@ $today = new DateTime();
 $dateTime = $today->format('Y-m-d H:i');
 $sheet->setCellValue('A1', "JNO : " . $jno );
 $sheet->setCellValue('C1', "PROJECT : " . $jobName);
-$sheet->setCellValue('K1', "기준일시 : " . $dateTime);
-$sheet->getStyle('K1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+$sheet->setCellValue('M1', "기준일시 : " . $dateTime);
+$sheet->setCellValue('J1', "※ Result Code가 R인 경우 회람횟수에 미포함");
+$sheet->getStyle('M1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 
 $sheet->setCellValue('A2', "공종");
 $sheet->setCellValue('B2', "문서번호");
@@ -50,16 +51,18 @@ $sheet->setCellValue('C2', "Rev.");
 $sheet->setCellValue('D2', "문서제목");
 $sheet->setCellValue('E2', "Vendor");
 $sheet->setCellValue('F2', "TR No.");
-$sheet->setCellValue('G2', "배포일\n(Latest)");
-$sheet->setCellValue('H2', "회신일\n(Latest)");
-$sheet->setCellValue('I2', "RFQ. NO.");
-$sheet->setCellValue('J2', "RFQ. Title");
-$sheet->setCellValue('K2', "Item / Tag No.");
-$sheet->setCellValue('L2', "Count");
-$sheet->setCellValue('M2', "Result #");
+$sheet->setCellValue('G2', "Latest");
+$sheet->mergeCells("G2:I2");
+$sheet->setCellValue('G3', "회람일");
+$sheet->setCellValue('H3', "회신일");
+$sheet->setCellValue('I3', "Rslt#");
+$sheet->setCellValue('J2', "회람\n횟수");
+$sheet->setCellValue('K2', "RFQ. NO.");
+$sheet->setCellValue('L2', "RFQ. Title");
+$sheet->setCellValue('M2', "Item / Tag No.");
 
-$sheet->getStyle("G2")->getAlignment()->setWrapText(true);
-$sheet->getStyle("H2")->getAlignment()->setWrapText(true);
+// 줄바꿈
+$sheet->getStyle("J2")->getAlignment()->setWrapText(true);
 
 // 헤더 병합
 $sheet->mergeCells("A2:A3");
@@ -68,24 +71,35 @@ $sheet->mergeCells("C2:C3");
 $sheet->mergeCells("D2:D3");
 $sheet->mergeCells("E2:E3");
 $sheet->mergeCells("F2:F3");
-$sheet->mergeCells("G2:G3");
-$sheet->mergeCells("H2:H3");
-$sheet->mergeCells("I2:I3");
+// $sheet->mergeCells("G2:G3");
+// $sheet->mergeCells("H2:H3");
+// $sheet->mergeCells("I2:K2");
+// $sheet->mergeCells("I2:I3");
 $sheet->mergeCells("J2:J3");
 $sheet->mergeCells("K2:K3");
 $sheet->mergeCells("L2:L3");
 $sheet->mergeCells("M2:M3");
 
 // 배포, 회신 history 헤더
+function latestOrder($i) {
+    if($i == 0) {
+        return "Last";
+    } else {
+        return "L - " . $i;
+    }
+}
 $lastCol = '';
-for( $i=1, $col='N'; $i <= $maxSeq; $i++,$col++) {
-    $sheet->setCellValue($col."2", numberToOrdinal($i));
+for( $i=0, $col='N'; $i < $maxSeq; $i++,$col++) {
+    $sheet->setCellValue($col."2", latestOrder($i));
     $nextCol = $col;
     $nextCol++;
-    $sheet->mergeCells("{$col}2:{$nextCol}2");
-    $sheet->setCellValue($col."3", "배포일");
+    $sheet->setCellValue($col."3", "회람일");
     $sheet->setCellValue($nextCol."3", "회신일");
+    $nextCol++;
+    $sheet->setCellValue($nextCol."3", "Rslt#");
+    $sheet->mergeCells("{$col}2:{$nextCol}2");
     $lastCol = $nextCol;
+    $col++;
     $col++;
 }
 
@@ -126,9 +140,17 @@ $responseResult = json_decode($response);
 // 하이퍼 링크
 $link_style_array = array(
     'font'  => array(
+        'color' => array('rgb' => '0070C0'),
+        // 'underline' => 'single'
+    ),
+);
+
+// Final
+$final_style_array = array(
+    'font'  => array(
         'color' => array('rgb' => '0000FF'),
-        'underline' => 'single'
-    )
+        // 'underline' => 'single'
+    ),
 );
 
 if($responseResult->ResultType = "Success") {
@@ -148,47 +170,63 @@ if($responseResult->ResultType = "Success") {
         $sheet->setCellValue('E'.$rowCnt, $latestData[$i]->from_comp_name);
         // TR No.
         $sheet->setCellValue('F'.$rowCnt, $latestData[$i]->tr_doc_num);
-        // 배포일
+        // 회람일
         $sheet->setCellValue('G'.$rowCnt, $latestData[$i]->doc_distribute_date_str);
-        // $sheet->getCell('G'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_DE_DOWNLOAD&jno={$jno}&doc_no={$latestData[$i]->doc_no}&webview=Y");
         $sheet->getCell('G'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_DE_DOWNLOAD");
-        $sheet->getStyle('G'.$rowCnt)->applyFromArray($link_style_array);
         // 회신일
         $sheet->setCellValue('H'.$rowCnt, $latestData[$i]->doc_reply_date_str);
         if($latestData[$i]->doc_reply_date_str) {
-            // $sheet->getCell('H'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_RE_DOWNLOAD&jno={$jno}&doc_no={$latestData[$i]->doc_no}&webview=Y");
             $sheet->getCell('H'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_LE_DOWNLOAD");
-            $sheet->getStyle('H'.$rowCnt)->applyFromArray($link_style_array);
         }
+        // Rslt#
+        $sheet->setCellValue('I'.$rowCnt, $latestData[$i]->doc_status_nick);
+        // 회람 회수
+        $sheet->setCellValue('J'.$rowCnt, $latestData[$i]->doc_cnt);
         // RFQ. No.
-        $sheet->setCellValue('I'.$rowCnt, $latestData[$i]->doc_rfq_num);
+        $sheet->setCellValue('K'.$rowCnt, $latestData[$i]->doc_rfq_num);
         // RFQ. Title
-        $sheet->setCellValue('J'.$rowCnt, $latestData[$i]->doc_rfq_title);
+        $sheet->setCellValue('L'.$rowCnt, $latestData[$i]->doc_rfq_title);
         // 아이템/태그
-        $sheet->setCellValue('K'.$rowCnt, $latestData[$i]->doc_tag_item);
-        // Cnt
-        $sheet->setCellValue('L'.$rowCnt, $latestData[$i]->doc_cnt);
-        // Rslt #
-        $sheet->setCellValue('M'.$rowCnt, $latestData[$i]->doc_status_nick);
+        $sheet->setCellValue('M'.$rowCnt, $latestData[$i]->doc_tag_item);
 
         $ms_no = $latestData[$i]->ms_no;
 
-        // 배포일/회신일 history 목록
+        // 회람일/회신일 history 목록
         $col='N';
         foreach($data["historyDateList"][$ms_no] as $value) {
             $sheet->setCellValue("{$col}{$rowCnt}", $value["hist_distribute_date_str"]);
-            // $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_DE_DOWNLOAD&jno={$jno}&doc_no={$value['doc_no']}&webview=Y");
             $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/pdfViewer.php?jno={$jno}&doc_no={$value['doc_no']}&pdfPage=1&model=DOC_DE_DOWNLOAD");
-            $sheet->getStyle("{$col}{$rowCnt}")->applyFromArray($link_style_array);
+            if($col == "N") {
+                $sheet->getStyle("{$col}{$rowCnt}")->applyFromArray($link_style_array);
+            }
+            if($value["doc_status_nick"] == "R") {
+                $sheet->getStyle("{$col}{$rowCnt}")->getFont()->setStrikethrough(true);
+            }
             $col++;
             $sheet->setCellValue("{$col}{$rowCnt}", $value["hist_reply_date_str"]);
             if($value["hist_reply_date_str"]) {
-                // $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_RE_DOWNLOAD&jno={$jno}&doc_no={$value['doc_no']}&webview=Y");
                 $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/pdfViewer.php?jno={$jno}&doc_no={$value['doc_no']}&pdfPage=1&model=DOC_LE_DOWNLOAD");
-                $sheet->getStyle("{$col}{$rowCnt}")->applyFromArray($link_style_array);
+                if($col == "O") {
+                    $sheet->getStyle("{$col}{$rowCnt}")->applyFromArray($link_style_array);
+                }
+            }
+            if($value["doc_status_nick"] == "R") {
+                $sheet->getStyle("{$col}{$rowCnt}")->getFont()->setStrikethrough(true);
             }
             $col++;
+            $sheet->setCellValue("{$col}{$rowCnt}", $value["doc_status_nick"]);
+            $col++;
         }
+
+        // final 서식
+        if($latestData[$i]->doc_status_nick == "F") {
+            $sheet->getStyle("A{$rowCnt}:{$lastCol}{$rowCnt}")->applyFromArray($final_style_array);
+        }
+        // 하이퍼 링크
+        $sheet->getStyle("G{$rowCnt}")->applyFromArray($link_style_array);
+        $sheet->getStyle("H{$rowCnt}")->applyFromArray($link_style_array);
+        $sheet->getStyle("N{$rowCnt}")->applyFromArray($link_style_array);
+        $sheet->getStyle("O{$rowCnt}")->applyFromArray($link_style_array);
 
         $rowCnt++;
     }
@@ -196,7 +234,7 @@ if($responseResult->ResultType = "Success") {
 
 // 10차수 이상일 경우 숨기기
 if($maxSeq > 10) {
-    for($col='AH'; true; $col++) {
+    for($col='AU'; true; $col++) {
         // $sheet->getRowDimension($col)->setOutlineLevel(1);
         $sheet->getColumnDimension($col)->setVisible(false);
         if($col == $lastCol) {
@@ -209,9 +247,9 @@ if($maxSeq > 10) {
 $sheet->getStyle('B3:B'.$rowCnt)->getAlignment()->setIndent(1);
 $sheet->getStyle('D3:D'.$rowCnt)->getAlignment()->setIndent(1);
 $sheet->getStyle('F3:F'.$rowCnt)->getAlignment()->setIndent(1);
-$sheet->getStyle('I3:I'.$rowCnt)->getAlignment()->setIndent(1);
-$sheet->getStyle('J3:J'.$rowCnt)->getAlignment()->setIndent(1);
-$sheet->getStyle('K3:K'.$rowCnt)->getAlignment()->setIndent(1);
+$sheet->getStyle('L3:L'.$rowCnt)->getAlignment()->setIndent(1);
+$sheet->getStyle('M3:M'.$rowCnt)->getAlignment()->setIndent(1);
+$sheet->getStyle('M1')->getAlignment()->setIndent(1);
 
 // 자동 필터
 $spreadsheet->getActiveSheet()->setAutoFilter("A3:{$lastCol}{$rowCnt}");
@@ -221,16 +259,13 @@ $rowCnt--;
 $sheet->getStyle("A2:{$lastCol}{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
 // 헤더 칼럼 가운데 정렬
-$sheet->getStyle('G1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('H1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
 $sheet->getStyle("A2:{$lastCol}3")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
 // 행 가운데 정렬
 $sheet->getStyle('A4:A'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle('C4:C'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle('E4:E'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('G4:H'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('L4:M'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('G4:K'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle("N4:{$lastCol}{$rowCnt}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
 // 셀 높이
@@ -253,18 +288,18 @@ $sheet->getColumnDimension('D')->setAutoSize(true);
 // $sheet->getColumnDimension('D')->setWidth(50);
 $sheet->getColumnDimension('E')->setWidth(20);
 $sheet->getColumnDimension('F')->setWidth(28);
-$sheet->getColumnDimension('G')->setWidth(11);
-$sheet->getColumnDimension('H')->setWidth(11);
-$sheet->getColumnDimension('I')->setWidth(20);
+$sheet->getColumnDimension('G')->setAutoSize(true);
+$sheet->getColumnDimension('H')->setAutoSize(true);
+$sheet->getColumnDimension('I')->setWidth(9);
 // $sheet->getColumnDimension('I')->setAutoSize(true);
-$sheet->getColumnDimension('J')->setAutoSize(true);
+$sheet->getColumnDimension('J')->setWidth(9);
 // $sheet->getColumnDimension('J')->setWidth(35);
-$sheet->getColumnDimension('K')->setWidth(60);
+$sheet->getColumnDimension('K')->setWidth(20);
 // $sheet->getColumnDimension('K')->setAutoSize(true);
-$sheet->getColumnDimension('L')->setWidth(6);
-$sheet->getColumnDimension('M')->setWidth(7);
+$sheet->getColumnDimension('L')->setAutoSize(true);
+$sheet->getColumnDimension('M')->setWidth(60);
 
-// 배포일/회신일 history 너비
+// 회람일/회신일 history 너비
 for($col='N'; true; $col++) {
     $sheet->getColumnDimension($col)->setAutoSize(true);
     if($col == $lastCol) {

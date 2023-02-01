@@ -401,7 +401,12 @@ var vm = new Vue({
                             tempArray = [];
                             $.each(historyList, function(i, info) {
                                 if(ms_no == info["ms_no"]) {
-                                    tempArray.push({hist_distribute_date_str: info["hist_distribute_date_str"], hist_reply_date_str: info["hist_reply_date_str"], doc_no: info["doc_no"]});
+                                    tempArray.push({
+                                        hist_distribute_date_str: info["hist_distribute_date_str"],
+                                        hist_reply_date_str: info["hist_reply_date_str"],
+                                        doc_no: info["doc_no"],
+                                        doc_status_nick: info["doc_status_nick"]
+                                    });
                                 }
                             });
                             // tempArray = tempArray.reverse();
