@@ -41,8 +41,10 @@ $today = new DateTime();
 $dateTime = $today->format('Y-m-d H:i');
 $sheet->setCellValue('A1', "JNO : " . $jno );
 $sheet->setCellValue('C1', "PROJECT : " . $jobName);
-$sheet->setCellValue('M1', "기준일시 : " . $dateTime);
+$sheet->getStyle("A1:C1")->getFont()->setSize(12);
 $sheet->setCellValue('J1', "※ Result Code가 R인 경우 회람횟수에 미포함");
+$sheet->getStyle("J1")->getFont()->getColor()->setRGB('FF0000');
+$sheet->setCellValue('M1', "기준일시 : " . $dateTime);
 $sheet->getStyle('M1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 
 $sheet->setCellValue('A2', "공종");
@@ -220,13 +222,15 @@ if($responseResult->ResultType = "Success") {
 
         // final 서식
         if($latestData[$i]->doc_status_nick == "F") {
-            $sheet->getStyle("A{$rowCnt}:{$lastCol}{$rowCnt}")->applyFromArray($final_style_array);
+            $sheet->getStyle("A{$rowCnt}:M{$rowCnt}")->applyFromArray($final_style_array);
         }
         // 하이퍼 링크
         $sheet->getStyle("G{$rowCnt}")->applyFromArray($link_style_array);
         $sheet->getStyle("H{$rowCnt}")->applyFromArray($link_style_array);
+        $sheet->getStyle("I{$rowCnt}")->applyFromArray($link_style_array);
         $sheet->getStyle("N{$rowCnt}")->applyFromArray($link_style_array);
         $sheet->getStyle("O{$rowCnt}")->applyFromArray($link_style_array);
+        $sheet->getStyle("P{$rowCnt}")->applyFromArray($link_style_array);
 
         $rowCnt++;
     }
@@ -269,7 +273,8 @@ $sheet->getStyle('G4:K'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSp
 $sheet->getStyle("N4:{$lastCol}{$rowCnt}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
 // 셀 높이
-for($i = 1; $i <= $rowCnt; $i++) {
+$sheet->getRowDimension(1)->setRowHeight(15);
+for($i = 2; $i <= $rowCnt; $i++) {
     $sheet->getRowDimension($i)->setRowHeight(-1);
 }
 
