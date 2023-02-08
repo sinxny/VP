@@ -368,7 +368,7 @@ table .row {
 
 .tableFixHead { 
     overflow-y: auto; 
-    height: 70vh; 
+    height: 80vh; 
 }
 .tableFixHead thead {
     z-index: 1;

@@ -105,7 +105,14 @@ $(document).ready(function() {
     });
 
     // 화면 보이기
-    showContent("vpLatest");
+    var subMenu = '';
+    if (sessionStorage.getItem("subMenu")) {
+        subMenu = sessionStorage.getItem("subMenu");
+    } else {
+        subMenu = "vpLatest";
+    }
+    activeSubMenu($("#" + subMenu));
+    showContent(subMenu);
 
     // 모바일 header 조정
     if($(window).width() <= 576) {
@@ -147,11 +154,6 @@ $(document).ready(function() {
     var thOrganization = $('#tblOrganization').find('thead th');
     $('#tblOrganization').closest('div.tableFixHead-modal').on('scroll', function() {
         thOrganization.css('transform', 'translateY('+ this.scrollTop +'px)');
-    });
-
-    // subMenu Active
-    $(".tree .branch li").on('click', function() {
-        $(this).find("a").addClass("active");
     });
 
     // JOB선택 모달 open
@@ -250,10 +252,9 @@ function showSubMenu() {
 // 메인화면 보이기
 function showContent(subMenu) {
     $("#vdcsContent").empty();
-    $("#subMenu").val(subMenu);
 
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "get_content_url.php",
         data: {subMenu: subMenu},
         dataType: "json",
@@ -549,6 +550,18 @@ function collapseTree(obj) {
         $(obj).siblings("ul").show();
     }
 }
+
+// subMenu Click
+function activeSubMenu(obj) {
+    $(".branch").find("a").removeClass("active");
+
+    $(obj).addClass("active");
+
+    sessionStorage.setItem("subMenu", $(obj).attr("id"));
+
+    showContent($(obj).attr("id"));
+}
+
 </script>
 <nav id="navHeader" class="navbar-nav-main-menu navbar navbar-expand-sm navbar-dark fixed-top nav-color nav-main-link row">
     <div class="col-6">
@@ -625,8 +638,28 @@ function collapseTree(obj) {
             <span style="width:min-content" onclick="collapseTree(this)"><i class="indicator fas fa-minus-circle"></i>Document</span>
             <ul>
                 <li>
-                    <a id="vpLatest" class="active">VDCS - Latest</span></a>
+                    <a id="vpLatest" class="active" onclick="activeSubMenu(this)">VDCS - Latest</span></a>
                 </li>
+            </ul>
+        </li>
+        <li class="branch">
+            <span style="width:min-content" onclick="collapseTree(this)"><i class="indicator fas fa-minus-circle"></i>Welding</span>
+            <ul>
+                <li>
+                    <a id="WELDING_DAY" onclick="activeSubMenu(this)">WELDING DAY</span></a>
+                </li>
+                <!-- <li>
+                    <a id="Report2" onclick="activeSubMenu(this)">Report2</span></a>
+                </li>
+                <li>
+                    <a id="Report3" onclick="activeSubMenu(this)">Report3</span></a>
+                </li>
+                <li>
+                    <a id="Report4" onclick="activeSubMenu(this)">Report4</span></a>
+                </li>
+                <li>
+                    <a id="Report5" onclick="activeSubMenu(this)">Report5</span></a>
+                </li> -->
             </ul>
         </li>
     </ul>
