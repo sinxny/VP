@@ -50,48 +50,49 @@ var vm = new Vue({
         getWeldingDayData() {
         var data = this;
         var jno = data.jno;
-
-        var url = "http://wcfservice.hi-techeng.co.kr/apipwim/getweldingtoday?jno="+ jno +"&today=" + this.weldingDate;
-        axios.get(url).then(
-            function(response) {
-                var welding = response["data"];
-                if(welding["ResultType"] == "Success") {
-                    data.weldingDayList = welding["Value"];
-                    data.noData = false;
-                } else {
-                    data.noData = true;
-                }
-            })
-            .finally(function () {
-                // 같은 Company 행 병합
-                var rowCompany = [];
-                $(".rowspanCom").each(function() {
-                    var textCom = $(this).text();
-                    var rows = $(".rowspanCom").filter(function() {
-                        return $(this).text() === textCom;
-                    })
-                    if(rows.length > 1) {
-                        rows.eq(0).attr("rowspan", rows.length);
-                        rows.not(":eq(0)").remove();
+        if(jno) {
+            var url = "https://wcfservice.htenc.co.kr/apipwim/getweldingtoday?jno="+ jno +"&today=" + this.weldingDate;
+            axios.get(url).then(
+                function(response) {
+                    var welding = response["data"];
+                    if(welding["ResultType"] == "Success") {
+                        data.weldingDayList = welding["Value"];
+                        data.noData = false;
+                    } else {
+                        data.noData = true;
                     }
-                    rowCompany.push(textCom);
-                });
-                var company = [...new Set(rowCompany)];
-
-                // 같은 Area 행 병합
-                $(company).each(function(i, com) {
-                    $("." + com).each(function() {
+                })
+                .finally(function () {
+                    // 같은 Company 행 병합
+                    var rowCompany = [];
+                    $(".rowspanCom").each(function() {
                         var textCom = $(this).text();
-                        var rows = $("." + com).filter(function() {
+                        var rows = $(".rowspanCom").filter(function() {
                             return $(this).text() === textCom;
                         })
                         if(rows.length > 1) {
                             rows.eq(0).attr("rowspan", rows.length);
                             rows.not(":eq(0)").remove();
                         }
-                    })
+                        rowCompany.push(textCom);
+                    });
+                    var company = [...new Set(rowCompany)];
+    
+                    // 같은 Area 행 병합
+                    $(company).each(function(i, com) {
+                        $("." + com).each(function() {
+                            var textCom = $(this).text();
+                            var rows = $("." + com).filter(function() {
+                                return $(this).text() === textCom;
+                            })
+                            if(rows.length > 1) {
+                                rows.eq(0).attr("rowspan", rows.length);
+                                rows.not(":eq(0)").remove();
+                            }
+                        })
+                    });
                 });
-            });
+            }
         },
         // 최신목록 내보내기
         exportWeldingExcel() {
@@ -221,12 +222,12 @@ var vm = new Vue({
 </script>
 <div id="app" style="margin-bottom:30px">
 <form id="mainForm" name="mainForm">
-<div class="row mb-1" v-show="!noData">
+<div class="row mb-1" v-show="!noData && jno">
     <!-- <div class="col-md-1">
         <i class="fa-solid fa-magnifying-glass"></i> <b style="font-size:large">Search</b>
     </div> -->
     <div class="col-md text-right">
-        <span class="d-flex flex-row-reverse" v-show="jno">
+        <span class="d-flex flex-row-reverse" v-show="!noData">
             <!-- <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="selDocDownload" :disabled="selectList.length == 0" title="선택 다운로드">
                 <i class="fa-solid fa-check" style="font-size:large"></i> 선택 다운로드
             </button>
@@ -241,7 +242,7 @@ var vm = new Vue({
         <!-- <button type="button" class="btn btn-outline-dark btn-sm" v-html="icon" @click="collapseChange"></button> -->
     </div>
 </div>
-<div v-show="!noData">
+<div v-show="!noData && jno">
     <div class="tableFixHead">
         <table class="table table-bordered" id="tblWeldingDay">
             <thead>

@@ -1,6 +1,16 @@
 <?php include __DIR__ . "/_inc.php";
 $isLogin = @$_SESSION["user"]["user_id"];
 
+// 도메인
+$domain = strtoupper($_SERVER["HTTP_HOST"]);
+if($domain == "DOCS.HTENC.CO.KR" || $domain == "VP.SEPARK2111") {
+	$menuRight = "all";
+} else if($domain == "VP.HTENC.CO.KR") {
+	$menuRight = "vp";
+} else if($domain == "CM.HTENC.CO.KR") {
+	$menuRight = "cm";
+}
+
 if(isset($_REQUEST) && array_key_exists("sid", $_REQUEST) && isset($_REQUEST["sid"]) && is_null($_REQUEST["sid"]) != true && $_REQUEST["sid"] != ""){
 	if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
 	{

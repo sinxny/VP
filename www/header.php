@@ -65,6 +65,19 @@ if($isLogin) {
 ?>
 <script>
 $(document).ready(function() {
+    // 도메인 별 권한
+    $menuRight = '<?php echo $menuRight?>';
+    if($menuRight == "all") {
+        $("#vdcs").show();
+        $("#welding").show();
+    } else if($menuRight == "vp") {
+        $("#vdcs").show();
+        $("#welding").hide();
+    } else if($menuRight == "cm") {
+        $("#vdcs").hide();
+        $("#welding").show();
+    }
+
     //JOB 표시
     if(sessionStorage.getItem('jobName')) {
         $("#pjtJobName").val(sessionStorage.getItem('jobName'));
@@ -108,6 +121,8 @@ $(document).ready(function() {
     var subMenu = '';
     if (sessionStorage.getItem("subMenu")) {
         subMenu = sessionStorage.getItem("subMenu");
+    }  else if($menuRight == "cm") {
+        subMenu = "WELDING_DAY";
     } else {
         subMenu = "vpLatest";
     }
@@ -155,17 +170,6 @@ $(document).ready(function() {
     $('#tblOrganization').closest('div.tableFixHead-modal').on('scroll', function() {
         thOrganization.css('transform', 'translateY('+ this.scrollTop +'px)');
     });
-
-    // JOB선택 모달 open
-    $('#jobSelWindow').on('open', function (event) { 
-        // var obj = $("input[type='textarea']")[4];
-        // $(obj).focus();
-
-        // $('#jobListGrid').jqxGrid('focus');
-
-        
-        // firstFilterInput.focus();
-    }); 
 });
 
 //로그아웃 버튼
@@ -634,7 +638,7 @@ function activeSubMenu(obj) {
 <!-- </nav> -->
 <div id="subMenu" style="padding-top: 0.5rem;font-size:14px !important">
     <ul class="tree">
-        <li class="branch">
+        <li class="branch" id="vdcs">
             <span style="width:min-content" onclick="collapseTree(this)"><i class="indicator fas fa-minus-circle"></i>Document</span>
             <ul>
                 <li>
@@ -642,7 +646,7 @@ function activeSubMenu(obj) {
                 </li>
             </ul>
         </li>
-        <li class="branch">
+        <li class="branch" id="welding">
             <span style="width:min-content" onclick="collapseTree(this)"><i class="indicator fas fa-minus-circle"></i>Welding</span>
             <ul>
                 <li>
