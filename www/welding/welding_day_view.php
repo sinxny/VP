@@ -216,6 +216,15 @@ var vm = new Vue({
                     data.ajaxDownload(url);
                 }
             });
+        },
+        // 날짜 데이터 변경
+        weldingDateChange() {
+            var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
+            if ( !regex.test(this.weldingDate) ) {
+                alert("날짜는 형식이 잘못되었습니다.");
+            } else {
+                this.getWeldingDayData();
+            }
         }
     }
 })
@@ -237,7 +246,7 @@ var vm = new Vue({
             <button type="button" class="btn btn-outline-primary btn-sm text-left ml-3 text-center" style="width:130px;" @click="exportWeldingExcel" title="목록 내보내기">
                 <i class="fa-solid fa-file-export" style="font-size:large"></i> 목록 내보내기
             </button>
-            <input type="date" class="form-control" style="height:30px" v-model="weldingDate"/>
+            <input type="date" class="form-control" style="height:30px" v-model="weldingDate" @change="weldingDateChange"/>
         </span>
         <!-- <button type="button" class="btn btn-outline-dark btn-sm" v-html="icon" @click="collapseChange"></button> -->
     </div>

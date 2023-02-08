@@ -49,7 +49,7 @@ $sheet->mergeCells("I1:J1");
 $sheet->setCellValue('C2', "해당사항 없는 ITEM은 미출력되도록");
 $sheet->setCellValue('H2', "Period");
 $sheet->getStyle('H2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-$sheet->setCellValue('I2', "2021-05-06");
+$sheet->setCellValue('I2', $weldingDate);
 $sheet->mergeCells("I2:J2");
 $sheet->getStyle("I1:I2")->getFont()->setBold(true);
 $sheet->getStyle("I1:I2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
