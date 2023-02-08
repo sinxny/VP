@@ -28,7 +28,8 @@ var vm = new Vue({
         jno : sessionStorage.getItem("jno"),
         jobName : sessionStorage.getItem("jobName"),
         isDownError: false,
-        weldingDate : new Date().toISOString().substring(0, 10)
+        weldingDate : new Date().toISOString().substring(0, 10),
+        noData : false
     },
     created() {
         // 최신문서 데이터 불러오기
@@ -56,6 +57,9 @@ var vm = new Vue({
                 var welding = response["data"];
                 if(welding["ResultType"] == "Success") {
                     data.weldingDayList = welding["Value"];
+                    data.noData = false;
+                } else {
+                    data.noData = true;
                 }
             })
             .finally(function () {
@@ -217,7 +221,7 @@ var vm = new Vue({
 </script>
 <div id="app" style="margin-bottom:30px">
 <form id="mainForm" name="mainForm">
-<div class="row mb-1">
+<div class="row mb-1" v-show="!noData">
     <!-- <div class="col-md-1">
         <i class="fa-solid fa-magnifying-glass"></i> <b style="font-size:large">Search</b>
     </div> -->
@@ -237,7 +241,7 @@ var vm = new Vue({
         <!-- <button type="button" class="btn btn-outline-dark btn-sm" v-html="icon" @click="collapseChange"></button> -->
     </div>
 </div>
-<div v-show="jno">
+<div v-show="!noData">
     <div class="tableFixHead">
         <table class="table table-bordered" id="tblWeldingDay">
             <thead>
@@ -273,6 +277,9 @@ var vm = new Vue({
 </div>
 <div class="alert alert-success text-center" v-show="!jno">
   <strong>PROJECT를 선택하세요.</strong>
+</div>
+<div class="alert alert-warning" v-show="noData">
+    <strong>조건에 맞는 결과가 없습니다.</strong>
 </div>
 <div id="modalLoading" class="modal modal-loading" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
