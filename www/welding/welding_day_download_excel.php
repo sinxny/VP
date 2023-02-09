@@ -142,20 +142,50 @@ if($responseResult->ResultType = "Success") {
             $sheet->getStyle("A{$rowCnt}:J{$rowCnt}")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('F4B084');
         }
         // Total
-        $sheet->setCellValue('D'.$rowCnt, $weldingData[$i]->Total);
+        $total = str_replace(",", "", $weldingData[$i]->Total);
+        $sheet->setCellValue('D'.$rowCnt, $total);
+        if(strpos($total, ".")) {
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // Previous
-        $sheet->setCellValue('E'.$rowCnt, $weldingData[$i]->Previous);
+        $previous = str_replace(",", "", $weldingData[$i]->Previous);
+        $sheet->setCellValue('E'.$rowCnt, $previous);
+        if(strpos($previous, ".")) {
+            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // To Day Work
-        $sheet->setCellValue('F'.$rowCnt, $weldingData[$i]->{'To Day Work'});
+        $to_day_work = str_replace(",", "", $weldingData[$i]->{'To Day Work'});
+        $sheet->setCellValue('F'.$rowCnt, $to_day_work);
+        if(strpos($to_day_work, ".")) {
+            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // Accumulative
-        $sheet->setCellValue('G'.$rowCnt, $weldingData[$i]->Accumulative);
+        $accumulative = str_replace(",", "", $weldingData[$i]->Accumulative);
+        $sheet->setCellValue('G'.$rowCnt, $accumulative);
+        if(strpos($accumulative, ".")) {
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // Remain
-        $sheet->setCellValue('H'.$rowCnt, $weldingData[$i]->Remain);
+        $remain = str_replace(",", "", $weldingData[$i]->Remain);
+        $sheet->setCellValue('H'.$rowCnt, $remain);
+        if(strpos($remain, ".")) {
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // Work Progress
         $sheet->setCellValue('I'.$rowCnt, $weldingData[$i]->{'Work Progress'});
         // Remark
         $sheet->setCellValue('J'.$rowCnt, $weldingData[$i]->Remark);
-
+        
         $rowCnt++;
     }
 }
