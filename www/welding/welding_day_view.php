@@ -17,6 +17,9 @@
 .areaColor {
     background-color: #A9D08E;
 }
+#tblWeldingDay td, #tblWeldingDay th {
+    border: 1px solid #A0A0A0;
+}
 </style>
 <script>
 var vm = new Vue({
@@ -29,7 +32,8 @@ var vm = new Vue({
         jobName : sessionStorage.getItem("jobName"),
         isDownError: false,
         weldingDate : new Date().toISOString().substring(0, 10),
-        noData : false
+        noData : false,
+        isChangeData : false
     },
     created() {
         // 최신문서 데이터 불러오기
@@ -56,54 +60,61 @@ var vm = new Vue({
                 function(response) {
                     var welding = response["data"];
                     if(welding["ResultType"] == "Success") {
-                        data.weldingDayList = welding["Value"];
+                        if(data.weldingDayList == welding["Value"]) {
+                            data.isChangeData = false;
+                        } else {
+                            data.isChangeData = true;
+                            data.weldingDayList = welding["Value"];
+                        }
                         data.noData = false;
                     } else {
                         data.noData = true;
                     }
                 })
                 .finally(function () {
-                    // 같은 Company 행 병합
-                    $(".rowspanCom").each(function() {
-                        var textCom = $(this).text();
-                        var rows = $(".rowspanCom").filter(function() {
-                            return $(this).text() === textCom;
-                        })
-                        if(rows.length > 1) {
-                            rows.eq(0).attr("rowspan", rows.length);
-                            rows.not(":eq(0)").remove();
-                        }
-                    });
-
-                    // 같은 Area 행 병합
-                    var sameCnt = 1;
-                    var criteria = '';
-                    var area = '';
-                    var removeObj = [];
-                    $(".rowspanArea").each(function(i, obj) {
-                        if(area == $(obj).text()) {
-                            sameCnt++;
-                        } else {
-                            $(".rowspanArea").eq(criteria).attr("rowspan", sameCnt);
-                            for(var j = 1; j <= sameCnt - 1; j++) {
-                                removeObj.push(criteria + j);
+                    if(data.isChangeData) {
+                        // 같은 Company 행 병합
+                        $(".rowspanCom").each(function() {
+                            var textCom = $(this).text();
+                            var rows = $(".rowspanCom").filter(function() {
+                                return $(this).text() === textCom;
+                            })
+                            if(rows.length > 1) {
+                                rows.eq(0).attr("rowspan", rows.length);
+                                rows.not(":eq(0)").remove();
                             }
-                            sameCnt = 1;
-                            criteria = i;
-                        }
-                        area = $(obj).text();
-                    });
-
-                    $.each(removeObj.reverse(), function(i, num) {
-                        $(".rowspanArea").eq(num).remove();
-                    });
+                        });
+    
+                        // 같은 Area 행 병합
+                        var sameCnt = 1;
+                        var criteria = '';
+                        var area = '';
+                        var removeObj = [];
+                        $(".rowspanArea").each(function(i, obj) {
+                            if(area == $(obj).text()) {
+                                sameCnt++;
+                            } else {
+                                $(".rowspanArea").eq(criteria).attr("rowspan", sameCnt);
+                                for(var j = 1; j <= sameCnt - 1; j++) {
+                                    removeObj.push(criteria + j);
+                                }
+                                sameCnt = 1;
+                                criteria = i;
+                            }
+                            area = $(obj).text();
+                        });
+    
+                        $.each(removeObj.reverse(), function(i, num) {
+                            $(".rowspanArea").eq(num).hide();
+                        });
+                    }
                 });
             }
         },
         // 최신목록 내보내기
         exportWeldingExcel() {
             var url = "welding/welding_day_download_excel.php?jno=" + this.jno + "&weldingDate=" + this.weldingDate + "&jobName=" + this.jobName;
-            this.ajaxDownload(url);
+            this.axiosDownload(url, "POST");
         },
         // 쿠키 삭제
         deleteCookie(name) {
@@ -301,7 +312,7 @@ var vm = new Vue({
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <i class="fa fa-spinner fa-pulse fa-3x text-primary"></i>
-            <div id="percent" style="padding:1rem;color:white;display:none"></div>
+            <!-- <div id="percent" style="padding:1rem;color:white;display:none"></div> -->
         </div>
     </div>
 </div>
