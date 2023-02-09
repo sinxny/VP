@@ -39,19 +39,20 @@ $jobName = $_GET["jobName"];
 $weldingDate = $_GET["weldingDate"];
 
 // 헤더
-$today = new DateTime();
-$dateTime = $today->format('Y-m-d H:i');
-$sheet->setCellValue('C1', $jobName);
-$sheet->setCellValue('D1', $jno);
-$sheet->getStyle('D1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-$sheet->setCellValue('I1', "By Day");
-$sheet->mergeCells("I1:J1");
-$sheet->setCellValue('C2', "해당사항 없는 ITEM은 미출력되도록");
+// $today = new DateTime();
+// $dateTime = $today->format('Y-m-d H:i');
+$sheet->setCellValue('A1', $jobName);
+$sheet->mergeCells("A1:J1");
+$sheet->getStyle('A1')->getFont()->setSize(16);
+$sheet->setCellValue('A2', "Daily Report");
+$sheet->mergeCells("A2:B2");
+$sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle("A1:A2")->getFont()->setBold(true);
 $sheet->setCellValue('H2', "Period");
 $sheet->getStyle('H2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 $sheet->setCellValue('I2', $weldingDate);
 $sheet->mergeCells("I2:J2");
-$sheet->getStyle("I1:I2")->getFont()->setBold(true);
+$sheet->getStyle("I2")->getFont()->setBold(true);
 $sheet->getStyle("I1:I2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle("I2:I2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
 

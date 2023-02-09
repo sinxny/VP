@@ -60,54 +60,47 @@ var vm = new Vue({
                 function(response) {
                     var welding = response["data"];
                     if(welding["ResultType"] == "Success") {
-                        if(data.weldingDayList == welding["Value"]) {
-                            data.isChangeData = false;
-                        } else {
-                            data.isChangeData = true;
-                            data.weldingDayList = welding["Value"];
-                        }
+                        data.weldingDayList = welding["Value"];
                         data.noData = false;
                     } else {
                         data.noData = true;
                     }
                 })
                 .finally(function () {
-                    if(data.isChangeData) {
-                        // 같은 Company 행 병합
-                        $(".rowspanCom").each(function() {
-                            var textCom = $(this).text();
-                            var rows = $(".rowspanCom").filter(function() {
-                                return $(this).text() === textCom;
-                            })
-                            if(rows.length > 1) {
-                                rows.eq(0).attr("rowspan", rows.length);
-                                rows.not(":eq(0)").remove();
+                    // 같은 Company 행 병합
+                    $(".rowspanCom").each(function() {
+                        var textCom = $(this).text();
+                        var rows = $(".rowspanCom").filter(function() {
+                            return $(this).text() === textCom;
+                        })
+                        if(rows.length > 1) {
+                            rows.eq(0).attr("rowspan", rows.length);
+                            rows.not(":eq(0)").remove();
+                        }
+                    });
+
+                    // 같은 Area 행 병합
+                    var sameCnt = 1;
+                    var criteria = '';
+                    var area = '';
+                    var removeObj = [];
+                    $(".rowspanArea").each(function(i, obj) {
+                        if(area == $(obj).text()) {
+                            sameCnt++;
+                        } else {
+                            $(".rowspanArea").eq(criteria).attr("rowspan", sameCnt);
+                            for(var j = 1; j <= sameCnt - 1; j++) {
+                                removeObj.push(criteria + j);
                             }
-                        });
-    
-                        // 같은 Area 행 병합
-                        var sameCnt = 1;
-                        var criteria = '';
-                        var area = '';
-                        var removeObj = [];
-                        $(".rowspanArea").each(function(i, obj) {
-                            if(area == $(obj).text()) {
-                                sameCnt++;
-                            } else {
-                                $(".rowspanArea").eq(criteria).attr("rowspan", sameCnt);
-                                for(var j = 1; j <= sameCnt - 1; j++) {
-                                    removeObj.push(criteria + j);
-                                }
-                                sameCnt = 1;
-                                criteria = i;
-                            }
-                            area = $(obj).text();
-                        });
-    
-                        $.each(removeObj.reverse(), function(i, num) {
-                            $(".rowspanArea").eq(num).hide();
-                        });
-                    }
+                            sameCnt = 1;
+                            criteria = i;
+                        }
+                        area = $(obj).text();
+                    });
+
+                    $.each(removeObj.reverse(), function(i, num) {
+                        $(".rowspanArea").eq(num).hide();
+                    });
                 });
             }
         },
