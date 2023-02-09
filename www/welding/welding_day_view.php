@@ -238,7 +238,7 @@ var vm = new Vue({
         weldingDateChange() {
             var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
             if ( !regex.test(this.weldingDate) ) {
-                alert("날짜는 형식이 잘못되었습니다.");
+                alert("날짜 값이 잘못되었습니다.");
             } else {
                 this.getWeldingDayData();
             }
