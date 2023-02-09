@@ -64,7 +64,6 @@ var vm = new Vue({
                 })
                 .finally(function () {
                     // 같은 Company 행 병합
-                    var rowCompany = [];
                     $(".rowspanCom").each(function() {
                         var textCom = $(this).text();
                         var rows = $(".rowspanCom").filter(function() {
@@ -74,22 +73,29 @@ var vm = new Vue({
                             rows.eq(0).attr("rowspan", rows.length);
                             rows.not(":eq(0)").remove();
                         }
-                        rowCompany.push(textCom);
                     });
-                    var company = [...new Set(rowCompany)];
-    
+
                     // 같은 Area 행 병합
-                    $(company).each(function(i, com) {
-                        $("." + com).each(function() {
-                            var textCom = $(this).text();
-                            var rows = $("." + com).filter(function() {
-                                return $(this).text() === textCom;
-                            })
-                            if(rows.length > 1) {
-                                rows.eq(0).attr("rowspan", rows.length);
-                                rows.not(":eq(0)").remove();
+                    var sameCnt = 1;
+                    var criteria = '';
+                    var area = '';
+                    var removeObj = [];
+                    $(".rowspanArea").each(function(i, obj) {
+                        if(area == $(obj).text()) {
+                            sameCnt++;
+                        } else {
+                            $(".rowspanArea").eq(criteria).attr("rowspan", sameCnt);
+                            for(var j = 1; j <= sameCnt - 1; j++) {
+                                removeObj.push(criteria + j);
                             }
-                        })
+                            sameCnt = 1;
+                            criteria = i;
+                        }
+                        area = $(obj).text();
+                    });
+
+                    $.each(removeObj.reverse(), function(i, num) {
+                        $(".rowspanArea").eq(num).remove();
                     });
                 });
             }
@@ -271,7 +277,7 @@ var vm = new Vue({
             <tbody>
                 <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
                     <td class="rowspanCom text-center" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">{{ welding.Company }}</td>
-                    <td :class="[`${welding.Company}`,{'areaColor' : (welding.Level) == ''}]" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')" style="padding-left:10px !important">{{ welding.Area }}</td>
+                    <td :class="['rowspanArea' ,{'areaColor' : (welding.Level) == ''}]" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')" style="padding-left:10px !important">{{ welding.Area }}</td>
                     <td :class="{'materialGrp' : (welding.Level) == ''}" v-if="(welding.Level > 2) || (welding.Level == '')" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
                     <td class="text-right" style="padding-right:10px !important">{{ welding.Total }}</td>
                     <td class="text-right" style="padding-right:10px !important">{{ welding.Previous }}</td>
