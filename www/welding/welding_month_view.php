@@ -42,7 +42,7 @@ var vm = new Vue({
 
         // 31일전 날짜를 기본값으로
         var now = new Date();
-        var ntDate = new Date(now.setDate(now.getDate() - 31));
+        var ntDate = new Date(now.setDate(now.getDate() - 30));
         var year = ntDate.getFullYear();
         var month = String(ntDate.getMonth() + 1);
         month = month.padStart(2, '0');
@@ -59,7 +59,7 @@ var vm = new Vue({
         var data = this;
         var jno = data.jno;
         if(jno) {
-            var url = "http://wcfservice.htenc.co.kr/apipwim/getweldingmonth?jno=" + this.jno + "&today=" + this.weldingDate;
+            var url = "https://wcfservice.htenc.co.kr/apipwim/getweldingmonth?jno=" + this.jno + "&today=" + this.weldingDate;
             axios.get(url).then(
                 function(response) {
                     var welding = response["data"];
