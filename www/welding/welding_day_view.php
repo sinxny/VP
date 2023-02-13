@@ -16,9 +16,13 @@
 }
 .areaColor {
     background-color: #A9D08E;
+    text-align: center;
 }
 #tblWeldingDay td, #tblWeldingDay th {
     border: 1px solid #A0A0A0;
+}
+.weldingSum {
+    padding-left: 10px !important;
 }
 </style>
 <script>
@@ -266,22 +270,22 @@ var vm = new Vue({
         <table class="table table-bordered" id="tblWeldingDay">
             <thead>
                 <tr class="table-primary">
-                    <th>Company</th>
-                    <th>Area</th>
-                    <th>Material Group</th>
-                    <th>Total</th>
-                    <th>Previous</th>
-                    <th>To Day Work</th>
-                    <th>Accumulative</th>
-                    <th>Remain</th>
-                    <th>Work Progress(%)</th>
+                    <th style="width:8%">Company</th>
+                    <th style="width:8%">Area</th>
+                    <th style="width:8%">Material Group</th>
+                    <th style="width:9%">Total</th>
+                    <th style="width:9%">Previous</th>
+                    <th style="width:9%">To Day Work</th>
+                    <th style="width:9%">Accumulative</th>
+                    <th style="width:9%">Remain</th>
+                    <th style="width:9%">Work Progress(%)</th>
                     <th>Remark</th>
                 </tr>
             </thead>
             <tbody>
                 <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
                     <td class="rowspanCom text-center" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">{{ welding.Company }}</td>
-                    <td :class="['rowspanArea' ,{'areaColor' : (welding.Level) == ''}]" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')" style="padding-left:10px !important">{{ welding.Area }}</td>
+                    <td :class="['rowspanArea' ,{'areaColor' : (welding.Level) == ''},{'weldingSum' : (welding.Level) == 2}]" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')">{{ welding.Area }}</td>
                     <td :class="{'materialGrp' : (welding.Level) == ''}" v-if="(welding.Level > 2) || (welding.Level == '')" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
                     <td class="text-right" style="padding-right:10px !important">{{ welding.Total }}</td>
                     <td class="text-right" style="padding-right:10px !important">{{ welding.Previous }}</td>

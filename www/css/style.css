@@ -355,7 +355,7 @@ body {
     margin-bottom: 0;
 }
 .table td, .table th {
-    padding: 0.25rem !important;
+    padding: 0.25rem;
     vertical-align: middle !important;
 }
 .table:not(.table-bordered):not(.table-borderless) tr:last-child td {

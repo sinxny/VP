@@ -16,9 +16,23 @@
 }
 .areaColor {
     background-color: #A9D08E;
+    text-align: center;
 }
 .tblWeldingMonth td, .tblWeldingMonth th {
     border: 1px solid #A0A0A0;
+}
+.weldingSum {
+    padding-left: 10px !important;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.noScroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.noScroll {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 </style>
 <script>
@@ -52,6 +66,27 @@ var vm = new Vue({
 
         // 최신문서 데이터 불러오기
         this.getWeldingMonthData();
+    },
+    mounted() {
+        // thead 고정
+        var thFix = $('#tblFixData').find('thead th')
+        $('#tblFixData').closest("div.tableFixHead").on('scroll', function() {
+            thFix.css('transform', 'translateY('+ this.scrollTop +'px)');
+        });
+        var thFlex = $('#tblFlexData').find('thead')
+        $('#tblFlexData').closest("div.tableFixHead").on('scroll', function() {
+            thFlex.css('transform', 'translateY('+ this.scrollTop +'px)');
+        });
+
+        $('.noScroll').scroll(function(){
+            var scrollY = $(this).scrollTop();
+            $(".scroll").scrollTop(scrollY);
+            
+        });
+        $('.scroll').scroll(function(){
+            var scrollY = $(this).scrollTop();
+            $(".noScroll").scrollTop(scrollY);
+        });
     },
     methods: {
         // 데이터 가져오기
@@ -282,52 +317,56 @@ var vm = new Vue({
 <div v-show="!noData && jno">
     <div class="row">
         <div class="col-3" style="padding-right:0 !important">
-            <table class="table table-bordered tblWeldingMonth">
-                <thead>
-                    <tr class="table-primary" style="height:56px">
-                        <th>Company</th>
-                        <th>Area</th>
-                        <th>Material Group</th>
-                    </tr>
-                    <tr class="table-primary">
-                    </tr>
-                </thead> 
-                <tbody>
-                    <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
-                        <td class="rowspanCom text-center" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">{{ welding.Company }}</td>
-                        <td :class="['rowspanArea' ,{'areaColor' : (welding.Level) == ''}]" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')" style="padding-left:10px !important">{{ welding.Area }}</td>
-                        <td :class="{'materialGrp' : (welding.Level) == ''}" v-if="(welding.Level > 2) || (welding.Level == '')" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-9" style="padding-left:0 !important">
-            <div class="table-responsive tblWeldingMonth">
-                <table class="table table-bordered table-sm">
-                    <thead class="table-primary">
-                        <tr>
-                            <th class="responsiveTblRow" colspan="32">Work Dia-inch for Monthly</th>
-                            <th class="responsiveTblRow" title="Doc. Title"></th>
-                            <th class="responsiveTblRow" title="Doc. Title" rowspan="2">Work Progress(%)</th>
-                            <th class="responsiveTblRow" title="Doc. Title" rowspan="2">Remark</th>
+            <div class="tableFixHead noScroll" style="padding-bottom:17px">
+                <table class="table table-bordered tblWeldingMonth" id="tblFixData">
+                    <thead>
+                        <tr class="table-primary" style="height:56px">
+                            <th>Company</th>
+                            <th>Area</th>
+                            <th>Material Group</th>
                         </tr>
-                        <tr>
-                            <th :key="index" v-for="(date, index) in headerDateList" class="responsiveTblRow text-center">{{ date }}</th>
-                            <th class="responsiveTblRow">Accumulative</th>
-                            <th class="responsiveTblRow">Remain</th>
+                        <tr class="table-primary">
                         </tr>
-                    </thead>
+                    </thead> 
                     <tbody>
                         <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
-                            <td :key="index" v-for="(date, index) in headerDateList" class="text-right" style="padding-right:10px !important"> {{ welding[date] }} </td>
-                            <td class="text-right" style="padding-right:10px !important">{{ welding.Accumulative }}</td> 
-                            <td class="text-right" style="padding-right:10px !important">{{ welding.Remain }}</td> 
-                            <td class="text-right" style="padding-right:10px !important">{{ welding["Work Progress"] }}</td> 
-                            <td>{{ welding.Remark }}</td>
+                            <td class="rowspanCom text-center" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">{{ welding.Company }}</td>
+                            <td :class="['rowspanArea' ,{'areaColor' : (welding.Level) == ''},{'weldingSum' : (welding.Level) == 2}]" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')">{{ welding.Area }}</td>
+                            <td :class="{'materialGrp' : (welding.Level) == ''}" v-if="(welding.Level > 2) || (welding.Level == '')" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="col-9" style="padding-left:0 !important">
+            <div class="tableFixHead scroll">
+                <div class="table-responsive tblWeldingMonth" id="tblFlexData">
+                    <table class="table table-bordered table-sm">
+                        <thead class="table-primary">
+                            <tr>
+                                <th class="responsiveTblRow" colspan="32">Work Dia-inch for Monthly</th>
+                                <th class="responsiveTblRow" title="Doc. Title"></th>
+                                <th class="responsiveTblRow" title="Doc. Title" rowspan="2">Work Progress(%)</th>
+                                <th class="responsiveTblRow" title="Doc. Title" rowspan="2">Remark</th>
+                            </tr>
+                            <tr>
+                                <th :key="index" v-for="(date, index) in headerDateList" class="responsiveTblRow text-center">{{ date }}</th>
+                                <th class="responsiveTblRow">Accumulative</th>
+                                <th class="responsiveTblRow">Remain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
+                                <td :key="index" v-for="(date, index) in headerDateList" class="text-right" style="padding-right:10px !important"> {{ welding[date] }} </td>
+                                <td class="text-right" style="padding-right:10px !important">{{ welding.Accumulative }}</td> 
+                                <td class="text-right" style="padding-right:10px !important">{{ welding.Remain }}</td> 
+                                <td class="text-right" style="padding-right:10px !important">{{ welding["Work Progress"] }}</td> 
+                                <td>{{ welding.Remark }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>  
         </div>
     </div>
 </div>
