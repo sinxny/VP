@@ -652,6 +652,9 @@ function activeSubMenu(obj) {
                 <li>
                     <a id="WELDING_DAY" onclick="activeSubMenu(this)">WELDING DAY</span></a>
                 </li>
+                <li>
+                    <a id="WELDING_MONTH" onclick="activeSubMenu(this)">WELDING MONTH</span></a>
+                </li>
                 <!-- <li>
                     <a id="Report2" onclick="activeSubMenu(this)">Report2</span></a>
                 </li>

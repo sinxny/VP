@@ -17,7 +17,7 @@
 .areaColor {
     background-color: #A9D08E;
 }
-#tblWeldingDay td, #tblWeldingDay th {
+.tblWeldingMonth td, .tblWeldingMonth th {
     border: 1px solid #A0A0A0;
 }
 </style>
@@ -31,37 +31,55 @@ var vm = new Vue({
         jno : sessionStorage.getItem("jno"),
         jobName : sessionStorage.getItem("jobName"),
         isDownError: false,
-        weldingDate : new Date().toISOString().substring(0, 10),
+        weldingDate : '',
         noData : false,
-        isChangeData : false
+        isChangeData : false,
+        headerDateList : []
     },
     created() {
-        // 최신문서 데이터 불러오기
-        this.getWeldingDayData();
-
         // 날짜 min/max값 넣기
         dateMinMaxAppend();
-    },
-    mounted() {
-        // thead 고정
-        var thWelding = $('#tblWeldingDay').find('thead th')
-        $('#tblWeldingDay').closest("div.tableFixHead").on('scroll', function() {
-            thWelding.css('transform', 'translateY('+ this.scrollTop +'px)');
-        });
+
+        // 31일전 날짜를 기본값으로
+        var now = new Date();
+        var ntDate = new Date(now.setDate(now.getDate() - 31));
+        var year = ntDate.getFullYear();
+        var month = String(ntDate.getMonth() + 1);
+        month = month.padStart(2, '0');
+        var day = ntDate.getDate();
+
+        this.weldingDate = [year, month, day].join('-');
+
+        // 최신문서 데이터 불러오기
+        this.getWeldingMonthData();
     },
     methods: {
         // 데이터 가져오기
-        getWeldingDayData() {
+        getWeldingMonthData() {
         var data = this;
         var jno = data.jno;
         if(jno) {
-            var url = "https://wcfservice.htenc.co.kr/apipwim/getweldingtoday?jno="+ jno +"&today=" + this.weldingDate;
+            var url = "http://wcfservice.htenc.co.kr/apipwim/getweldingmonth?jno=" + this.jno + "&today=" + this.weldingDate;
             axios.get(url).then(
                 function(response) {
                     var welding = response["data"];
                     if(welding["ResultType"] == "Success") {
                         data.weldingDayList = welding["Value"];
                         data.noData = false;
+
+                        // 날짜 헤더
+                        var weldingKeys = Object.keys(data.weldingDayList[0]);
+
+                        // 날짜 값 가져오기
+                        var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
+                        var dateList = [];
+                        $.each(weldingKeys, function(i, value) {
+                            if ( regex.test(value) ) {
+                                dateList.push(value);
+                            }
+                        });
+                        data.headerDateList = dateList;
+
                     } else {
                         data.noData = true;
                     }
@@ -106,7 +124,7 @@ var vm = new Vue({
         },
         // 최신목록 내보내기
         exportWeldingExcel() {
-            var url = "welding/welding_day_download_excel.php?jno=" + this.jno + "&weldingDate=" + this.weldingDate + "&jobName=" + this.jobName;
+            var url = "welding/welding_month_download_excel.php?jno=" + this.jno + "&weldingDate=" + this.weldingDate + "&jobName=" + this.jobName;
             this.axiosDownload(url, "GET");
         },
         // 쿠키 삭제
@@ -233,7 +251,7 @@ var vm = new Vue({
             if ( !regex.test(this.weldingDate) ) {
                 alert("날짜 값이 잘못되었습니다.");
             } else {
-                this.getWeldingDayData();
+                this.getWeldingMonthData();
             }
         }
     }
@@ -262,37 +280,55 @@ var vm = new Vue({
     </div>
 </div>
 <div v-show="!noData && jno">
-    <div class="tableFixHead">
-        <table class="table table-bordered" id="tblWeldingDay">
-            <thead>
-                <tr class="table-primary">
-                    <th>Company</th>
-                    <th>Area</th>
-                    <th>Material Group</th>
-                    <th>Total</th>
-                    <th>Previous</th>
-                    <th>To Day Work</th>
-                    <th>Accumulative</th>
-                    <th>Remain</th>
-                    <th>Work Progress(%)</th>
-                    <th>Remark</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
-                    <td class="rowspanCom text-center" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">{{ welding.Company }}</td>
-                    <td :class="['rowspanArea' ,{'areaColor' : (welding.Level) == ''}]" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')" style="padding-left:10px !important">{{ welding.Area }}</td>
-                    <td :class="{'materialGrp' : (welding.Level) == ''}" v-if="(welding.Level > 2) || (welding.Level == '')" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welding.Total }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welding.Previous }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welding["To Day Work"] }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welding.Accumulative }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welding.Remain }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welding["Work Progress"] }}</td>
-                    <td>{{ welding.Remark }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="row">
+        <div class="col-3" style="padding-right:0 !important">
+            <table class="table table-bordered tblWeldingMonth">
+                <thead>
+                    <tr class="table-primary" style="height:56px">
+                        <th>Company</th>
+                        <th>Area</th>
+                        <th>Material Group</th>
+                    </tr>
+                    <tr class="table-primary">
+                    </tr>
+                </thead> 
+                <tbody>
+                    <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
+                        <td class="rowspanCom text-center" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">{{ welding.Company }}</td>
+                        <td :class="['rowspanArea' ,{'areaColor' : (welding.Level) == ''}]" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')" style="padding-left:10px !important">{{ welding.Area }}</td>
+                        <td :class="{'materialGrp' : (welding.Level) == ''}" v-if="(welding.Level > 2) || (welding.Level == '')" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-9" style="padding-left:0 !important">
+            <div class="table-responsive tblWeldingMonth">
+                <table class="table table-bordered table-sm">
+                    <thead class="table-primary">
+                        <tr>
+                            <th class="responsiveTblRow" colspan="32">Work Dia-inch for Monthly</th>
+                            <th class="responsiveTblRow" title="Doc. Title"></th>
+                            <th class="responsiveTblRow" title="Doc. Title" rowspan="2">Work Progress(%)</th>
+                            <th class="responsiveTblRow" title="Doc. Title" rowspan="2">Remark</th>
+                        </tr>
+                        <tr>
+                            <th :key="index" v-for="(date, index) in headerDateList" class="responsiveTblRow text-center">{{ date }}</th>
+                            <th class="responsiveTblRow">Accumulative</th>
+                            <th class="responsiveTblRow">Remain</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
+                            <td :key="index" v-for="(date, index) in headerDateList" class="text-right" style="padding-right:10px !important"> {{ welding[date] }} </td>
+                            <td class="text-right" style="padding-right:10px !important">{{ welding.Accumulative }}</td> 
+                            <td class="text-right" style="padding-right:10px !important">{{ welding.Remain }}</td> 
+                            <td class="text-right" style="padding-right:10px !important">{{ welding["Work Progress"] }}</td> 
+                            <td>{{ welding.Remark }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 <div class="alert alert-success text-center" v-show="!jno">
