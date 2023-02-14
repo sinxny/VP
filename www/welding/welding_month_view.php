@@ -314,7 +314,7 @@ var vm = new Vue({
     </div>
 </div>
 <div v-show="!noData && jno">
-    <div style="height: 80vh;overflow:scroll">
+    <div style="height: 80vh;overflow:auto">
         <table class="table table-bordered table-sm tblWeldingMonth">
             <thead style="position: sticky; top:0">
                 <tr class="table-primary">
