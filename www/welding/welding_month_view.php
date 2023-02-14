@@ -321,6 +321,8 @@ var vm = new Vue({
                     <th class="leftFixFirst responsiveTblRow" rowspan="2">Company</th>
                     <th class="leftFixSecond responsiveTblRow" rowspan="2">Area</th>
                     <th class="leftFixThird responsiveTblRow" rowspan="2">Material Group</th>
+                    <th class="responsiveTblRow" rowspan="2">Total</th>
+                    <th class="responsiveTblRow" rowspan="2">Previous</th>
                     <th colspan="32">Work Dia-inch for Monthly</th>
                     <th></th>
                     <th rowspan="2" class="responsiveTblRow">Work Progress(%)</th>
@@ -337,6 +339,8 @@ var vm = new Vue({
                     <td :class="['rowspanCom', 'text-center', 'leftFixFirst', 'responsiveTblRow', {'companyColor': (welding.Level) == ''}, {'level1': (welding.Level) == 1}, {'level0': (welding.Level) == '0'}]" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">{{ welding.Company }}</td>
                     <td :class="['rowspanArea', {'areaColor' : (welding.Level) == ''}, {'level2' : (welding.Level) == 2}, {'weldingSum' : (welding.Level) == 2}, 'leftFixSecond', 'responsiveTblRow']" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')">{{ welding.Area }}</td>
                     <td :class="[{'materialGrp' : (welding.Level) == ''},{'level3' : (welding.Level) == 3}, 'leftFixThird', 'responsiveTblRow']" v-if="(welding.Level > 2) || (welding.Level == '')" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
+                    <td class="text-right responsiveTblRow" style="padding-right:10px !important">{{ welding.Total }}</td> 
+                    <td class="text-right responsiveTblRow" style="padding-right:10px !important">{{ welding.Previous }}</td> 
                     <td :key="index" v-for="(date, index) in headerDateList" class="text-right responsiveTblRow" style="padding-right:10px !important"> {{ welding[date] }} </td>
                     <td class="text-right responsiveTblRow" style="padding-right:10px !important">{{ welding.Accumulative }}</td> 
                     <td class="text-right responsiveTblRow" style="padding-right:10px !important">{{ welding.Remain }}</td> 
