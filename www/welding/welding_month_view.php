@@ -24,15 +24,29 @@
 .weldingSum {
     padding-left: 10px !important;
 }
-/* Hide scrollbar for Chrome, Safari and Opera */
-.noScroll::-webkit-scrollbar {
-    display: none;
+.tblWeldingMonth thead { 
+    position: sticky; 
+    top: 0; 
+    z-index: 1;
 }
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.noScroll {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+.tblWeldingMonth .leftFixFirst { 
+    position: sticky;
+    left: 0;
+}
+.tblWeldingMonth .leftFixSecond { 
+    position: sticky;
+    /* left: 95px; */
+}
+.tblWeldingMonth .leftFixThird { 
+    position: sticky;
+    /* left: 180px; */
+}
+.tblWeldingMonth .rightFixFirst { 
+    position: sticky;
+    left: 0;
+}
+.companyColor {
+    background-color: white;
 }
 </style>
 <script>
@@ -66,27 +80,6 @@ var vm = new Vue({
 
         // 최신문서 데이터 불러오기
         this.getWeldingMonthData();
-    },
-    mounted() {
-        // thead 고정
-        var thFix = $('#tblFixData').find('thead th')
-        $('#tblFixData').closest("div.tableFixHead").on('scroll', function() {
-            thFix.css('transform', 'translateY('+ this.scrollTop +'px)');
-        });
-        var thFlex = $('#tblFlexData').find('thead')
-        $('#tblFlexData').closest("div.tableFixHead").on('scroll', function() {
-            thFlex.css('transform', 'translateY('+ this.scrollTop +'px)');
-        });
-
-        $('.noScroll').scroll(function(){
-            var scrollY = $(this).scrollTop();
-            $(".scroll").scrollTop(scrollY);
-            
-        });
-        $('.scroll').scroll(function(){
-            var scrollY = $(this).scrollTop();
-            $(".noScroll").scrollTop(scrollY);
-        });
     },
     methods: {
         // 데이터 가져오기
@@ -154,6 +147,12 @@ var vm = new Vue({
                     $.each(removeObj.reverse(), function(i, num) {
                         $(".rowspanArea").eq(num).hide();
                     });
+
+                    // sticky left값 설정
+                    var firstWidth = $(".leftFixFirst").eq(1).outerWidth();
+                    $(".leftFixSecond").css("left", firstWidth);
+                    var secondWidth = $(".leftFixFirst").eq(1).outerWidth() + $(".leftFixSecond").eq(1).outerWidth();
+                    $(".leftFixThird").css("left", secondWidth);
                 });
             }
         },
@@ -315,59 +314,37 @@ var vm = new Vue({
     </div>
 </div>
 <div v-show="!noData && jno">
-    <div class="row">
-        <div class="col-3" style="padding-right:0 !important">
-            <div class="tableFixHead noScroll" style="padding-bottom:17px">
-                <table class="table table-bordered tblWeldingMonth" id="tblFixData">
-                    <thead>
-                        <tr class="table-primary" style="height:56px">
-                            <th>Company</th>
-                            <th>Area</th>
-                            <th>Material Group</th>
-                        </tr>
-                        <tr class="table-primary">
-                        </tr>
-                    </thead> 
-                    <tbody>
-                        <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
-                            <td class="rowspanCom text-center" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">{{ welding.Company }}</td>
-                            <td :class="['rowspanArea' ,{'areaColor' : (welding.Level) == ''},{'weldingSum' : (welding.Level) == 2}]" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')">{{ welding.Area }}</td>
-                            <td :class="{'materialGrp' : (welding.Level) == ''}" v-if="(welding.Level > 2) || (welding.Level == '')" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="col-9" style="padding-left:0 !important">
-            <div class="tableFixHead scroll">
-                <div class="table-responsive tblWeldingMonth" id="tblFlexData">
-                    <table class="table table-bordered table-sm">
-                        <thead class="table-primary">
-                            <tr>
-                                <th class="responsiveTblRow" colspan="32">Work Dia-inch for Monthly</th>
-                                <th class="responsiveTblRow" title="Doc. Title"></th>
-                                <th class="responsiveTblRow" title="Doc. Title" rowspan="2">Work Progress(%)</th>
-                                <th class="responsiveTblRow" title="Doc. Title" rowspan="2">Remark</th>
-                            </tr>
-                            <tr>
-                                <th :key="index" v-for="(date, index) in headerDateList" class="responsiveTblRow text-center">{{ date }}</th>
-                                <th class="responsiveTblRow">Accumulative</th>
-                                <th class="responsiveTblRow">Remain</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
-                                <td :key="index" v-for="(date, index) in headerDateList" class="text-right" style="padding-right:10px !important"> {{ welding[date] }} </td>
-                                <td class="text-right" style="padding-right:10px !important">{{ welding.Accumulative }}</td> 
-                                <td class="text-right" style="padding-right:10px !important">{{ welding.Remain }}</td> 
-                                <td class="text-right" style="padding-right:10px !important">{{ welding["Work Progress"] }}</td> 
-                                <td>{{ welding.Remark }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>  
-        </div>
+    <div style="height: 80vh;overflow:scroll">
+        <table class="table table-bordered table-sm tblWeldingMonth">
+            <thead style="position: sticky; top:0">
+                <tr class="table-primary">
+                    <th class="leftFixFirst responsiveTblRow" rowspan="2">Company</th>
+                    <th class="leftFixSecond responsiveTblRow" rowspan="2">Area</th>
+                    <th class="leftFixThird responsiveTblRow" rowspan="2">Material Group</th>
+                    <th colspan="32">Work Dia-inch for Monthly</th>
+                    <th></th>
+                    <th rowspan="2" class="responsiveTblRow">Work Progress(%)</th>
+                    <th rowspan="2" class="responsiveTblRow">Remark</th>
+                </tr>
+                <tr class="table-primary">
+                    <th :key="index" v-for="(date, index) in headerDateList" class="responsiveTblRow text-center">{{ date }}</th>
+                    <th class="responsiveTblRow">Accumulative</th>
+                    <th class="responsiveTblRow">Remain</th>
+                </tr>
+            </thead> 
+            <tbody>
+                <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
+                    <td :class="['rowspanCom', 'text-center', 'leftFixFirst', 'responsiveTblRow', {'companyColor': (welding.Level) == ''}, {'level1': (welding.Level) == 1}, {'level0': (welding.Level) == '0'}]" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">{{ welding.Company }}</td>
+                    <td :class="['rowspanArea', {'areaColor' : (welding.Level) == ''}, {'level2' : (welding.Level) == 2}, {'weldingSum' : (welding.Level) == 2}, 'leftFixSecond', 'responsiveTblRow']" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')">{{ welding.Area }}</td>
+                    <td :class="[{'materialGrp' : (welding.Level) == ''},{'level3' : (welding.Level) == 3}, 'leftFixThird', 'responsiveTblRow']" v-if="(welding.Level > 2) || (welding.Level == '')" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
+                    <td :key="index" v-for="(date, index) in headerDateList" class="text-right responsiveTblRow" style="padding-right:10px !important"> {{ welding[date] }} </td>
+                    <td class="text-right responsiveTblRow" style="padding-right:10px !important">{{ welding.Accumulative }}</td> 
+                    <td class="text-right responsiveTblRow" style="padding-right:10px !important">{{ welding.Remain }}</td> 
+                    <td class="text-right responsiveTblRow" style="padding-right:10px !important">{{ welding["Work Progress"] }}</td> 
+                    <td class="responsiveTblRow">{{ welding.Remark }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 <div class="alert alert-success text-center" v-show="!jno">
