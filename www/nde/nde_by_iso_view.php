@@ -9,7 +9,7 @@
     .dx-datagrid-search-panel {
         height: 30px;
     }
-    .dx-datagrid-nowrap, .dx-datagrid-nowrap .dx-header-row>td>.dx-datagrid-text-content {
+    .dx-datagrid-nowrap .dx-header-row>td>.dx-datagrid-text-content {
         white-space: normal !important;
     }
 </style>
