@@ -1,18 +1,19 @@
 <style>
     #gridContainer {
-        height: 85vh;
+        height: 82.05vh;
     }
-    .dx-cell-focus-disabled {
+    .dx-header-row .dx-cell-focus-disabled {
         text-align:center !important;
+        vertical-align: middle !important;
     }
     .dx-datagrid-search-panel {
         height: 30px;
     }
+    .dx-datagrid-nowrap, .dx-datagrid-nowrap .dx-header-row>td>.dx-datagrid-text-content {
+        white-space: normal !important;
+    }
 </style>
 <script>
-    //DevExpress grid
-    
-
     var vm = new Vue({
         el: '#app',
         data: {
@@ -52,7 +53,8 @@
                                 {
                                     dataField:'NO',
                                     caption: 'NO.',
-                                    width: 55
+                                    width: 72.5,
+                                    alignment: 'center'
                                 },
                                 {
                                     dataField: 'DRW_NO',
@@ -65,7 +67,8 @@
                                 {
                                     dataField: 'NDE_RATE',
                                     caption: 'NDE RATE(%)',
-                                    alignment: 'right'
+                                    alignment: 'right',
+                                    width: 80
                                 },
                                 {
                                     caption: 'DWG WELD TOTAL JOINT',
@@ -84,7 +87,8 @@
                                 },
                                 {
                                     dataField: 'TARGET_JOINT',
-                                    caption: 'TARGET JOINT'
+                                    caption: 'TARGET JOINT',
+                                    width: 80
                                 },
                                 {
                                     caption: 'SELECTION',
@@ -113,11 +117,13 @@
                                 },
                                 {
                                     dataField: 'REPORT_JOINT',
-                                    caption: 'REPORT JOINT'
+                                    caption: 'REPORT JOINT',
+                                    width: 80
                                 },
                                 {
                                     dataField: 'BALANCE',
-                                    caption: 'BALANCE'
+                                    caption: 'BALANCE',
+                                    width: 87.5
                                 },
                                 {
                                     dataField: 'PROGRESS',
@@ -133,16 +139,19 @@
                             showBorders: true,
                             filterRow: {
                                 visible: true,
-                                applyFilter: 'auto',
+                                applyFilter: 'auto'
                             },
                             searchPanel: {
                                 visible: true,
                                 width: 240,
-                                placeholder: 'Search...',
+                                placeholder: 'Search...'
                             },
                             headerFilter: {
-                                visible: true,
-                            }
+                                visible: true
+                            },
+                            paging: {
+                                pageSize: 18,
+                            },
                         }).dxDataGrid('instance');
     
                         const applyFilterTypes = [{
