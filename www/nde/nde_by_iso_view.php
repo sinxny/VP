@@ -335,7 +335,7 @@
         <div class="alert alert-success text-center" v-show="!jno">
             <strong>PROJECT를 선택하세요.</strong>
         </div>
-        <div class="alert alert-warning" v-show="noData">
+        <div class="alert alert-warning" v-show="jno && noData">
             <strong>조건에 맞는 결과가 없습니다.</strong>
         </div>
         <div id="modalLoading" class="modal modal-loading" data-backdrop="static" data-keyboard="false">
