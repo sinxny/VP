@@ -11,8 +11,10 @@ switch($subMenu) {
         break;
     case "WELDING_MONTH" :
         $pageUrl = "welding/welding_month_view.php";
-    // case "Report3" :
-    //     $pageUrl = "vdcs/document/latest/latest_view.php";
+        break;
+    case "NDE_BY_ISO" :
+        $pageUrl = "nde/nde_by_iso_view.php";
+        break;
     // case "Report4" :
     //     $pageUrl = "vdcs/document/latest/latest_view.php";
     // case "Report5" :

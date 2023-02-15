@@ -45,6 +45,8 @@
 <script type="text/javascript" src="js/grp.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" type="text/css" href="DevExtreme/css/dx.light.css" />
+<script src="DevExtreme/js/dx.all.js"></script>
 <style>
     .compName {
         background-color: #DAEEF3;
@@ -655,10 +657,10 @@ function activeSubMenu(obj) {
                 <li>
                     <a id="WELDING_MONTH" onclick="activeSubMenu(this)">WELDING MONTH</span></a>
                 </li>
-                <!-- <li>
-                    <a id="Report2" onclick="activeSubMenu(this)">Report2</span></a>
-                </li>
                 <li>
+                    <a id="NDE_BY_ISO" onclick="activeSubMenu(this)">NDE BY ISO</span></a>
+                </li>
+                <!-- <li>
                     <a id="Report3" onclick="activeSubMenu(this)">Report3</span></a>
                 </li>
                 <li>
