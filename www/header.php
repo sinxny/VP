@@ -660,10 +660,10 @@ function activeSubMenu(obj) {
                 <li>
                     <a id="NDE_BY_ISO" onclick="activeSubMenu(this)">NDE BY ISO</span></a>
                 </li>
-                <!-- <li>
-                    <a id="Report3" onclick="activeSubMenu(this)">Report3</span></a>
-                </li>
                 <li>
+                    <a id="NDE_BY_WELDER" onclick="activeSubMenu(this)">NDE BY WELDER</span></a>
+                </li>
+                <!-- <li>
                     <a id="Report4" onclick="activeSubMenu(this)">Report4</span></a>
                 </li>
                 <li>

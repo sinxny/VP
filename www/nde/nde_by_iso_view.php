@@ -67,8 +67,8 @@
                                 {
                                     dataField: 'NDE_RATE',
                                     caption: 'NDE RATE(%)',
-                                    alignment: 'right',
-                                    width: 80
+                                    width: 80,
+                                    dataType: 'number'
                                 },
                                 {
                                     caption: 'DWG WELD TOTAL JOINT',

@@ -15,8 +15,9 @@ switch($subMenu) {
     case "NDE_BY_ISO" :
         $pageUrl = "nde/nde_by_iso_view.php";
         break;
-    // case "Report4" :
-    //     $pageUrl = "vdcs/document/latest/latest_view.php";
+    case "NDE_BY_WELDER" :
+        $pageUrl = "nde/nde_by_welder_view.php";
+        break;
     // case "Report5" :
     //     $pageUrl = "vdcs/document/latest/latest_view.php";
     // default: 
