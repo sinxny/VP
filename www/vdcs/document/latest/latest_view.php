@@ -53,7 +53,9 @@ var vm = new Vue({
         researchSave : '',
         historyDateList: {},
         maxSeq: 0,
-        isDownError: false
+        isDownError: false,
+        isStaff: sessionStorage.getItem("isStaff"),
+        externalRight: 'Y'
     },
     created() {
         // 최신문서 데이터 불러오기
@@ -61,6 +63,11 @@ var vm = new Vue({
 
         // 날짜 min/max값 넣기
         dateMinMaxAppend();
+
+        // 권한 체크
+        if(this.jno && this.isStaff == "N") {
+            this.isStaffCheck();
+        }
     },
     computed: {
         allSelected: {
@@ -602,6 +609,21 @@ var vm = new Vue({
                     data.ajaxDownload(url);
                 }
             });
+        },
+        // 권한 체크
+        isStaffCheck () {
+            url = "api/common/job/authority.php";
+            data = {
+                jno: this.jno
+            }
+            axios.post(url, data)
+            .then(function(response) {
+                var externalRight = response["data"]["externalRight"];
+                sessionStorage.setItem("externalRight", externalRight);
+            })
+            .catch(function(error){
+                console.log(error);
+            });
         }
     }
 })
@@ -614,13 +636,13 @@ var vm = new Vue({
     </div>
     <div class="col-md text-right">
         <span v-show="jno">
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="selDocDownload" :disabled="selectList.length == 0" title="선택 다운로드">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="selDocDownload" :disabled="selectList.length == 0" title="선택 다운로드" v-show="externalRight == 'Y'">
                 <i class="fa-solid fa-check" style="font-size:large"></i> 선택 다운로드
             </button>
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="allDocDownload" :disabled="latestList.length == 0" title="전체 다운로드">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="allDocDownload" :disabled="latestList.length == 0" title="전체 다운로드" v-show="externalRight == 'Y'">
                 <i class="fa-solid fa-floppy-disk" style="font-size:large"></i> 전체 다운로드
             </button>
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="exportLatestExcel" :disabled="latestList.length == 0" title="목록 내보내기">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="exportLatestExcel" :disabled="latestList.length == 0" title="목록 내보내기" v-show="externalRight == 'Y'">
                 <i class="fa-solid fa-file-export" style="font-size:large"></i> 목록 내보내기
             </button>
         </span>
@@ -708,7 +730,7 @@ var vm = new Vue({
                 <table class="table table-bordered table-sm tblLatestList" style="height:min-content;">
                     <thead class="thead-light">
                         <tr>
-                            <th><input type="checkbox" v-model="allSelected"/></th>
+                            <th v-show="externalRight == 'Y'"><input type="checkbox" v-model="allSelected"/></th>
                             <th>공종</th>
                             <th title="Doc. No.">문서번호</th>
                             <th>Rev.</th>
@@ -716,7 +738,7 @@ var vm = new Vue({
                     </thead>
                     <tbody>
                         <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
-                            <td class="text-center"><input type="checkbox" v-model="selectList" :value="doc.doc_no"/></td>
+                            <td class="text-center"><input type="checkbox" v-model="selectList" :value="doc.doc_no" v-show="externalRight == 'Y'"/></td>
                             <td class="text-center" @click="docRowClick(doc.ms_no)">{{ doc.tr_func_cd }}</td>
                             <td @click="docRowClick(doc.ms_no)" style="width:230px" :title="doc.doc_num"><div class="text-ellipsis so_doc_no">{{ doc.doc_num }}</div></td>
                             <td class="text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_rev_num }}</td>
@@ -784,7 +806,7 @@ var vm = new Vue({
         <table class="table table-bordered table-sm tblLatestList">
             <thead class="thead-light">
                 <tr> 
-                    <th style="white-space: nowrap;min-width: 1rem"><input type="checkbox" v-model="allSelected"/></th>
+                    <th style="white-space: nowrap;min-width: 1rem" v-show="externalRight == 'Y'"><input type="checkbox" v-model="allSelected"/></th>
                     <th class="responsiveTblRow" title="VP Discipline Code">Disc.</th>
                     <th class="responsiveTblRow">Doc. No.</th>
                     <th class="responsiveTblRow">Rev.</th>
@@ -807,7 +829,7 @@ var vm = new Vue({
             </thead>
             <tbody>
                 <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
-                    <td class="text-center" style="white-space: nowrap;min-width: 1rem"><input type="checkbox" v-model="selectList" :value="doc.doc_no"/></td>
+                    <td class="text-center" style="white-space: nowrap;min-width: 1rem" v-show="externalRight == 'Y'"><input type="checkbox" v-model="selectList" :value="doc.doc_no"/></td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.tr_func_cd }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_num }}</td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_rev_num }}</td>
@@ -860,8 +882,8 @@ var vm = new Vue({
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.hist_distribute_date_str }}</td>
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.hist_reply_date_str }}</td>
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.doc_status_nick }}</td>
-                        <td class="text-center"><span class="downloadImg" @click="distributeDownload(history.doc_no)" title="배포문서 다운로드"><img src="../../../images/preview.png" /></span></td>
-                        <td class="text-center"><span class="downloadImg" v-show="history.doc_status && history.doc_status_nick != 'F'" @click="IssueDownload(history.doc_no)" title="회신문서 다운로드"><img src="../../../images/outlook.png"/></span></td>
+                        <td class="text-center"><span class="downloadImg" @click="distributeDownload(history.doc_no)" title="배포문서 다운로드"><img src="../../../images/preview.png" v-show="externalRight == 'Y'"/></span></td>
+                        <td class="text-center"><span class="downloadImg" v-show="history.doc_status && history.doc_status_nick != 'F' && externalRight == 'Y'" @click="IssueDownload(history.doc_no)" title="회신문서 다운로드"><img src="../../../images/outlook.png"/></span></td>
                     </tr>
                 </tbody>
             </table>

@@ -91,6 +91,7 @@ $(document).ready(function() {
 
     //jobCondition 초기값
     var IsInterStaff = '<?php echo $_SESSION["user"]["is_mobile_gw"] ?>';
+    sessionStorage.setItem("isStaff", IsInterStaff);
     if(IsInterStaff == "Y") {
         $("#jobFilter").val($("input[name='jobCondition']:checked").val());
         $("#btnStaffOnly").show();

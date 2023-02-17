@@ -44,6 +44,7 @@ if(isset($isLogin)) {
 <html>
 <head>
 <meta charset="utf-8" />
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <title>VDCS - PDF WebViewer</title>
 <style>
 	body {
@@ -57,7 +58,30 @@ if(isset($isLogin)) {
 </style>
 </head>
 <body>
-	<iframe name="vdcsPdfViewer" src="<?php echo $_src; ?>" width="100%" height="100%" frameborder="0" align="absmiddle" scrolling="no" seamless></iframe>
+	<div>
+		<iframe name="vdcsPdfViewer" src="<?php echo $_src; ?>" width="100%" height="100%" frameborder="0" align="absmiddle" scrolling="no" seamless></iframe>
+	</div>
+	<script>
+		var isStaff = '<?php echo $_SESSION["user"]["is_mobile_gw"]?>';
+		if(isStaff != "Y") {
+			url = "../api/common/job/authority.php";
+			data = {
+				jno: <?php echo $jno?>
+			}
+			axios.post(url, data)
+			.then(function(response) {
+				var externalRight = response["data"]["externalRight"];
+				sessionStorage.setItem("externalRight", externalRight);
+				if(externalRight == "N") {
+					alert("해당 PROJECT에 접근 권한이 없습니다.");
+					location.href = document.location.origin;
+				}
+			})
+			.catch(function(error){
+				console.log(error);
+			});
+		}
+	</script>
 </body>
 </html>
 <?php 
