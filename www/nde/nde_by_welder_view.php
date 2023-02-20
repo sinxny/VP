@@ -208,16 +208,16 @@ var vm = new Vue({
         <table class="table table-bordered" id="tblNdeWelder">
             <thead>
                 <tr class="table-welder">
-                    <th rowspan="2">No.</th>
-                    <th rowspan="2">WELDER</th>
-                    <th rowspan="2">RTorPAUT<br />SELECTION</th>
-                    <th rowspan="2">SHOOT</th>
-                    <th rowspan="2">BALANCE</th>
-                    <th>RESULT</th>
-                    <th rowspan="2">REPAIR<br />PROGRESS(%)</th>
-                    <th rowspan="2">USED FILM</th>
-                    <th rowspan="2">REPAIR FILM</th>
-                    <th rowspan="2">REPAIR FILM<br />PROGRESS(%)</th>
+                    <th rowspan="2" width="60px">No.</th>
+                    <th rowspan="2" width="300px">WELDER</th>
+                    <th rowspan="2" width="100px">RTorPAUT<br />SELECTION</th>
+                    <th rowspan="2" width="100px">SHOOT</th>
+                    <th rowspan="2" width="100px">BALANCE</th>
+                    <th width="100px">RESULT</th>
+                    <th rowspan="2" width="100px">REPAIR<br />PROGRESS(%)</th>
+                    <th rowspan="2" width="100px">USED FILM</th>
+                    <th rowspan="2" width="100px">REPAIR FILM</th>
+                    <th rowspan="2" width="100px">REPAIR FILM<br />PROGRESS(%)</th>
                     <th rowspan="2">REMARK</th>
                 </tr>
                 <tr class="table-welder">

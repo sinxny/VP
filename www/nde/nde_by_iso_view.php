@@ -55,8 +55,7 @@
                                 {
                                     dataField:'NO',
                                     caption: 'NO.',
-                                    width: 72.5,
-                                    alignment: 'center'
+                                    width: 60,
                                 },
                                 {
                                     dataField: 'DRW_NO',
