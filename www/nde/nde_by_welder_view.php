@@ -1,23 +1,4 @@
 <style>
-.level3 {
-    background-color:#FFF2CC;
-}
-.level2 {
-    background-color:#FCE4D6;
-}
-.level1 {
-    background-color:#E6E6FA;
-}
-.level0 {
-    background-color:#F4B084;
-}
-.materialGrp {
-    background-color: #E2EFDA;
-}
-.areaColor {
-    background-color: #A9D08E;
-    text-align: center;
-}
 #tblNdeWelder td, #tblNdeWelder th {
     border: 1px solid #A0A0A0;
 }
@@ -25,7 +6,7 @@
     padding-left: 10px !important;
 }
 .table-welder th {
-    background-color:#FCE4D6;
+    background-color:#b8daff;
 }
 </style>
 <script>
@@ -62,7 +43,7 @@ var vm = new Vue({
         var data = this;
         var jno = data.jno;
         if(jno) {
-            var url = "https://wcfservice.hi-techeng.co.kr/apipwim/getndewelder?jno=" + this.jno;
+            var url = "https://wcfservice.htenc.co.kr/apipwim/getndewelder?jno=" + this.jno;
             axios.get(url).then(
                 function(response) {
                     var welder = response["data"];

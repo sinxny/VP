@@ -5,6 +5,8 @@
     .dx-header-row .dx-cell-focus-disabled {
         text-align:center !important;
         vertical-align: middle !important;
+        background-color: #b8daff;
+        color: black;
     }
     .dx-datagrid-search-panel {
         height: 30px;

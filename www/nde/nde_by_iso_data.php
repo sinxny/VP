@@ -3,7 +3,7 @@
 $jno = $_GET["jno"];
 
 ini_set( "display_errors", 1 );
-$url = "http://wcfservice.hi-techeng.co.kr/apipwim/getndeiso?jno={$jno}";
+$url = "http://wcfservice.htenc.co.kr/apipwim/getndeiso?jno={$jno}";
 
 $curl = curl_init();
 
