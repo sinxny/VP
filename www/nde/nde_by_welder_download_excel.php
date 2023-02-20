@@ -137,8 +137,8 @@ if($responseResult->ResultType = "Success") {
         $sheet->setCellValue('I'.$rowCnt, $weldingData[$i]->REPAIR_FILM);
         // REPAIR FILM PROGRESS(%)
         $sheet->setCellValue('J'.$rowCnt, $weldingData[$i]->REPAIR_FILM_PROGRESS);
-//         // REMARK
-//         $sheet->setCellValue('K'.$rowCnt, $weldingData[$i]->REMARK);
+        // REMARK
+        $sheet->setCellValue('K'.$rowCnt, $weldingData[$i]->REMARK);
         $rowCnt++;
     }
 }
@@ -166,7 +166,7 @@ $sheet->getStyle("A3:K{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle
 // 칼럼 사이즈
 $sheet->getColumnDimension('A')->setWidth(9);
 $sheet->getColumnDimension('B')->setWidth(22);
-$sheet->getColumnDimension('C')->setWidth(20);;
+$sheet->getColumnDimension('C')->setWidth(20);
 $sheet->getColumnDimension('D')->setWidth(15);
 $sheet->getColumnDimension('E')->setWidth(15);
 $sheet->getColumnDimension('F')->setWidth(15);
