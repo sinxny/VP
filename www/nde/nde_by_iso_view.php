@@ -14,6 +14,12 @@
     .dx-datagrid-nowrap .dx-header-row>td>.dx-datagrid-text-content {
         white-space: normal !important;
     }
+    .dx-datagrid-header-panel {
+        height: 35px
+    }
+    .dx-column-indicators {
+        float: right !important;
+    }
 </style>
 <script>
     var vm = new Vue({
@@ -55,7 +61,8 @@
                                 {
                                     dataField:'NO',
                                     caption: 'NO.',
-                                    width: 60,
+                                    width: 72.5,
+                                    alignment: "center"
                                 },
                                 {
                                     dataField: 'DRW_NO',
@@ -68,7 +75,7 @@
                                 {
                                     dataField: 'NDE_RATE',
                                     caption: 'NDE RATE(%)',
-                                    width: 80,
+                                    width: 87.5,
                                     dataType: 'number'
                                 },
                                 {
@@ -77,12 +84,12 @@
                                         {
                                             dataField: 'BW',
                                             caption: 'BW',
-                                            width: 80
+                                            width: 87.5
                                         },
                                         {
                                             dataField: 'SW',
                                             caption: 'SW',
-                                            width: 80
+                                            width: 87.5
                                         }
                                     ]
                                 },
@@ -97,29 +104,29 @@
                                         {
                                             dataField: 'RT',
                                             caption: 'RT',
-                                            width: 65
+                                            width: 87.5
                                         },
                                         {
                                             dataField: 'UT',
                                             caption: 'PAUT',
-                                            width: 65
+                                            width: 87.5
                                         },
                                         {
                                             dataField: 'MT',
                                             caption: 'MT',
-                                            width: 65
+                                            width: 87.5
                                         },
                                         {
                                             dataField: 'PT',
                                             caption: 'PT',
-                                            width: 65
+                                            width: 87.5
                                         }
                                     ]
                                 },
                                 {
                                     dataField: 'REPORT_JOINT',
                                     caption: 'REPORT JOINT',
-                                    width: 80
+                                    width: 87.5
                                 },
                                 {
                                     dataField: 'BALANCE',
@@ -128,7 +135,8 @@
                                 },
                                 {
                                     dataField: 'PROGRESS',
-                                    caption: 'PROGRESS(%)'
+                                    caption: 'PROGRESS(%)',
+                                    width: 115
                                 },
                                 {
                                     dataField: 'REMARK',

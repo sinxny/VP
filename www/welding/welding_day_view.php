@@ -269,7 +269,7 @@ var vm = new Vue({
     <div class="tableFixHead">
         <table class="table table-bordered" id="tblWeldingDay">
             <thead>
-                <tr class="table-primary">
+                <tr class="table-primary" style="height:55.5px">
                     <th style="width:8%">Company</th>
                     <th style="width:8%">Area</th>
                     <th style="width:8%">Material Group</th>
