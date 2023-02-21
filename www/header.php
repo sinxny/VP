@@ -75,14 +75,14 @@ $(document).ready(function() {
     $("#userId").val('<?php echo $_SESSION["user"]["user_id"]?>');
 
     // 도메인 별 권한
-    $menuRight = '<?php echo $menuRight?>';
-    if($menuRight == "all") {
+    var menuRight = '<?php echo $menuRight?>';
+    if(menuRight == "all") {
         $("#vdcs").show();
         $("#welding").show();
-    } else if($menuRight == "vp") {
+    } else if(menuRight == "vp") {
         $("#vdcs").show();
         $("#welding").hide();
-    } else if($menuRight == "cm") {
+    } else if(menuRight == "cm") {
         $("#vdcs").hide();
         $("#welding").show();
     }
@@ -131,7 +131,7 @@ $(document).ready(function() {
     var subMenu = '';
     if (sessionStorage.getItem("subMenu")) {
         subMenu = sessionStorage.getItem("subMenu");
-    }  else if($menuRight == "cm") {
+    }  else if(menuRight == "cm") {
         subMenu = "WELDING_DAY";
     } else {
         subMenu = "vpLatest";

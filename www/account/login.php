@@ -18,7 +18,8 @@ if ("LOGIN" == $request_model_type) {
         $isLogin = true;
         $_SESSION["user"]["user_name"] = "LG화학";
         $_SESSION["user"]["user_id"] = $userId;
-        $_SESSION["user"]["is_mobile_gw"] = "LG";
+        $_SESSION["user"]["is_attend"] = "LG";
+        $_SESSION["user"]["uno"] = "LG";
     }
 
     $result = array(
