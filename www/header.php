@@ -98,6 +98,7 @@ $(document).ready(function() {
 
     //jobCondition 초기값
     var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
+    var teamId = '<?php echo @$_SESSION["user"]["team_id"] ?>';
     sessionStorage.setItem("isStaff", IsInterStaff);
     if(IsInterStaff == "Y") {
         $("#jobFilter").val($("input[name='jobCondition']:checked").val());
@@ -111,6 +112,13 @@ $(document).ready(function() {
     else if(IsInterStaff == "LG") {
         $("#btnStaffOnly").hide();
         $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
+    }
+
+    // 비밀번호 변경 버튼
+    if (IsInterStaff == "N" || teamId == 90) {
+        $("#btnChangePassword").show();
+    } else {
+        $("#btnChangePassword").hide();
     }
 
     //JOB LIST 불러오기
@@ -710,7 +718,7 @@ function validatePwdInputs() {
             <div class="dropdown-menu dropdown-menu-right">
                 <div class="dropdown-item-text" href="#" onclick="onUserInfoClick()"><?php echo $_SESSION["user"]["user_name"]?>(<?php echo $_SESSION["user"]["user_id"]?>)</div>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalChangePassword">비밀번호 변경</a>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalChangePassword" id="btnChangePassword">비밀번호 변경</a>
                 <a class="dropdown-item" href="#" onclick="onLogoutClick()">Logout</a>
             </div>
         </li>
