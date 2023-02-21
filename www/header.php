@@ -67,6 +67,10 @@ if($isLogin) {
 ?>
 <script>
 $(document).ready(function() {
+    // uno, userId
+    $("#uno").val('<?php echo $_SESSION["user"]["uno"]?>');
+    $("#userId").val('<?php echo $_SESSION["user"]["user_id"]?>');
+
     // 도메인 별 권한
     $menuRight = '<?php echo $menuRight?>';
     if($menuRight == "all") {
@@ -173,11 +177,14 @@ $(document).ready(function() {
     $('#tblOrganization').closest('div.tableFixHead-modal').on('scroll', function() {
         thOrganization.css('transform', 'translateY('+ this.scrollTop +'px)');
     });
+
+    //비밀번호 변경 - 저장 버튼
+    $("#btnSavePwd").on("click", onBtnSavePwdClick);
 });
 
 //로그아웃 버튼
 function onLogoutClick() {
-    $("#menuForm").attr({
+    $("#mainForm").attr({
         action:"/account/logout.php", 
         method:"post", 
         target:"_self"
@@ -569,6 +576,84 @@ function activeSubMenu(obj) {
     showContent($(obj).attr("id"));
 }
 
+//비밀번호 변경 - 저장 버튼
+function onBtnSavePwdClick() {
+
+//작업모드
+$("#mode").val("SAVE_PASSWORD");
+    var proceed;
+    proceed = true;
+
+    if(validatePwdInputs()) {
+
+        //글자 수 확인
+        $(".lengthCheck").each(function(){
+            var pwdLength = $(this).val();
+
+            if(pwdLength.length < 4 || pwdLength.length > 16) {
+                proceed = false;
+                $(this).addClass("is-invalid");
+                $(this).closest(".form-group").find(".invalid-feedback").html("4 ~ 16자 의 영문 대소문자, 숫자, 특수문자를 입력하세요.");
+                $(this).closest(".form-group").find(".invalid-feedback").show();
+            }
+        });
+
+        if(proceed) {
+            //비밀번호 확인
+            if(!($("#newPwd").val() == $("#newPwdCheck").val())) {
+                proceed = false;
+                $("#newPwdCheck").addClass("is-invalid");
+                $("#newPwdCheck").closest(".form-group").find(".invalid-feedback").html("비밀번호가 일치하지 않습니다.");
+                $("#newPwdCheck").closest(".form-group").find(".invalid-feedback").show();
+            }
+        }
+
+        if(proceed) {
+            $.ajax({
+                type: "POST",
+                url: "/api/common/member/change_password/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=",
+                data: $("#mainForm").serialize(),
+                dataType: "json",
+                success: function(result) {
+                    console.log(result);
+                    // //변경되었을 경우
+                    // if(result["return_value"] == 1) {
+                    //     $("#resultPwdMsg").addClass("alert-primary");
+                    //     $("#resultPwdMsg").removeClass("alert-danger");
+                    //     $("#resultPwdMsg").empty().html(result["msg"]).fadeIn();
+                    //     $("#resultPwdMsg").delay( 5000 ).fadeOut();
+
+                    //     $("#modalChangePassword").find("input").val('');
+                    // } 
+                    // //변경이 안될경우
+                    // else {
+                    //     $("#resultPwdMsg").addClass("alert-danger");
+                    //     $("#resultPwdMsg").removeClass("alert-primary");
+                    //     $("#resultPwdMsg").empty().html(result["msg"]).fadeIn();
+                    //     $("#resultPwdMsg").delay( 5000 ).fadeOut();
+                    // }
+                }
+            });
+        }
+    }
+}
+
+//유효성 검사 (비밀번호 변경)
+function validatePwdInputs() {
+    var valid = true;
+
+    // 현재 비밀번호
+    valid = valid & validateElement("existPwd");
+
+    // 새 비밀번호
+    valid = valid & validateElement("newPwd");
+
+    // 비밀번호 확인
+    valid = valid & validateElement("newPwdCheck");
+
+    return valid;
+}
+
 </script>
 <nav id="navHeader" class="navbar-nav-main-menu navbar navbar-expand-sm navbar-dark fixed-top nav-color nav-main-link row">
     <div class="col-6">
@@ -623,13 +708,14 @@ function activeSubMenu(obj) {
             <div class="dropdown-menu dropdown-menu-right">
                 <div class="dropdown-item-text" href="#" onclick="onUserInfoClick()"><?php echo $_SESSION["user"]["user_name"]?>(<?php echo $_SESSION["user"]["user_id"]?>)</div>
                 <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalChangePassword">비밀번호 변경</a>
                 <a class="dropdown-item" href="#" onclick="onLogoutClick()">Logout</a>
             </div>
         </li>
     </ul>
 </nav>
 <div id="divSubMenuContent">
-<form id="menuForm" name="menuForm">
+<form id="mainForm" name="mainForm">
 <div id="sidebar" class="vertical-nav bg-light">
 <div id="leftmenuinnerinner">
 <div id="closeSidebar" class="clearfix">
@@ -796,11 +882,72 @@ function activeSubMenu(obj) {
       </div>
     </div>
 </div>
+
+<!-- The Modal -->
+<div class="modal fade" id="modalChangePassword" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">비밀번호 변경</h4>
+                <button type="button" class="close btn-close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="alert alert-secondary">현재 비밀번호를 입력한 후 새로 사용할 비밀번호를 입력하세요.</div>
+                <div>
+                    <div id="resultPwdMsg" class="alert py-1 mb-0" style="display: none;"></div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4 colHeader">
+                        <label for="existPwd">기존 비밀번호</label><span class="necessaryInput"> *</span>
+                    </div>
+                    <div class="col-8">
+                        <input type="password" class="form-control validateElement" id="existPwd" name="existPwd" maxlength="100" required />
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4 colHeader">
+                        <label for="newPwd">변경 비밀번호</label><span class="necessaryInput"> *</span>
+                    </div>
+                    <div class="col-8">
+                        <input type="password" class="form-control validateElement lengthCheck" id="newPwd" name="newPwd" maxlength="100" required />
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4 colHeader">
+                        <label for="newPwdCheck">비밀번호 확인</label><span class="necessaryInput"> *</span>
+                    </div>
+                    <div class="col-8">
+                        <input type="password" class="form-control validateElement lengthCheck" id="newPwdCheck" name="newPwdCheck" maxlength="100" required />
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="alert alert-info" id="pwdLengthRule" name="pwdLengthRule">4 ~ 16자의 영문 대소문자, 숫자, 특수문자 혼용 사용할 수 있습니다.</div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <div class="container">
+                    <div class="d-flex justify-content-around">
+                        <button type="button" class="btn btn-primary" id="btnSavePwd" name="btnSavePwd">저장</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <?php
 }
 ?>
 
 <input type="hidden" id="jobFilter" name="jobFilter" />
+<input type="hidden" id="uno" name="uno" />
+<input type="hidden" id="userId" name="userId" />
 </form>
 </body>
 </html>
