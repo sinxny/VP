@@ -48,6 +48,11 @@ if (!$isLocal) {
     define("_DB_User_Oracle_"    , "hibiz");//61.33.147.38
     define("_DB_Pass_Oracle_"    , "VGsFPFJnVD1ReAI2WDdUZ1A2Vjc=");
     define("_DB_Name_Oracle_"    , $dbtns);
+    
+    define("_DB_Host_OCI_Common_"    , false);
+    define("_DB_User_OCI_Common_"     , "common");//61.33.147.38
+    define("_DB_Pass_OCI_Common_"    , "BzNWaQE7B2oCPlE6C2UHNANhBTEDYA==");
+    define("_DB_Name_OCI_Common_"    , $dbtns);
 }
 else {
     $server         = "testdb.htenc.co.kr";
@@ -61,7 +66,18 @@ else {
     define("_DB_User_Oracle_"    , "hibiz");
     define("_DB_Pass_Oracle_"    , "VGsFPFJnVD1ReAI2WDdUZ1A2Vjc=");
     define("_DB_Name_Oracle_"    , $dbtns);
+    
+    define("_DB_Host_OCI_Common_"    , false);
+    define("_DB_User_OCI_Common_"     , "common");//61.33.147.38
+    define("_DB_Pass_OCI_Common_"    , "BzNWaQE7B2oCPlE6C2UHNANhBTEDYA==");
+    define("_DB_Name_OCI_Common_"    , $dbtns);
 }
+
+define("_DB_Host_Mssql_Duzon_"    , "biz.htenc.co.kr");
+define("_DB_Name_Mssql_Duzon_"    , "Neo_BizBox");
+define("_DB_User_Mssql_Duzon_"    , "bizbox");
+define("_DB_Pass_Mssql_Duzon_"    , "bizbox");
+
 //require_once _LIB_PATH_ . "fun.class.php";
 require_once __DIR__ . "/fun.class_2022.php";
 //require_once _LIB_PATH_ . "db_oci8.php";
@@ -273,3 +289,26 @@ class DB extends DB_PDO_OCI
     }//end function query_limit();
 }
 
+class CommonDB extends DB_PDO_OCI
+{
+    public function __construct() {
+        //$this->Host = _DB_Host_Oracle_;
+        $this->User = _DB_User_OCI_Common_;
+        //$this->Password = _DB_Pass_Oracle_;
+        $this->setPassword(_DB_Pass_OCI_Common_);
+        $this->Database = _DB_Name_OCI_Common_;
+	$this->Charset = DB_PDO_OCI_CHARSET::KO16MSWIN949->value;
+    }
+    public function connection($user, $password, $database, $charset = null) {
+        //$this->Host = $host;
+        $this->User = $user;
+        //$this->Password = $password;
+        $this->setPassword($password);
+        $this->Database = $database;
+		if(isset($charset) && !is_null($charset) && !$charset)
+		{
+			$this->Charset = $charset;
+		}
+        parent::connect();
+    }
+}

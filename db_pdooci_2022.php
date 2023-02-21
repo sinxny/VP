@@ -20,6 +20,7 @@ enum DB_PDO_OCI_CHARSET : string
 
 class DB_PDO_OCI {
     public $Debug    =  0;
+    public $ShowError = true;
     public $sqoe     =  1; // sqoe= show query on error
     
     //protected $Host = "";
@@ -95,14 +96,14 @@ class DB_PDO_OCI {
             $this->Error=$this->Conn->errorInfo();
             //$this->halt($Query_String);
             //ORA-01403 : No data found
-            if ($this->Error[1]!=1403 && $this->Error[1]!=0 && $this->sqoe) {
+            if ($this->ShowError == true && $this->Error[1]!=1403 && $this->Error[1]!=0 && $this->sqoe) {
                 echo "<BR><FONT color=red><B>".$this->Error[2]."<BR>Query :\"$Query_String\"</B></FONT>";
             }
         }
 
         $this->Row=0;
 
-        if($this->Debug) {
+        if($this->ShowError == true && $this->Debug) {
             printf("Debug: query = %s<br>\n", $Query_String);
         }
         $stat = true;
@@ -269,22 +270,26 @@ class DB_PDO_OCI {
     public function halt($msg = "", $is_convert_utf8 = true) {
         global $Fun;
         $err = $this->Error;
-		$message = null;
-        if(isset($err) && is_array($err) && array_count_values($err) > 2){
-            if($is_convert_utf8 == true) $Fun->iconv_utf8All($err);
-            //printf("<b>ORACLE Error</b>: %s<br>\n", $err[2]);
-			//echo "<BR><FONT color=red><B>".$err[2]."<BR>Query :\"$message\"</B></FONT><br />\n";
-			echo "<br /><FONT color=red><B>".$err[2]."</B></FONT>";
-			if(isset($msg) && $msg != "")
-			{
-				$message = $msg;
-				if($is_convert_utf8 == true) $Fun->iconv_utf8All($message);
-				echo "<br /><FONT color=red><B>Query :".$message."</B></FONT>";
-			}
+	$message = null;
+        if($this->ShowError == true)
+        {
+            if(isset($err) && is_array($err) && array_count_values($err) > 2)
+            {
+                if($is_convert_utf8 == true) $Fun->iconv_utf8All($err);
+                //printf("<b>ORACLE Error</b>: %s<br>\n", $err[2]);
+                //echo "<BR><FONT color=red><B>".$err[2]."<BR>Query :\"$message\"</B></FONT><br />\n";
+                echo "<br /><FONT color=red><B>".$err[2]."</B></FONT>";
+                if(isset($msg) && !$msg)
+                {
+                    $message = $msg;
+                    if($is_convert_utf8 == true) $Fun->iconv_utf8All($message);
+                    echo "<br /><FONT color=red><B>Query :".$message."</B></FONT>";
+                }
+            }
+            // $this->Conn->rollBack();
+                    echo "<br />\n";
+            die("Session halted.");
         }
-        // $this->Conn->rollBack();
-		echo "<br />\n";
-        die("Session halted.");
     }
 
     public function unsetAutoCommit() {
