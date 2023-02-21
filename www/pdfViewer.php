@@ -62,8 +62,8 @@ if(isset($isLogin)) {
 		<iframe name="vdcsPdfViewer" src="<?php echo $_src; ?>" width="100%" height="100%" frameborder="0" align="absmiddle" scrolling="no" seamless></iframe>
 	</div>
 	<script>
-		var isStaff = '<?php echo $_SESSION["user"]["is_mobile_gw"]?>';
-		if(isStaff != "Y") {
+		var isStaff = '<?php echo $_SESSION["user"]["is_attend"]?>';
+		if(isStaff == "N") {
 			url = "../api/common/job/authority.php";
 			data = {
 				jno: <?php echo $jno?>

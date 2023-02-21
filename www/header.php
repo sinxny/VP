@@ -3,13 +3,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="pragma" content="no-cache" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="google" content="notranslate">
-<link rel="manifest" href="manifest.json">
+<meta http-equiv="Expires" content="Mon, 06 Jan 1990 00:00:01 GMT" /> 
+<meta http-equiv="Expires" content="-1" /> 
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="google" content="notranslate" />
+<link rel="manifest" href="manifest.json" />
 <title>VDCS Latest</title>
-<link rel="stylesheet" href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="fontawesome-6.0.0-web/css/all.css">
+<script type="text/javascript" src="js/grp.js"></script>
+<link rel="stylesheet" href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="fontawesome-6.0.0-web/css/all.css" />
 <link rel="stylesheet" href="jquery/jquery-ui-1.13.0/jquery-ui.min.css" />
 <script type="text/javascript" src="jquery/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="jquery/jquery-ui-1.13.0/jquery-ui.min.js"></script>
@@ -42,7 +46,6 @@
 <script type="text/javascript" src="jqwidgets-ver14.0.0-src/jqxgrid.filter.js"></script>
 <link rel="stylesheet" href="jqwidgets-ver14.0.0-src/styles/jqx.base.css" type="text/css" />
 <link rel="stylesheet" href="css/style.css" />
-<script type="text/javascript" src="js/grp.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <link rel="stylesheet" type="text/css" href="DevExtreme/css/dx.light.css" />
@@ -94,7 +97,7 @@ $(document).ready(function() {
     basicDemo.init();
 
     //jobCondition 초기값
-    var IsInterStaff = '<?php echo $_SESSION["user"]["is_mobile_gw"] ?>';
+    var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
     sessionStorage.setItem("isStaff", IsInterStaff);
     if(IsInterStaff == "Y") {
         $("#jobFilter").val($("input[name='jobCondition']:checked").val());
@@ -199,7 +202,7 @@ var basicDemo = (function () {
             $('#jobSelWindow').jqxWindow('open');
         });
         $('#pjtJobName').click(function () {
-            var IsInterStaff = '<?php echo $_SESSION["user"]["is_mobile_gw"] ?>';
+            var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
             if(IsInterStaff != "LG") {
                 $('#jobSelWindow').jqxWindow('open');
             }
@@ -469,7 +472,7 @@ function importOrganization() {
                 });
 
                 var InternalNo = 1
-                var IsInterStaff = '<?php echo $_SESSION["user"]["is_mobile_gw"] ?>';
+                var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
                 $(result["Value"]).each(function(i, info) {
                     // 내부직원 외부직원 협력업체 구분
                     var staffClass = "";
@@ -615,23 +618,22 @@ $("#mode").val("SAVE_PASSWORD");
                 data: $("#mainForm").serialize(),
                 dataType: "json",
                 success: function(result) {
-                    console.log(result);
-                    // //변경되었을 경우
-                    // if(result["return_value"] == 1) {
-                    //     $("#resultPwdMsg").addClass("alert-primary");
-                    //     $("#resultPwdMsg").removeClass("alert-danger");
-                    //     $("#resultPwdMsg").empty().html(result["msg"]).fadeIn();
-                    //     $("#resultPwdMsg").delay( 5000 ).fadeOut();
+                    //변경되었을 경우
+                    if(result["ResultType"] == "Success") {
+                        $("#resultPwdMsg").addClass("alert-primary");
+                        $("#resultPwdMsg").removeClass("alert-danger");
+                        $("#resultPwdMsg").empty().html(result["Message"]).fadeIn();
+                        $("#resultPwdMsg").delay( 5000 ).fadeOut();
 
-                    //     $("#modalChangePassword").find("input").val('');
-                    // } 
-                    // //변경이 안될경우
-                    // else {
-                    //     $("#resultPwdMsg").addClass("alert-danger");
-                    //     $("#resultPwdMsg").removeClass("alert-primary");
-                    //     $("#resultPwdMsg").empty().html(result["msg"]).fadeIn();
-                    //     $("#resultPwdMsg").delay( 5000 ).fadeOut();
-                    // }
+                        $("#modalChangePassword").find("input").val('');
+                    } 
+                    //변경이 안될경우
+                    else {
+                        $("#resultPwdMsg").addClass("alert-danger");
+                        $("#resultPwdMsg").removeClass("alert-primary");
+                        $("#resultPwdMsg").empty().html(result["Message"]).fadeIn();
+                        $("#resultPwdMsg").delay( 5000 ).fadeOut();
+                    }
                 }
             });
         }
@@ -897,7 +899,7 @@ function validatePwdInputs() {
             <div class="modal-body">
                 <div class="alert alert-secondary">현재 비밀번호를 입력한 후 새로 사용할 비밀번호를 입력하세요.</div>
                 <div>
-                    <div id="resultPwdMsg" class="alert py-1 mb-0" style="display: none;"></div>
+                    <div id="resultPwdMsg" class="alert py-1 mb-3" style="display: none;"></div>
                 </div>
                 <div class="row form-group">
                     <div class="col-4 colHeader">
@@ -926,7 +928,7 @@ function validatePwdInputs() {
                         <div class="invalid-feedback"></div>
                     </div>
                 </div>
-                <div class="alert alert-info" id="pwdLengthRule" name="pwdLengthRule">4 ~ 16자의 영문 대소문자, 숫자, 특수문자 혼용 사용할 수 있습니다.</div>
+                <div class="alert alert-info mt-2" id="pwdLengthRule" name="pwdLengthRule">4 ~ 16자의 영문 대소문자, 숫자, 특수문자 혼용 사용할 수 있습니다.</div>
             </div>
 
             <!-- Modal footer -->
