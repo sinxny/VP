@@ -208,7 +208,7 @@ var vm = new Vue({
             <thead style="position: sticky; top:0">
                 <tr class="table-primary">
                     <th class="leftFixFirst responsiveTblRow" rowspan="2">SUBCON</th>
-                    <th class="leftFixSecond" rowspan="2" style="min-width:72.5px">NO.</th>
+                    <th class="leftFixSecond" rowspan="2" style="min-width:70px;">NO.</th>
                     <th class="leftFixThird responsiveTblRow" rowspan="2">PKG. NO</th>
                     <th class="responsiveTblRow" rowspan="2">NDE%</th>
                     <th class="responsiveTblRow" colspan="7">MAIN LINE CONDITION</th>
@@ -247,7 +247,7 @@ var vm = new Vue({
             <tbody>
                 <tr :key="index" v-for="(pkg, index) in pkgDataList">
                     <td class="responsiveTblRow text-center leftFixFirst" style="background-color:white">{{ pkg.COMPANY_NAME }}</td>
-                    <td class="text-center leftFixSecond" style="min-width:72.5px; background-color:white">{{ pkg.NO }}</td>
+                    <td class="text-center leftFixSecond" style="min-width:70px; background-color:white">{{ pkg.NO }}</td>
                     <td class="responsiveTblRow leftFixThird" style="padding-left: 10px !important; background-color:white">{{ pkg.PKG_NO }}</td>
                     <td class="responsiveTblRow text-center">{{ pkg.NDE }}</td>
                     <td class="responsiveTblRow text-center">{{ pkg.FLUID }}</td>

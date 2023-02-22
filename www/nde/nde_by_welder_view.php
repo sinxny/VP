@@ -208,7 +208,7 @@ var vm = new Vue({
         <table class="table table-bordered" id="tblNdeWelder">
             <thead>
                 <tr class="table-welder">
-                    <th rowspan="2" width="72.5px">No.</th>
+                    <th rowspan="2" width="70px">No.</th>
                     <th rowspan="2" width="300px">WELDER</th>
                     <th rowspan="2" width="100px">RTorPAUT<br />SELECTION</th>
                     <th rowspan="2" width="100px">SHOOT</th>

@@ -1,12 +1,14 @@
 <style>
     #gridContainer {
         height: 82.05vh;
+        font-family: Arial,"Malgun Gothic",sans-serif !important; /*,"AppleGothicNeoSD"*/
     }
     .dx-header-row .dx-cell-focus-disabled {
         text-align:center !important;
         vertical-align: middle !important;
         background-color: #b8daff;
         color: black;
+        font-weight: bold;
     }
     .dx-datagrid-search-panel {
         height: 30px;
@@ -19,6 +21,22 @@
     }
     .dx-column-indicators {
         float: right !important;
+    }
+    .dx-datagrid-text-content {
+        font-size: 11px !important;
+    }
+    .dx-datagrid-table th, .dx-datagrid-table td {
+        border: 1px solid #A0A0A0 !important;
+    }
+    .dx-datagrid-headers {
+        border : none !important;
+    }.dx-datagrid-rowsview {
+        border : none !important;
+    }
+    .dx-pages {
+        left: -40%;
+        float: right;
+        position: relative;
     }
 </style>
 <script>
@@ -61,7 +79,7 @@
                                 {
                                     dataField:'NO',
                                     caption: 'NO.',
-                                    width: 72.5,
+                                    width: 70,
                                     alignment: "center"
                                 },
                                 {
@@ -161,6 +179,9 @@
                             paging: {
                                 pageSize: 18,
                             },
+                            pager: {
+                                showNavigationButtons: true
+                            }
                         }).dxDataGrid('instance');
     
                         const applyFilterTypes = [{

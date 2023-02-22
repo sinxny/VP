@@ -329,7 +329,7 @@ var vm = new Vue({
                     <th rowspan="2" class="responsiveTblRow">Remark</th>
                 </tr>
                 <tr class="table-primary">
-                    <th :key="index" v-for="(date, index) in headerDateList" class="responsiveTblRow text-center">{{ date }}</th>
+                    <th :key="index" v-for="(date, index) in headerDateList" class="responsiveTblRow text-center" style="font-weight:normal !important">{{ date }}</th>
                     <th class="responsiveTblRow">Accumulative</th>
                     <th class="responsiveTblRow">Remain</th>
                 </tr>
