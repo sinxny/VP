@@ -38,7 +38,7 @@ var vm = new Vue({
         var data = this;
         var jno = data.jno;
         if(jno) {
-            var url = "http://wcfservice.htenc.co.kr/apipwim/getpackage?jno=" + this.jno
+            var url = "https://wcfservice.htenc.co.kr/apipwim/getpackage?jno=" + this.jno
             axios.get(url).then(
                 function(response) {
                     var pkgData = response["data"];
