@@ -18,11 +18,12 @@ switch($subMenu) {
     case "NDE_BY_WELDER" :
         $pageUrl = "nde/nde_by_welder_view.php";
         break;
-    // case "Report5" :
-    //     $pageUrl = "vdcs/document/latest/latest_view.php";
-    // default: 
-    //     $pageUrl = "vdcs/document/latest/latest_view.php";
-    //     break;
+    case "PACKAGE_LIST" :
+        $pageUrl = "pkg/pkg_list_view.php";
+        break;
+    default: 
+        $pageUrl = "vdcs/document/latest/latest_view.php";
+        break;
 }
 
 if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")

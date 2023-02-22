@@ -760,6 +760,9 @@ function validatePwdInputs() {
                 <li>
                     <a id="NDE_BY_WELDER" onclick="activeSubMenu(this)">NDE BY WELDER</span></a>
                 </li>
+                <li>
+                    <a id="PACKAGE_LIST" onclick="activeSubMenu(this)">PKG LIST</span></a>
+                </li>
                 <!-- <li>
                     <a id="Report4" onclick="activeSubMenu(this)">Report4</span></a>
                 </li>
