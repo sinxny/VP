@@ -807,17 +807,17 @@ var vm = new Vue({
             <thead class="thead-light">
                 <tr> 
                     <th style="white-space: nowrap;min-width: 1rem" v-show="externalRight == 'Y'"><input type="checkbox" v-model="allSelected"/></th>
-                    <th class="responsiveTblRow" title="VP Discipline Code">Disc.</th>
-                    <th class="responsiveTblRow">Doc. No.</th>
+                    <th class="responsiveTblRow" title="VP Discipline Code">공종</th>
+                    <th class="responsiveTblRow">문서번호</th>
                     <th class="responsiveTblRow">Rev.</th>
-                    <th class="responsiveTblRow">Doc. Title</th>
+                    <th class="responsiveTblRow">문서제목</th>
                     <th class="responsiveTblRow" title="Vendor Name">Vendor</th>
                     <th class="responsiveTblRow">TR No.</th>
-                    <th class="responsiveTblRow">Dist. Date</th>
-                    <th class="responsiveTblRow">Reply Date</th>
+                    <th class="responsiveTblRow">배포일</th>
+                    <th class="responsiveTblRow">회신일</th>
                     <th class="responsiveTblRow">RFQ. No.</th>
                     <th class="responsiveTblRow">RFQ. Title</th>
-                    <th class="responsiveTblRow">Item/Tag No.</th>
+                    <th class="responsiveTblRow">Item / Tag No.</th>
                     <th class="responsiveTblRow">Cnt</th>
                     <th class="responsiveTblRow" title="Result Code">
                         Rslt #
