@@ -21,6 +21,10 @@ switch($subMenu) {
     case "PACKAGE_LIST" :
         $pageUrl = "pkg/pkg_list_view.php";
         break;
+    // cm 권한 없음
+    case "noRight" :
+        $pageUrl = "no_right.php";
+        break;
     default: 
         $pageUrl = "vdcs/document/latest/latest_view.php";
         break;

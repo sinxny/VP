@@ -77,9 +77,21 @@ $(document).ready(function() {
     // 도메인 별 권한
     var menuRight = '<?php echo $menuRight?>';
     var teamId = '<?php echo @$_SESSION["user"]["team_id"] ?>';
+    sessionStorage.setItem("cmRight", true);
     if(menuRight == "all") {
         $("#vdcs").show();
-        $("#welding").show();
+        $("#btnStaffOnly").show();
+        $("#jobFilter").val($("input[name='jobCondition']:checked").val());
+        // 사장님, 기술연구소
+        if(teamId == 11 || teamId == 90) {
+            $("#welding").show();
+        }        
+        // 사업팀, 공사팀 
+        else if(teamId == 48 || teamId == 49) {
+            $("#welding").show();
+        } else {
+            $("#welding").hide();
+        }
     } else if(menuRight == "vp") {
         $("#vdcs").show();
         $("#welding").hide();
@@ -88,18 +100,19 @@ $(document).ready(function() {
         $("#welding").show();
 
         // 사장님, 기술연구소
-        if($teamId == 11 || $teamId == 90) {
+        if(teamId == 11 || teamId == 90) {
             $("#jobFilter").val($("input[name='jobCondition']:checked").val());
             $("#btnStaffOnly").show();
         }
         // 사업팀, 공사팀 
-        else if($teamId == 48 || teamId == 49) {
+        else if(teamId == 48 || teamId == 49) {
             $("#jobFilter").val("STAFF");
             $("#selJobFilter").hide();
             $("#btnStaffOnly").show();
         } else {
             $("#btnStaffOnly").hide();
             $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
+            sessionStorage.setItem("cmRight", false);
         }
     }
 
@@ -115,18 +128,20 @@ $(document).ready(function() {
     //jobCondition 초기값
     var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
     sessionStorage.setItem("isStaff", IsInterStaff);
-    if(IsInterStaff == "Y") {
-        $("#jobFilter").val($("input[name='jobCondition']:checked").val());
-        $("#btnStaffOnly").show();
-    } else if(IsInterStaff == "N") {
-        $("#jobFilter").val("STAFF");
-        $("#selJobFilter").hide();
-        $("#btnStaffOnly").show();
-    } 
-    // LG
-    else if(IsInterStaff == "LG") {
-        $("#btnStaffOnly").hide();
-        $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
+    if(menuRight == "vp" || menuRight == "all") {
+        if(IsInterStaff == "Y") {
+            $("#jobFilter").val($("input[name='jobCondition']:checked").val());
+            $("#btnStaffOnly").show();
+        } else if(IsInterStaff == "N") {
+            $("#jobFilter").val("STAFF");
+            $("#selJobFilter").hide();
+            $("#btnStaffOnly").show();
+        } 
+        // LG
+        else if(IsInterStaff == "LG") {
+            $("#btnStaffOnly").hide();
+            $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
+        }
     }
 
     // 비밀번호 변경 버튼
@@ -160,7 +175,6 @@ $(document).ready(function() {
         subMenu = "vpLatest";
     }
     activeSubMenu($("#" + subMenu));
-    showContent(subMenu);
 
     // 모바일 header 조정
     if($(window).width() <= 576) {
@@ -226,7 +240,9 @@ var basicDemo = (function () {
         });
         $('#pjtJobName').click(function () {
             var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
-            if(IsInterStaff != "LG") {
+            var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
+            var cmRight = sessionStorage.getItem("cmRight");
+            if(IsInterStaff != "LG" && cmRight != "false") {
                 $('#jobSelWindow').jqxWindow('open');
             }
         });
@@ -292,6 +308,11 @@ function showSubMenu() {
 // 메인화면 보이기
 function showContent(subMenu) {
     $("#vdcsContent").empty();
+
+    var cmRight = sessionStorage.getItem("cmRight");
+    if(cmRight == "false") {
+        subMenu = "noRight";
+    }
 
     $.ajax({
         type: "POST",
