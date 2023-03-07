@@ -46,7 +46,8 @@
             jno: sessionStorage.getItem("jno"),
             jobName: sessionStorage.getItem("jobName"),
             isDownError: false,
-            noData: false
+            noData: false,
+            isoData: []
         },
         created() {
             // NDE BY ISO 데이터 불러오기
@@ -57,6 +58,7 @@
             getNdeIsoData() {
                 // 데이터 여부 확인
                 var data = this;
+                var isoData = [];
                 axios({
                     url: 'nde/nde_by_iso_data.php?jno=' + this.jno,
                     method: "GET"
@@ -66,6 +68,7 @@
                         data.noData = true;
                     } else {
                         data.noData = false;
+                        data.isoData = JSON.stringify(response["data"]);
                     }
                 })
 
@@ -221,13 +224,21 @@
                             },
                         });
     
-                        var btnExcel = `<button type="button" class="btn btn-outline-primary btn-sm text-left ml-3 text-center mt-1" style="width:130px;" id="btnExportExcel" title="목록 내보내기">
-                                        <i class="fa-solid fa-file-export" style="font-size:large"></i> 목록 내보내기
-                                    </button>`;
-                        $(".dx-toolbar-after").append(btnExcel);
-                        
                         // 목록 내보내기 버튼 클릭
+                        var btnExcel = `<button type="button" class="btn btn-outline-primary btn-sm text-left ml-3 mt-1" style="width:130px;" id="btnExportExcel" title="목록 내보내기">
+                                            <i class="fa-solid fa-file-export" style="font-size:large"></i> 목록 내보내기
+                                        </button>`;
+                        $(".dx-toolbar-after").append(btnExcel);
                         $("#btnExportExcel").on('click', this.exportNdeExcel);
+
+                        // 필터 clear 버튼
+                        var btnNoFilter = `<button type="button" class="btn btn-outline-primary btn-sm text-left mt-1" style="width:auto;" id="btnCancelFilter" title="목록 내보내기">
+                                                <i class="fa-solid fa-filter-circle-xmark"></i> 필터 초기화
+                                            </button>`;
+                        $(".dx-toolbar-before").append(btnNoFilter);
+                        $("#btnCancelFilter").on('click', function() {
+                            dataGrid.clearFilter();
+                        });
     
                         function getOrderDay(rowData) {
                             return (new Date(rowData.OrderDate)).getDay();

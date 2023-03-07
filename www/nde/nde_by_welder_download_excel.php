@@ -38,6 +38,8 @@ $jno = $_GET["jno"];
 $jobName = $_GET["jobName"];
 
 // 헤더
+$today = new DateTime();
+$dateTime = $today->format('Y-m-d');
 $sheet->setCellValue('A1', $jobName);
 $sheet->mergeCells("A1:K1");
 $sheet->getStyle('A1')->getFont()->setSize(16);
@@ -47,7 +49,7 @@ $sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadshe
 $sheet->getStyle("A1:A2")->getFont()->setBold(true);
 $sheet->setCellValue('I2', "Period");
 $sheet->getStyle('I2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-$sheet->setCellValue('J2', "LATEST");
+$sheet->setCellValue('J2', $dateTime);
 $sheet->mergeCells("J2:K2");
 $sheet->getStyle("J2")->getFont()->setBold(true);
 $sheet->getStyle("J2:K2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -61,8 +63,9 @@ $sheet->setCellValue('E3', "BALANCE");
 $sheet->setCellValue('F3', "RESULT");
 $sheet->setCellValue('F4', "REPAIR");
 $sheet->setCellValue('G3', "REPAIR\nPROGRESS(%)");
-$sheet->setCellValue('H3', "USED FILM");
-$sheet->setCellValue('I3', "REPAIR FILM");
+$sheet->setCellValue('H3', "RT");
+$sheet->setCellValue('H4', "USED FILM");
+$sheet->setCellValue('I4', "REPAIR FILM");
 $sheet->setCellValue('J3', "REPAIR FILM\nPROGRESS(%)");
 $sheet->setCellValue('K3', "REMARK");
 $sheet->getStyle("A3:K4")->getFont()->setSize(10);
@@ -80,8 +83,7 @@ $sheet->mergeCells("C3:C4");
 $sheet->mergeCells("D3:D4");
 $sheet->mergeCells("E3:E4");
 $sheet->mergeCells("G3:G4");
-$sheet->mergeCells("H3:H4");
-$sheet->mergeCells("I3:I4");
+$sheet->mergeCells("H3:I3");
 $sheet->mergeCells("J3:J4");
 $sheet->mergeCells("K3:K4");
 
@@ -120,23 +122,56 @@ if($responseResult->ResultType = "Success") {
         // NO.
         $sheet->setCellValue('A'.$rowCnt, $i+1);
         // WELDER
-        $sheet->setCellValue('B'.$rowCnt, $weldingData[$i]->WELDER_REG_NO);
+        $welderRegNo = $weldingData[$i]->WELDER_REG_NO;
+        $sheet->setCellValue('B'.$rowCnt, $welderRegNo);
         // RTorPAUT SELECTION
-        $sheet->setCellValue('C'.$rowCnt, $weldingData[$i]->RT_UT_SEL);
+        $rtUtSel = str_replace(",", "", $weldingData[$i]->RT_UT_SEL);
+        $sheet->setCellValue('C'.$rowCnt, $rtUtSel);
+        if($rtUtSel == 0 || $rtUtSel == ''){
+            $sheet->getStyle("C{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // SHOOT
-        $sheet->setCellValue('D'.$rowCnt, $weldingData[$i]->SHOOT);
+        $shoot = str_replace(",", "", $weldingData[$i]->SHOOT);
+        $sheet->setCellValue('D'.$rowCnt, $shoot);
+        if($shoot == 0 || $shoot == ''){
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // BALANCE
-        $sheet->setCellValue('E'.$rowCnt, $weldingData[$i]->BALANCE);
+        $balance = str_replace(",", "", $weldingData[$i]->BALANCE);
+        $sheet->setCellValue('E'.$rowCnt, $balance);
+        if($balance == 0 || $balance == ''){
+            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // REPAIR
-        $sheet->setCellValue('F'.$rowCnt, $weldingData[$i]->REPAIR);
+        $repair = str_replace(",", "", $weldingData[$i]->REPAIR);
+        $sheet->setCellValue('F'.$rowCnt,$repair);
+        if($repair == 0 || $repair == ''){
+            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // REPAIR PROGRESS(%)
-        $sheet->setCellValue('G'.$rowCnt, $weldingData[$i]->REPAIR_PROGRESS);
+        $repairProgress = str_replace(",", "", $weldingData[$i]->REPAIR_PROGRESS);
+        $sheet->setCellValue('G'.$rowCnt, $repairProgress);
+        if($repairProgress == 0 || $repairProgress == ''){
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // USED FILM
-        $sheet->setCellValue('H'.$rowCnt, $weldingData[$i]->USED_FILM);
+        $usedFilm = str_replace(",", "", $weldingData[$i]->USED_FILM);
+        $sheet->setCellValue('H'.$rowCnt, $usedFilm);
+        if($usedFilm == 0 || $usedFilm == ''){
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // REPAIR FILM
-        $sheet->setCellValue('I'.$rowCnt, $weldingData[$i]->REPAIR_FILM);
+        $repairFilm = str_replace(",", "", $weldingData[$i]->REPAIR_FILM);
+        $sheet->setCellValue('I'.$rowCnt, $repairFilm);
+        if($repairFilm == 0 || $repairFilm == ''){
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // REPAIR FILM PROGRESS(%)
-        $sheet->setCellValue('J'.$rowCnt, $weldingData[$i]->REPAIR_FILM_PROGRESS);
+        $repairFilmProgress = str_replace(",", "", $weldingData[$i]->REPAIR_FILM_PROGRESS);
+        $sheet->setCellValue('J'.$rowCnt, $repairFilmProgress);
+        if($repairFilmProgress == 0 || $repairFilmProgress == ''){
+            $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // REMARK
         $sheet->setCellValue('K'.$rowCnt, $weldingData[$i]->REMARK);
         $rowCnt++;

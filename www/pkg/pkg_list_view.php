@@ -1,6 +1,6 @@
 <style>
-.tblPkgList td, .tblPkgList th {
-    border: 1px solid #A0A0A0;
+.table th, .table td{
+    border: 1px solid #A0A0A0 !important;
 }
 .tblPkgList thead { 
     position: sticky; 

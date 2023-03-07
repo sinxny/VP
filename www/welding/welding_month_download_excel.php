@@ -108,13 +108,15 @@ if($responseResult->ResultType = "Success") {
         $sheet->setCellValue($col."4", $date);
         $col++;
     }
-
-    $sheet->setCellValue($col."4", "Accumlative");
-    $sheet->mergeCells("F3:{$col}3");
+    
+    $sheet->mergeCells("F3:AJ3");
+    $sheet->setCellValue($col."3", "Accumlative");
+    $sheet->mergeCells("{$col}3:{$col}4");
     $col++;
     $sheet->setCellValue($col."2", "Period");
     $sheet->getStyle($col."2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-    $sheet->setCellValue($col."4", "Remain");
+    $sheet->setCellValue($col."3", "Remain");
+    $sheet->mergeCells("{$col}3:{$col}4");
     $periodCol = $col;
     $col++;
     $sheet->setCellValue($col."2", $weldingDate);
@@ -181,7 +183,9 @@ if($responseResult->ResultType = "Success") {
         // Total
         $total = str_replace(",", "", $weldingData[$i]->Total);
         $sheet->setCellValue('D'.$rowCnt, $total);
-        if(strpos($total, ".")) {
+        if($total == 0 || $total == ''){
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($total, ".")) {
             $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
@@ -189,7 +193,9 @@ if($responseResult->ResultType = "Success") {
         // Previous
         $previous = str_replace(",", "", $weldingData[$i]->Previous);
         $sheet->setCellValue('E'.$rowCnt, $previous);
-        if(strpos($previous, ".")) {
+        if($previous == 0 || $previous == ''){
+            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($previous, ".")) {
             $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
@@ -199,7 +205,9 @@ if($responseResult->ResultType = "Success") {
         foreach($dataHeader as $date) {
             $dateValue = $weldingData[$i]->{$date};
             $sheet->setCellValue("{$col}{$rowCnt}", $dateValue);
-            if(strpos($dateValue, ".")) {
+            if($dateValue == 0 || $dateValue == ''){
+                $sheet->getStyle("{$col}{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+            } else if(strpos($dateValue, ".")) {
                 $sheet->getStyle("{$col}{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
             } else {
                 $sheet->getStyle("{$col}{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
@@ -209,7 +217,9 @@ if($responseResult->ResultType = "Success") {
         // Accumulative
         $accumulative = str_replace(",", "", $weldingData[$i]->Accumulative);
         $sheet->setCellValue("{$col}{$rowCnt}", $accumulative);
-        if(strpos($accumulative, ".")) {
+        if($accumulative == 0 || $accumulative == ''){
+            $sheet->getStyle("{$col}{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($accumulative, ".")) {
             $sheet->getStyle("{$col}{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("{$col}{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
@@ -218,14 +228,24 @@ if($responseResult->ResultType = "Success") {
         // Remain
         $remain = str_replace(",", "", $weldingData[$i]->Remain);
         $sheet->setCellValue("{$col}{$rowCnt}", $remain);
-        if(strpos($remain, ".")) {
+        if($remain == 0 || $remain == ''){
+            $sheet->getStyle("{$col}{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($remain, ".")) {
             $sheet->getStyle("{$col}{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("{$col}{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
         $col++;
         // Work Progress
-        $sheet->setCellValue("{$col}{$rowCnt}", $weldingData[$i]->{'Work Progress'});
+        $workProgress = $weldingData[$i]->{'Work Progress'};
+        $sheet->setCellValue("{$col}{$rowCnt}", $workProgress);
+        if($workProgress == 0 || $workProgress == ''){
+            $sheet->getStyle("{$col}{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($workProgress, ".")) {
+            $sheet->getStyle("{$col}{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("{$col}{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         $col++;
         // Remark
         $sheet->setCellValue("{$col}{$rowCnt}", $weldingData[$i]->Remark);
@@ -257,7 +277,7 @@ $sheet->getStyle("A1:{$lastCol}{$rowCnt}")->getAlignment()->setVertical(\PhpOffi
 // 칼럼 사이즈
 $sheet->getColumnDimension('A')->setWidth(15);
 $sheet->getColumnDimension('B')->setWidth(15);
-$sheet->getColumnDimension('C')->setWidth(15);;
+$sheet->getColumnDimension('C')->setWidth(15);
 $sheet->getColumnDimension('D')->setWidth(15);
 $sheet->getColumnDimension('E')->setWidth(15);
 for($col='F'; true; $col++) {
@@ -268,7 +288,7 @@ for($col='F'; true; $col++) {
 }
 
 // 틀 고정
-$sheet->freezePane("D1");
+$sheet->freezePane("F5");
 
 // 파일명
 $title = "welding_month_report";

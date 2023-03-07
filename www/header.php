@@ -76,6 +76,7 @@ $(document).ready(function() {
 
     // 도메인 별 권한
     var menuRight = '<?php echo $menuRight?>';
+    var teamId = '<?php echo @$_SESSION["user"]["team_id"] ?>';
     if(menuRight == "all") {
         $("#vdcs").show();
         $("#welding").show();
@@ -85,6 +86,21 @@ $(document).ready(function() {
     } else if(menuRight == "cm") {
         $("#vdcs").hide();
         $("#welding").show();
+
+        // 사장님, 기술연구소
+        if($teamId == 11 || $teamId == 90) {
+            $("#jobFilter").val($("input[name='jobCondition']:checked").val());
+            $("#btnStaffOnly").show();
+        }
+        // 사업팀, 공사팀 
+        else if($teamId == 48 || teamId == 49) {
+            $("#jobFilter").val("STAFF");
+            $("#selJobFilter").hide();
+            $("#btnStaffOnly").show();
+        } else {
+            $("#btnStaffOnly").hide();
+            $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
+        }
     }
 
     //JOB 표시
@@ -98,7 +114,6 @@ $(document).ready(function() {
 
     //jobCondition 초기값
     var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
-    var teamId = '<?php echo @$_SESSION["user"]["team_id"] ?>';
     sessionStorage.setItem("isStaff", IsInterStaff);
     if(IsInterStaff == "Y") {
         $("#jobFilter").val($("input[name='jobCondition']:checked").val());

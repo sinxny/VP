@@ -178,6 +178,14 @@ var vm = new Vue({
                     data.ajaxDownload(url);
                 }
             });
+        },
+        // 0 or 공백은 회계형식
+        numberToAccounting(num) {
+            if(num == 0 || num == '') {
+                return "-";
+            } else {
+                return num;
+            }
         }
     }
 })
@@ -215,27 +223,28 @@ var vm = new Vue({
                     <th rowspan="2" width="100px">BALANCE</th>
                     <th width="100px">RESULT</th>
                     <th rowspan="2" width="100px">REPAIR<br />PROGRESS(%)</th>
-                    <th rowspan="2" width="100px">USED FILM</th>
-                    <th rowspan="2" width="100px">REPAIR FILM</th>
+                    <th colspan="2">RT</th>
                     <th rowspan="2" width="100px">REPAIR FILM<br />PROGRESS(%)</th>
                     <th rowspan="2">REMARK</th>
                 </tr>
                 <tr class="table-welder">
                     <th>REPAIR</th>
+                    <th width="100px">USED FILM</th>
+                    <th width="100px">REPAIR FILM</th>
                 </tr>
             </thead>
             <tbody>
                 <tr :key="index" v-for="(welder, index) in ndeWelderList">
                     <td class="text-center">{{ index + 1 }}</td>
                     <td style="padding-left:10px !important">{{ welder.WELDER_REG_NO }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welder.RT_UT_SEL }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welder.SHOOT }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welder.BALANCE }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welder.REPAIR }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welder.REPAIR_PROGRESS }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welder.USED_FILM }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welder.REPAIR_FILM }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welder.REPAIR_FILM_PROGRESS }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welder.RT_UT_SEL) }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welder.SHOOT) }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welder.BALANCE) }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welder.REPAIR) }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welder.REPAIR_PROGRESS) }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welder.USED_FILM) }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welder.REPAIR_FILM) }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welder.REPAIR_FILM_PROGRESS) }}</td>
                     <td>{{ welder.Remark }}</td>
                 </tr>
             </tbody>

@@ -239,6 +239,14 @@ var vm = new Vue({
             } else {
                 this.getWeldingDayData();
             }
+        },
+        // 0 or 공백은 회계형식
+        numberToAccounting(num) {
+            if(num == 0 || num == '') {
+                return "-";
+            } else {
+                return num;
+            }
         }
     }
 })
@@ -287,12 +295,12 @@ var vm = new Vue({
                     <td class="rowspanCom text-center" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">{{ welding.Company }}</td>
                     <td :class="['rowspanArea' ,{'areaColor' : (welding.Level) == ''},{'weldingSum' : (welding.Level) == 2}]" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')">{{ welding.Area }}</td>
                     <td :class="{'materialGrp' : (welding.Level) == ''}" v-if="(welding.Level > 2) || (welding.Level == '')" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welding.Total }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welding.Previous }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welding["To Day Work"] }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welding.Accumulative }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welding.Remain }}</td>
-                    <td class="text-right" style="padding-right:10px !important">{{ welding["Work Progress"] }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welding.Total) }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welding.Previous) }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welding["To Day Work"]) }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welding.Accumulative) }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welding.Remain) }}</td>
+                    <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welding["Work Progress"]) }}</td>
                     <td>{{ welding.Remark }}</td>
                 </tr>
             </tbody>

@@ -12651,7 +12651,7 @@
 }
 .dx-datagrid .dx-header-filter {
   position: relative;
-  color: #959595;
+  color: red;
   font: 14px/1 DXIcons;
 }
 .dx-datagrid .dx-header-filter::before {

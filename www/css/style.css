@@ -820,6 +820,20 @@ ul, #myUL {
     background-color: #eeeedd;
 }
 
+.fixHeadColumn thead { 
+    position: sticky; 
+    top: 0; 
+    z-index: 1;
+}
+
+.fixHeadColumn .fixLeft {
+    position: sticky;
+}
+
+.fixHeadColumn .fixRight {
+    position: sticky;
+}
+
 @media (max-width: 767px) {
     .modalMain .modal-body { 
         padding: 1rem!important; 

@@ -81,7 +81,7 @@ $sheet->setCellValue('AA4', "B Punch");
 $sheet->setCellValue('AB4', "Flushing");
 $sheet->setCellValue('AC4', "Box-Up");
 $sheet->setCellValue('AD3', "REMARK");
-$sheet->getStyle("A3:AD3")->getFont()->setSize(10);
+$sheet->getStyle("A3:AD4")->getFont()->setSize(10);
 $sheet->getStyle("A3:K4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('C6E0B4');
 $sheet->getStyle("AD3:AD4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('C6E0B4');
 $sheet->getStyle("L3:W4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9E1F2');
@@ -206,7 +206,7 @@ if($responseResult->ResultType = "Success") {
     }
 }
 
-// // 들여쓰기
+// 들여쓰기
 $sheet->getStyle('C5:C'.$rowCnt)->getAlignment()->setIndent(1);
 $sheet->getStyle('F5:F'.$rowCnt)->getAlignment()->setIndent(1);
 $sheet->getStyle('I5:K'.$rowCnt)->getAlignment()->setIndent(1);

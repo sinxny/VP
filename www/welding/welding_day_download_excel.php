@@ -2,6 +2,8 @@
 ini_set('memory_limit','-1');
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
 ini_set( "display_errors", 1 );
 
 // require_once "../../../_inc.php";
@@ -144,7 +146,9 @@ if($responseResult->ResultType = "Success") {
         // Total
         $total = str_replace(",", "", $weldingData[$i]->Total);
         $sheet->setCellValue('D'.$rowCnt, $total);
-        if(strpos($total, ".")) {
+        if($total == 0 || $total == ''){
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($total, ".")) {
             $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
@@ -152,15 +156,19 @@ if($responseResult->ResultType = "Success") {
         // Previous
         $previous = str_replace(",", "", $weldingData[$i]->Previous);
         $sheet->setCellValue('E'.$rowCnt, $previous);
-        if(strpos($previous, ".")) {
+        if($previous == 0 || $previous == ''){
+            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($previous, ".")) {
             $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
         // To Day Work
-        $to_day_work = str_replace(",", "", $weldingData[$i]->{'To Day Work'});
-        $sheet->setCellValue('F'.$rowCnt, $to_day_work);
-        if(strpos($to_day_work, ".")) {
+        $toDayWork = str_replace(",", "", $weldingData[$i]->{'To Day Work'});
+        $sheet->setCellValue('F'.$rowCnt, $toDayWork);
+        if($toDayWork == 0 || $toDayWork == ''){
+            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($to_day_work, ".")) {
             $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
@@ -168,7 +176,9 @@ if($responseResult->ResultType = "Success") {
         // Accumulative
         $accumulative = str_replace(",", "", $weldingData[$i]->Accumulative);
         $sheet->setCellValue('G'.$rowCnt, $accumulative);
-        if(strpos($accumulative, ".")) {
+        if($accumulative == 0 || $accumulative == ''){
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($accumulative, ".")) {
             $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
@@ -176,13 +186,23 @@ if($responseResult->ResultType = "Success") {
         // Remain
         $remain = str_replace(",", "", $weldingData[$i]->Remain);
         $sheet->setCellValue('H'.$rowCnt, $remain);
-        if(strpos($remain, ".")) {
+        if($remain == 0 || $remain == ''){
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($remain, ".")) {
             $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
         // Work Progress
-        $sheet->setCellValue('I'.$rowCnt, $weldingData[$i]->{'Work Progress'});
+        $workProgress = $weldingData[$i]->{'Work Progress'};
+        $sheet->setCellValue('I'.$rowCnt, $workProgress);
+        if($workProgress == 0 || $workProgress == ''){
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($remain, ".")) {
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // Remark
         $sheet->setCellValue('J'.$rowCnt, $weldingData[$i]->Remark);
         

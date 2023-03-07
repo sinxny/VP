@@ -38,6 +38,8 @@ $jno = $_GET["jno"];
 $jobName = $_GET["jobName"];
 
 // 헤더
+$today = new DateTime();
+$dateTime = $today->format('Y-m-d');
 $sheet->setCellValue('A1', $jobName);
 $sheet->mergeCells("A1:O1");
 $sheet->getStyle('A1')->getFont()->setSize(16);
@@ -47,7 +49,7 @@ $sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadshe
 $sheet->getStyle("A1:A2")->getFont()->setBold(true);
 $sheet->setCellValue('M2', "Period");
 $sheet->getStyle('M2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-$sheet->setCellValue('N2', "LATEST");
+$sheet->setCellValue('N2', $dateTime);
 $sheet->mergeCells("N2:O2");
 $sheet->getStyle("N2")->getFont()->setBold(true);
 $sheet->getStyle("N2:O2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -125,28 +127,116 @@ if($responseResult->ResultType = "Success") {
         // PKG NO.
         $sheet->setCellValue('C'.$rowCnt, $dwgData[$i]->PKG_NO);
         // NDE RATE(%)
-        $sheet->setCellValue('D'.$rowCnt, $dwgData[$i]->NDE_RATE);
+        $ndeRate = str_replace(",", "", $dwgData[$i]->NDE_RATE);
+        $sheet->setCellValue('D'.$rowCnt, $ndeRate);
+        if($ndeRate == 0 || $ndeRate == ''){
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($ndeRate, ".")) {
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // BW
-        $sheet->setCellValue('E'.$rowCnt, $dwgData[$i]->BW);
+        $bw = str_replace(",", "", $dwgData[$i]->BW);
+        $sheet->setCellValue('E'.$rowCnt, $bw);
+        if($bw == 0 || $bw == ''){
+            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($bw, ".")) {
+            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // SW
-        $sheet->setCellValue('F'.$rowCnt, $dwgData[$i]->SW);
+        $sw = str_replace(",", "", $dwgData[$i]->SW);
+        $sheet->setCellValue('F'.$rowCnt, $sw);
+        if($sw == 0 || $sw == ''){
+            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($sw, ".")) {
+            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // TARGET JOINT
-        $sheet->setCellValue('G'.$rowCnt, $dwgData[$i]->TARGET_JOINT);
+        $targetJoint = str_replace(",", "", $dwgData[$i]->TARGET_JOINT);
+        $sheet->setCellValue('G'.$rowCnt, $targetJoint);
+        if($targetJoint == 0 || $targetJoint == ''){
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($targetJoint, ".")) {
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // RT
-        $sheet->setCellValue('H'.$rowCnt, $dwgData[$i]->RT);
+        $rt = str_replace(",", "", $dwgData[$i]->RT);
+        $sheet->setCellValue('H'.$rowCnt, $rt);
+        if($rt == 0 || $rt == ''){
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($rt, ".")) {
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // PAUT
-        $sheet->setCellValue('I'.$rowCnt, $dwgData[$i]->UT);
+        $paut = str_replace(",", "", $dwgData[$i]->UT);
+        $sheet->setCellValue('I'.$rowCnt, $paut);
+        if($paut == 0 || $paut == ''){
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($paut, ".")) {
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // MT
-        $sheet->setCellValue('J'.$rowCnt, $dwgData[$i]->MT);
+        $mt = str_replace(",", "", $dwgData[$i]->MT);
+        $sheet->setCellValue('J'.$rowCnt, $mt);
+        if($mt == 0 || $mt == ''){
+            $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($mt, ".")) {
+            $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // PT
-        $sheet->setCellValue('K'.$rowCnt, $dwgData[$i]->PT);
+        $pt = str_replace(",", "", $dwgData[$i]->PT);
+        $sheet->setCellValue('K'.$rowCnt, $pt);
+        if($pt == 0 || $pt == ''){
+            $sheet->getStyle("K{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($pt, ".")) {
+            $sheet->getStyle("K{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("K{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // REPORT JOINT
-        $sheet->setCellValue('L'.$rowCnt, $dwgData[$i]->REPORT_JOINT);
+        $reportJoint = str_replace(",", "", $dwgData[$i]->REPORT_JOINT);
+        $sheet->setCellValue('L'.$rowCnt, $reportJoint);
+        if($reportJoint == 0 || $reportJoint == ''){
+            $sheet->getStyle("L{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($reportJoint, ".")) {
+            $sheet->getStyle("L{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("L{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // BALANCE
-        $sheet->setCellValue('M'.$rowCnt, $dwgData[$i]->BALANCE);
+        $balance = str_replace(",", "", $dwgData[$i]->BALANCE);
+        $sheet->setCellValue('M'.$rowCnt, $balance);
+        if($balance == 0 || $balance == ''){
+            $sheet->getStyle("M{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($balance, ".")) {
+            $sheet->getStyle("M{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("M{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
         // PROGRESS(%)
-        $sheet->setCellValue('N'.$rowCnt, $dwgData[$i]->PROGRESS);
-        // BALANCE
+        $progress = str_replace(",", "", $dwgData[$i]->PROGRESS);
+        $sheet->setCellValue('N'.$rowCnt, $progress);
+        if($progress == 0 || $progress == ''){
+            $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($progress, ".")) {
+            $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
+        // Remark
         $sheet->setCellValue('O'.$rowCnt, $dwgData[$i]->REMARK);
         $rowCnt++;
     }
