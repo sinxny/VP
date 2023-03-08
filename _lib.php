@@ -8,7 +8,7 @@ $isLocal = false;
 define("_CRYPT_KEY_", "hi1004@");
 
 
-define("_HTTPS_", $_SERVER['HTTPS'] == "on" ? true : false);
+define("_HTTPS_", $_SERVER['HTTPS'] === "on" ? true : false);
 define("_ROOT_URL_", (_HTTPS_ == true ? "https://" : "http://") . $_SERVER["HTTP_HOST"] . "/");
 $_SERVER["DOCUMENT_ROOT"] = str_replace("\\","/", $_SERVER["DOCUMENT_ROOT"]); // str_replace("\\", "/", "") : Microsoft Windows에서 경로를 \로 표시되는것을 /로 변경....
 define("_ROOT_PATH_", $_SERVER["DOCUMENT_ROOT"]);
