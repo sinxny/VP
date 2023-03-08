@@ -187,43 +187,6 @@
                             }
                         }).dxDataGrid('instance');
     
-                        const applyFilterTypes = [{
-                            key: 'auto',
-                            name: 'Immediately',
-                        }, {
-                            key: 'onClick',
-                            name: 'On Button Click',
-                        }];
-    
-                        const applyFilterModeEditor = $('#useFilterApplyButton').dxSelectBox({
-                            items: applyFilterTypes,
-                            value: applyFilterTypes[0].key,
-                            valueExpr: 'key',
-                            displayExpr: 'name',
-                            onValueChanged(data) {
-                                dataGrid.option('filterRow.applyFilter', data.value);
-                            },
-                        }).dxSelectBox('instance');
-    
-                        $('#filterRow').dxCheckBox({
-                            text: 'Filter Row',
-                            value: true,
-                            onValueChanged(data) {
-                                dataGrid.clearFilter();
-                                dataGrid.option('filterRow.visible', data.value);
-                                applyFilterModeEditor.option('disabled', !data.value);
-                            },
-                        });
-    
-                        $('#headerFilter').dxCheckBox({
-                            text: 'Header Filter',
-                            value: true,
-                            onValueChanged(data) {
-                                dataGrid.clearFilter();
-                                dataGrid.option('headerFilter.visible', data.value);
-                            },
-                        });
-    
                         // 목록 내보내기 버튼 클릭
                         var btnExcel = `<button type="button" class="btn btn-outline-primary btn-sm text-left ml-3 mt-1" style="width:130px;" id="btnExportExcel" title="목록 내보내기">
                                             <i class="fa-solid fa-file-export" style="font-size:large"></i> 목록 내보내기
@@ -239,10 +202,6 @@
                         $("#btnCancelFilter").on('click', function() {
                             dataGrid.clearFilter();
                         });
-    
-                        function getOrderDay(rowData) {
-                            return (new Date(rowData.OrderDate)).getDay();
-                        }
                     });
                 }
             },
