@@ -109,7 +109,7 @@ $sheet->mergeCells("W3:W4");
 $sheet->mergeCells("X3:AC3");
 $sheet->mergeCells("AD3:AD4");
 
-//
+// 들여쓰기
 $sheet->getStyle("A3:AD4")->getAlignment()->setWrapText(true);
 
 $url = "http://wcfservice.htenc.co.kr/apipwim/getpackage?jno={$jno}";
@@ -148,7 +148,11 @@ if($responseResult->ResultType = "Success") {
         // PKG. NO
         $sheet->setCellValue('C'.$rowCnt, $pkgData[$i]->PKG_NO);
         // NDE%
-        $sheet->setCellValue('D'.$rowCnt, $pkgData[$i]->NDE);
+        $nde = $pkgData[$i]->NDE;
+        $sheet->setCellValue('D'.$rowCnt, $nde);
+        if($nde == 0 || $nde == ''){
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // Fluid
         $sheet->setCellValue('E'.$rowCnt, $pkgData[$i]->FLUID);
         // Line No
@@ -158,27 +162,63 @@ if($responseResult->ResultType = "Success") {
         // Test Fluid
         $sheet->setCellValue('H'.$rowCnt, $pkgData[$i]->TEST_FLUID);
         // Operating Pressure
-        $sheet->setCellValue('I'.$rowCnt, $pkgData[$i]->OPERATION_PRESSURE);
+        $operationPressure = $pkgData[$i]->OPERATION_PRESSURE;
+        $sheet->setCellValue('I'.$rowCnt, $operationPressure);
+        if($operationPressure == 0 || $operationPressure == ''){
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // Design Pressure
-        $sheet->setCellValue('J'.$rowCnt, $pkgData[$i]->DESIGN_PRESSURE);
+        $designPressure = $pkgData[$i]->DESIGN_PRESSURE;
+        $sheet->setCellValue('J'.$rowCnt, $designPressure);
+        if($designPressure == 0 || $designPressure == ''){
+            $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // Test Pressure
-        $sheet->setCellValue('K'.$rowCnt, $pkgData[$i]->TEST_PRESSURE);
+        $testPressure = $pkgData[$i]->TEST_PRESSURE;
+        $sheet->setCellValue('K'.$rowCnt, $testPressure);
+        if($testPressure == 0 || $testPressure == ''){
+            $sheet->getStyle("K{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // Method CLIENT
         $sheet->setCellValue('L'.$rowCnt, $pkgData[$i]->METHOD_CLIENT);
         // 인허가 항목
         $sheet->setCellValue('M'.$rowCnt, $pkgData[$i]->LICENSING);
         // TOTAL WELDING D/INCH
-        $sheet->setCellValue('N'.$rowCnt, $pkgData[$i]->TOTAL_DIA_INCH);
+        $totalDiaInch = $pkgData[$i]->TOTAL_DIA_INCH;
+        $sheet->setCellValue('N'.$rowCnt, $totalDiaInch);
+        if($totalDiaInch == 0 || $totalDiaInch == ''){
+            $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // COMPLETE D/INCH
-        $sheet->setCellValue('O'.$rowCnt, $pkgData[$i]->COMPLETE_DIA_INCH);
+        $completeDiaInch = $pkgData[$i]->COMPLETE_DIA_INCH;
+        $sheet->setCellValue('O'.$rowCnt, $completeDiaInch);
+        if($completeDiaInch == 0 || $completeDiaInch == ''){
+            $sheet->getStyle("O{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // WELDING PROGRESS(%)
-        $sheet->setCellValue('P'.$rowCnt, $pkgData[$i]->WELDING_PROGRESS);
+        $weldingProgress = $pkgData[$i]->WELDING_PROGRESS;
+        $sheet->setCellValue('P'.$rowCnt, $weldingProgress);
+        if($weldingProgress == 0 || $weldingProgress == ''){
+            $sheet->getStyle("P{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // TOTAL PWHT QTY
-        $sheet->setCellValue('Q'.$rowCnt, $pkgData[$i]->TOTAL_PWHT);
+        $totalPwht = $pkgData[$i]->TOTAL_PWHT;
+        $sheet->setCellValue('Q'.$rowCnt, $totalPwht);
+        if($totalPwht == 0 || $totalPwht == ''){
+            $sheet->getStyle("Q{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // PWHT ON PROGRESS QTY
-        $sheet->setCellValue('R'.$rowCnt, $pkgData[$i]->PWHT_PROGRESS);
+        $pwhtProgress = $pkgData[$i]->PWHT_PROGRESS;
+        $sheet->setCellValue('R'.$rowCnt, $pwhtProgress);
+        if($pwhtProgress == 0 || $pwhtProgress == ''){
+            $sheet->getStyle("R{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // PWHT COMPLETE QTY
-        $sheet->setCellValue('S'.$rowCnt, $pkgData[$i]->COMPLETE_PWHT);
+        $completePwht = $pkgData[$i]->COMPLETE_PWHT;
+        $sheet->setCellValue('S'.$rowCnt, $completePwht);
+        if($completePwht == 0 || $completePwht == ''){
+            $sheet->getStyle("S{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        }
         // Walk Down Ready
         $sheet->setCellValue('T'.$rowCnt, $pkgData[$i]->WALK_DOWN_READY);
         // SUBCON Walk Down
@@ -223,6 +263,7 @@ $sheet->getStyle("A{$rowCnt}:AD{$rowCnt}")->getBorders()->getBottom()->setBorder
 // 행 가운데 정렬
 $sheet->getStyle('A5:B'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle('D5:E'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('I5:I'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 $sheet->getStyle('G5:H'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle('L5:M'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle('T5:AC'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);

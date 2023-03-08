@@ -1,5 +1,5 @@
 <style>
-.table th, .table td{
+.tblPkgList th, .tblPkgList td{
     border: 1px solid #A0A0A0 !important;
 }
 .tblPkgList thead { 
@@ -184,6 +184,14 @@ var vm = new Vue({
                     data.ajaxDownload(url);
                 }
             });
+        },
+        // 0 or 공백은 회계형식
+        numberToAccounting(num) {
+            if(num == 0 || num == '') {
+                return "-";
+            } else {
+                return num;
+            }
         }
     }
 })
@@ -249,22 +257,22 @@ var vm = new Vue({
                     <td class="responsiveTblRow text-center leftFixFirst" style="background-color:white">{{ pkg.COMPANY_NAME }}</td>
                     <td class="text-center leftFixSecond" style="min-width:70px; background-color:white">{{ pkg.NO }}</td>
                     <td class="responsiveTblRow leftFixThird" style="padding-left: 10px !important; background-color:white">{{ pkg.PKG_NO }}</td>
-                    <td class="responsiveTblRow text-center">{{ pkg.NDE }}</td>
+                    <td class="responsiveTblRow text-center">{{ numberToAccounting(pkg.NDE) }}</td>
                     <td class="responsiveTblRow text-center">{{ pkg.FLUID }}</td>
                     <td class="responsiveTblRow" style="padding-left: 10px !important">{{ pkg.LINE_NO }}</td>
                     <td class="responsiveTblRow text-center">{{ pkg.LINE_CLASS }}</td>
                     <td class="responsiveTblRow text-center">{{ pkg.TEST_FLUID }}</td>
-                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ pkg.OPERATION_PRESSURE }}</td>
-                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ pkg.DESIGN_PRESSURE }}</td>
-                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ pkg.TEST_PRESSURE }}</td>
+                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ numberToAccounting(pkg.OPERATION_PRESSURE) }}</td>
+                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ numberToAccounting(pkg.DESIGN_PRESSURE) }}</td>
+                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ numberToAccounting(pkg.TEST_PRESSURE) }}</td>
                     <td class="responsiveTblRow text-center">{{ pkg.METHOD_CLIENT }}</td>
                     <td class="responsiveTblRow text-center">{{ pkg.LICENSING }}</td>
-                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ pkg.TOTAL_DIA_INCH }}</td>
-                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ pkg.COMPLETE_DIA_INCH }}</td>
-                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ pkg.WELDING_PROGRESS }}</td>
-                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ pkg.TOTAL_PWHT }}</td>
-                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ pkg.PWHT_PROGRESS }}</td>
-                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ pkg.COMPLETE_PWHT }}</td>
+                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ numberToAccounting(pkg.TOTAL_DIA_INCH) }}</td>
+                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ numberToAccounting(pkg.COMPLETE_DIA_INCH) }}</td>
+                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ numberToAccounting(pkg.WELDING_PROGRESS) }}</td>
+                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ numberToAccounting(pkg.TOTAL_PWHT) }}</td>
+                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ numberToAccounting(pkg.PWHT_PROGRESS) }}</td>
+                    <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ numberToAccounting(pkg.COMPLETE_PWHT) }}</td>
                     <td class="responsiveTblRow text-center">{{ pkg.WALK_DOWN_READY }}</td>
                     <td class="responsiveTblRow text-center">{{ pkg.SUBCON_WALK_DOWN }}</td>
                     <td class="responsiveTblRow text-center">{{ pkg.HTENC_WALK_DOWN }}</td>

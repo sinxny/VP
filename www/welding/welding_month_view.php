@@ -24,7 +24,7 @@
 .companyColor {
     background-color: white;
 }
-.table th, .table td{
+.tblWeldingMonth th, .tblWeldingMonth td{
     border: 1px solid #A0A0A0 !important;
 }
 </style>
