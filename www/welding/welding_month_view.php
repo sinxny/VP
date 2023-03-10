@@ -322,7 +322,7 @@ var vm = new Vue({
             <button type="button" class="btn btn-outline-primary btn-sm text-left ml-3 text-center" style="width:130px;" @click="exportWeldingExcel" title="목록 내보내기">
                 <i class="fa-solid fa-file-export" style="font-size:large"></i> 목록 내보내기
             </button>
-            <input type="date" class="form-control" style="height:30px" v-model="weldingDate" @change="weldingDateChange"/>
+            <input type="date" class="form-control" style="height:30px" v-model="weldingDate" @blur="weldingDateChange"/>
         </span>
         <!-- <button type="button" class="btn btn-outline-dark btn-sm" v-html="icon" @click="collapseChange"></button> -->
     </div>
