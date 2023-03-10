@@ -100,20 +100,20 @@ $(document).ready(function() {
         $("#welding").show();
 
         // 사장님, 기술연구소
-        if(teamId == 11 || teamId == 90) {
+        // if(teamId == 11 || teamId == 90) {
             $("#jobFilter").val($("input[name='jobCondition']:checked").val());
             $("#btnStaffOnly").show();
-        }
+        // }
         // 사업팀, 공사팀 
-        else if(teamId == 48 || teamId == 49) {
-            $("#jobFilter").val("STAFF");
-            $("#selJobFilter").hide();
-            $("#btnStaffOnly").show();
-        } else {
-            $("#btnStaffOnly").hide();
-            $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
-            sessionStorage.setItem("cmRight", false);
-        }
+        // else if(teamId == 48 || teamId == 49) {
+        //     $("#jobFilter").val("STAFF");
+        //     $("#selJobFilter").hide();
+        //     $("#btnStaffOnly").show();
+        // } else {
+        //     $("#btnStaffOnly").hide();
+        //     $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
+        //     sessionStorage.setItem("cmRight", false);
+        // }
     }
 
     //JOB 표시
