@@ -168,7 +168,7 @@ if($responseResult->ResultType = "Success") {
         $sheet->setCellValue('F'.$rowCnt, $toDayWork);
         if($toDayWork == 0 || $toDayWork == ''){
             $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($to_day_work, ".")) {
+        } else if(strpos($toDayWork, ".")) {
             $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
