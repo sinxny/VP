@@ -73,6 +73,7 @@
                 })
 
                 if(this.noData == false) {
+                    var pageSize = 18;
                     $(() => {
                         const dataGrid = $('#gridContainer').dxDataGrid({
                             dataSource: 'nde/nde_by_iso_data.php?jno=' + this.jno,
@@ -180,10 +181,72 @@
                                 visible: true
                             },
                             paging: {
-                                pageSize: 18,
+                                pageSize: pageSize,
                             },
                             pager: {
                                 showNavigationButtons: true
+                            },
+                            onCellPrepared(e) {
+                                const dataGrid = $("#gridContainer").dxDataGrid("instance");
+                                const dataSource = dataGrid.getDataSource();
+                                const recordCount = dataSource.items().length;
+
+                                // 헤더 스타일
+                                if (e.rowType == "header" && e.column.caption == "RT") {
+                                    $(e.cellElement.get(0)).attr("style", "border-left: 2px solid red !important;border-top : 2px solid red !important;")
+                                } else if(e.rowType == "header" && (e.column.caption == "PAUT" || e.column.caption == "MT")) {
+                                    $(e.cellElement.get(0)).attr("style", "border-top : 2px solid red !important;")
+                                } else if (e.rowType == "header" && e.column.caption == "PT") {
+                                    $(e.cellElement.get(0)).attr("style", "border-right: 2px solid red !important;border-top : 2px solid red !important;")
+                                }
+                                // RT
+                                if(e.columnIndex == 7) {
+                                    if(e.rowType == "filter") {
+                                        $(e.cellElement.get(0)).closest(".dx-editor-cell").attr("style", "border-left: 2px solid red !important");
+                                    } 
+                                    else if (e.rowType != "header"){
+                                        $(e.cellElement.get(0)).attr("style", "border-left: 2px solid red !important; text-align: right")
+                                        if(e.rowIndex == pageSize - 1 || e.rowIndex == recordCount - 1) {
+                                            $(e.cellElement.get(0)).attr("style", "border-left: 2px solid red !important; border-bottom: 2px solid red !important; text-align: right")
+                                        }
+                                    }
+                                }
+                                // PAUT, MT 
+                                else if(e.rowType != "filter" && (e.columnIndex == 8 || e.columnIndex == 9)) {
+                                    if(e.rowIndex == pageSize - 1 || e.rowIndex == recordCount - 1) {
+                                        $(e.cellElement.get(0)).attr("style", "border-bottom: 2px solid red !important; text-align: right")
+                                    }
+                                } 
+                                // PT
+                                else if(e.columnIndex == 10) {
+                                    if(e.rowType == "filter") {
+                                        $(e.cellElement.get(0)).closest(".dx-editor-cell").attr("style", "border-right: 2px solid red !important")
+                                    } 
+                                    else if (e.rowType != "header"){
+                                        $(e.cellElement.get(0)).attr("style", "border-right: 2px solid red !important; text-align: right")
+                                        if(e.rowIndex == pageSize - 1 || e.rowIndex == recordCount - 1) {
+                                            $(e.cellElement.get(0)).attr("style", "border-right: 2px solid red !important; border-bottom: 2px solid red !important; text-align: right")
+                                        }
+                                    }
+                                }
+
+                                // 돋보기 색깔 넣기
+                                $(e.cellElement.get(0)).find("input").on("keyup", function() {
+                                    if($(this).attr("aria-valuenow")) {
+                                        $(this).closest("td").find("i").attr("style", "color: red !important");
+                                    } else {
+                                        $(this).closest("td").find("i").attr("style", "");
+                                    }
+                                });
+
+                                $(".dx-texteditor-input").each(function() {
+                                    var filterInput = $(this).attr("aria-valuenow");
+                                    if(filterInput) {
+                                        $(this).closest("td").find("i").attr("style", "color: red !important");
+                                    } else {
+                                        $(this).closest("td").find("i").attr("style", "");
+                                    }
+                                });
                             }
                         }).dxDataGrid('instance');
     
@@ -201,6 +264,7 @@
                         $(".dx-toolbar-before").append(btnNoFilter);
                         $("#btnCancelFilter").on('click', function() {
                             dataGrid.clearFilter();
+                            $(".dx-datagrid-filter-row").find("i").attr("style", "");
                         });
                     });
                 }

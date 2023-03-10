@@ -2,6 +2,8 @@
 ini_set('memory_limit','-1');
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
 ini_set( "display_errors", 1 );
 
 // require_once "../../../_inc.php";
@@ -27,6 +29,9 @@ $sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSet
 // 자동 맞춤
 $sheet->getPageSetup()->setFitToWidth(1);
 $sheet->getPageSetup()->setFitToHeight(0);
+
+// 틀 고정
+$sheet->freezePane("A5");
 
 // 폰트사이즈 / 폰트 이름
 $spreadsheet->getDefaultStyle()->getFont()->setSize(11);
@@ -264,6 +269,8 @@ $sheet->setAutoFilter("A4:O{$rowCnt}");
 // 표 그리기
 $rowCnt--;
 $sheet->getStyle("A3:O{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+// SELECTION 테두리
+$sheet->getStyle("H4:K{$rowCnt}")->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('FF0000'));
 
 // 칼럼 사이즈
 $sheet->getColumnDimension('A')->setWidth(9);

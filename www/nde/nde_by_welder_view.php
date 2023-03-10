@@ -212,8 +212,8 @@ var vm = new Vue({
     </div>
 </div>
 <div v-show="!noData && jno">
-    <div class="tableFixHead">
-        <table class="table table-bordered" id="tblNdeWelder">
+    <div style="height: 80vh;overflow:auto">
+        <table class="table table-bordered fixHeadColumn" id="tblNdeWelder">
             <thead>
                 <tr class="table-welder">
                     <th rowspan="2" width="70px">No.</th>

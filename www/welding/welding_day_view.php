@@ -274,8 +274,8 @@ var vm = new Vue({
     </div>
 </div>
 <div v-show="!noData && jno">
-    <div class="tableFixHead">
-        <table class="table table-bordered" id="tblWeldingDay">
+    <div style="height: 80vh;overflow:auto">
+        <table class="table table-bordered fixHeadColumn" id="tblWeldingDay">
             <thead>
                 <tr class="table-primary" style="height:55.5px">
                     <th style="width:8%">Company</th>

@@ -834,6 +834,11 @@ ul, #myUL {
     position: sticky;
 }
 
+.fixHeadColumn {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
 @media (max-width: 767px) {
     .modalMain .modal-body { 
         padding: 1rem!important; 

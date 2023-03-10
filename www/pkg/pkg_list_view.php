@@ -212,7 +212,7 @@ var vm = new Vue({
 </div>
 <div v-show="!noData && jno">
     <div style="height: 80vh;overflow:auto">
-        <table class="table table-bordered table-sm tblPkgList">
+        <table class="table table-bordered table-sm tblPkgList fixHeadColumn">
             <thead style="position: sticky; top:0">
                 <tr class="table-primary">
                     <th class="leftFixFirst responsiveTblRow" rowspan="2">SUBCON</th>
