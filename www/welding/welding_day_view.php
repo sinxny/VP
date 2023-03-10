@@ -46,13 +46,6 @@ var vm = new Vue({
         // 날짜 min/max값 넣기
         dateMinMaxAppend();
     },
-    mounted() {
-        // thead 고정
-        var thWelding = $('#tblWeldingDay').find('thead th')
-        $('#tblWeldingDay').closest("div.tableFixHead").on('scroll', function() {
-            thWelding.css('transform', 'translateY('+ this.scrollTop +'px)');
-        });
-    },
     methods: {
         // 데이터 가져오기
         getWeldingDayData() {
@@ -110,6 +103,7 @@ var vm = new Vue({
         },
         // 최신목록 내보내기
         exportWeldingExcel() {
+            this.weldingDateChange();
             var url = "welding/welding_day_download_excel.php?jno=" + this.jno + "&weldingDate=" + this.weldingDate + "&jobName=" + this.jobName;
             this.axiosDownload(url, "GET");
         },

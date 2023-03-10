@@ -164,6 +164,7 @@ var vm = new Vue({
         },
         // 최신목록 내보내기
         exportWeldingExcel() {
+            this.weldingDateChange();
             var url = "welding/welding_month_download_excel.php?jno=" + this.jno + "&weldingDate=" + this.weldingDate + "&jobName=" + this.jobName;
             this.axiosDownload(url, "GET");
         },
