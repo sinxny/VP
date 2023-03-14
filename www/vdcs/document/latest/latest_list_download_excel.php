@@ -232,6 +232,7 @@ if($responseResult->ResultType = "Success") {
         $sheet->getStyle("O{$rowCnt}")->applyFromArray($link_style_array);
         $sheet->getStyle("P{$rowCnt}")->applyFromArray($link_style_array);
 
+        flush();
         $rowCnt++;
     }
 }
