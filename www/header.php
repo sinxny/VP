@@ -10,7 +10,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="google" content="notranslate" />
 <link rel="manifest" href="manifest.json" />
-<title>VDCS Latest</title>
 <script type="text/javascript" src="js/grp.js"></script>
 <link rel="stylesheet" href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="fontawesome-6.0.0-web/css/all.css" />
@@ -95,9 +94,13 @@ $(document).ready(function() {
     } else if(menuRight == "vp") {
         $("#vdcs").show();
         $("#welding").hide();
+        document.title = "VDCS Latest";
+        $("#headerTitle").text("VDCS - Latest");
     } else if(menuRight == "cm") {
         $("#vdcs").hide();
         $("#welding").show();
+        document.title = "공사관리 시스템";
+        $("#headerTitle").text("공사관리 시스템");
 
         // 사장님, 기술연구소
         // if(teamId == 11 || teamId == 90) {
@@ -705,7 +708,7 @@ function validatePwdInputs() {
     <div class="col-6">
         <a class="navbar-brand" href="javascript:void(0);" onclick="location.reload()" style="padding: 14.5px 0px">
             <img src="images/ft_logo.png" alt="Logo" style="margin-top: -4.2px;margin-left: 3.5px;width: 112px;" alt="HiTech Engineering"/>
-            <span style="font-size:large;margin-left: 2rem;">VDCS - Latest</span>
+            <span style="font-size:large;margin-left: 2rem;" id="headerTitle"></span>
         </a>
     </div>
     <!-- <div class="navbar-nav-w-menu">
