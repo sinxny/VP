@@ -39,6 +39,7 @@ $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(2, 2);
 $jno = $_GET["jno"];
 $jobName = $_GET["jobName"];
 $weldingDate = $_GET["weldingDate"];
+$group = $_GET["group"];
 
 // 헤더
 // $today = new DateTime();
@@ -59,7 +60,7 @@ $sheet->getStyle("I1:I2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadshe
 $sheet->getStyle("I2:I2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
 
 $sheet->setCellValue('A3', "Company");
-$sheet->setCellValue('B3', "Area");
+$sheet->setCellValue('B3', $group);
 $sheet->setCellValue('C3', "Material Group");
 $sheet->setCellValue('D3', "Total");
 $sheet->setCellValue('E3', "Previous");
@@ -72,7 +73,7 @@ $sheet->getStyle("A3:J3")->getFont()->setSize(10);
 $sheet->getStyle("A3:J3")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('BDD7EE');
 $sheet->getStyle("A3:J3")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-$url = "http://wcfservice.hi-techeng.co.kr/apipwim/getweldingtoday?jno={$jno}&today={$weldingDate}";
+$url = "http://wcfservice.hi-techeng.co.kr/apipwim/getweldingtoday?jno={$jno}&today={$weldingDate}&group={$group}";
 
 $curl = curl_init();
 
@@ -116,30 +117,30 @@ if($responseResult->ResultType = "Success") {
         }
         $isSameCom = $weldingData[$i]->Company;
         // Area
-        if($isSameArea != $weldingData[$i]->Area) {
+        if($isSameArea != $weldingData[$i]->{$group}) {
             $areaEdRow = $rowCnt - 1;
             if($rowCnt != 4 && ($areaEdRow - $areaStRow != 0)) {
                 $sheet->mergeCells("B{$areaStRow}:B{$areaEdRow}");
             }
-            $sheet->setCellValue('B'.$rowCnt, $weldingData[$i]->Area);
+            $sheet->setCellValue('B'.$rowCnt, $weldingData[$i]->{$group});
             $sheet->getStyle('B'.$rowCnt)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A9D08E');
             $areaStRow = $rowCnt;
         }
-        $isSameArea = $weldingData[$i]->Area;
+        $isSameArea = $weldingData[$i]->{$group};
         // Material Group
-        if($weldingData[$i]->Level > 2 || !$weldingData[$i]->Level) {
+        if($weldingData[$i]->Step > 2 || !$weldingData[$i]->Step) {
             $sheet->setCellValue('C'.$rowCnt, $weldingData[$i]->{'Material Group'});
         }
         $sheet->getStyle('C'.$rowCnt)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('E2EFDA');
-        if($weldingData[$i]->Level == 3) {
+        if($weldingData[$i]->Step == 3) {
             $sheet->getStyle("C{$rowCnt}:J{$rowCnt}")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFF2CC');
-        } else if($weldingData[$i]->Level == 2) {
+        } else if($weldingData[$i]->Step == 2) {
             $sheet->mergeCells("B{$rowCnt}:C{$rowCnt}");
             $sheet->getStyle("B{$rowCnt}:J{$rowCnt}")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FCE4D6');
-        } else if($weldingData[$i]->Level == 1) {
+        } else if($weldingData[$i]->Step == 1) {
             $sheet->mergeCells("A{$rowCnt}:C{$rowCnt}");
             $sheet->getStyle("A{$rowCnt}:J{$rowCnt}")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('E6E6FA');
-        } else if($weldingData[$i]->Level == 0) {
+        } else if($weldingData[$i]->Step == 0) {
             $sheet->mergeCells("A{$rowCnt}:C{$rowCnt}");
             $sheet->getStyle("A{$rowCnt}:J{$rowCnt}")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('F4B084');
         }
@@ -148,60 +149,48 @@ if($responseResult->ResultType = "Success") {
         $sheet->setCellValue('D'.$rowCnt, $total);
         if($total == 0 || $total == ''){
             $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($total, ".")) {
-            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
-            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         }
         // Previous
         $previous = str_replace(",", "", $weldingData[$i]->Previous);
         $sheet->setCellValue('E'.$rowCnt, $previous);
         if($previous == 0 || $previous == ''){
             $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($previous, ".")) {
-            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
-            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         }
         // To Day Work
         $toDayWork = str_replace(",", "", $weldingData[$i]->{'To Day Work'});
         $sheet->setCellValue('F'.$rowCnt, $toDayWork);
         if($toDayWork == 0 || $toDayWork == ''){
             $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($toDayWork, ".")) {
-            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
-            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         }
         // Accumulative
         $accumulative = str_replace(",", "", $weldingData[$i]->Accumulative);
         $sheet->setCellValue('G'.$rowCnt, $accumulative);
         if($accumulative == 0 || $accumulative == ''){
             $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($accumulative, ".")) {
-            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
-            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         }
         // Remain
         $remain = str_replace(",", "", $weldingData[$i]->Remain);
         $sheet->setCellValue('H'.$rowCnt, $remain);
         if($remain == 0 || $remain == ''){
             $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($remain, ".")) {
-            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
-            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         }
         // Work Progress
         $workProgress = $weldingData[$i]->{'Work Progress'};
         $sheet->setCellValue('I'.$rowCnt, $workProgress);
         if($workProgress == 0 || $workProgress == ''){
             $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($remain, ".")) {
-            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
-            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         }
         // Remark
         $sheet->setCellValue('J'.$rowCnt, $weldingData[$i]->Remark);
@@ -219,6 +208,7 @@ $sheet->getStyle("A3:J{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle
 
 // 행 가운데 정렬
 $sheet->getStyle('A4:A'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('B4:B'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
 
 // 셀 높이
 for($i = 1; $i <= $rowCnt; $i++) {

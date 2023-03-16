@@ -1,14 +1,14 @@
 <style>
-.level3 {
+.step3 {
     background-color:#FFF2CC;
 }
-.level2 {
+.step2 {
     background-color:#FCE4D6;
 }
-.level1 {
+.step1 {
     background-color:#E6E6FA;
 }
-.level0 {
+.step0 {
     background-color:#F4B084;
 }
 .materialGrp {
@@ -36,8 +36,10 @@ var vm = new Vue({
         jobName : sessionStorage.getItem("jobName"),
         isDownError: false,
         weldingDate : new Date().toISOString().substring(0, 10),
-        noData : false,
-        isChangeData : false
+        noData : true,
+        isChangeData : false,
+        init: true,
+        selectGrp: 'Area'
     },
     created() {
         // 최신문서 데이터 불러오기
@@ -49,62 +51,90 @@ var vm = new Vue({
     methods: {
         // 데이터 가져오기
         getWeldingDayData() {
-        var data = this;
-        var jno = data.jno;
-        if(jno) {
-            var url = "https://wcfservice.htenc.co.kr/apipwim/getweldingtoday?jno="+ jno +"&today=" + this.weldingDate;
-            axios.get(url).then(
-                function(response) {
-                    var welding = response["data"];
-                    if(welding["ResultType"] == "Success") {
-                        data.weldingDayList = welding["Value"];
-                        data.noData = false;
-                    } else {
-                        data.noData = true;
-                    }
-                })
-                .finally(function () {
-                    // 같은 Company 행 병합
-                    $(".rowspanCom").each(function() {
-                        var textCom = $(this).text();
-                        var rows = $(".rowspanCom").filter(function() {
-                            return $(this).text() === textCom;
-                        })
-                        if(rows.length > 1) {
-                            rows.eq(0).attr("rowspan", rows.length);
-                            rows.not(":eq(0)").remove();
-                        }
-                    });
-
-                    // 같은 Area 행 병합
-                    var sameCnt = 1;
-                    var criteria = '';
-                    var area = '';
-                    var removeObj = [];
-                    $(".rowspanArea").each(function(i, obj) {
-                        if(area == $(obj).text()) {
-                            sameCnt++;
+            $(".dx-loadpanel-content").removeClass("dx-state-invisible").addClass("dx-state-visible");
+            var data = this;
+            var jno = data.jno;
+            if(jno) {
+                var url = "https://wcf.htenc.co.kr/apipwim/getweldingtoday?jno="+ jno +"&today=" + this.weldingDate + "&group=" + this.selectGrp;
+                axios.get(url).then(
+                    function(response) {
+                        $("td").show();
+                        $(".rowspanCom").attr("rowspan", '');
+                        var welding = response["data"];
+                        if(welding["ResultType"] == "Success") {
+                            data.weldingDayList = welding["Value"];
+                            data.noData = false;
                         } else {
-                            $(".rowspanArea").eq(criteria).attr("rowspan", sameCnt);
-                            for(var j = 1; j <= sameCnt - 1; j++) {
-                                removeObj.push(criteria + j);
-                            }
-                            sameCnt = 1;
-                            criteria = i;
+                            data.noData = true;
                         }
-                        area = $(obj).text();
-                    });
+                        data.init = false;
 
-                    $.each(removeObj.reverse(), function(i, num) {
-                        $(".rowspanArea").eq(num).hide();
+                    })
+                    .finally(function () {
+                        // 같은 Company 행 병합
+                        $(".rowspanCom").each(function() {
+                            var textCom = $(this).text();
+                            var rows = $(".rowspanCom").filter(function() {
+                                return $(this).text() === textCom;
+                            })
+                            if(rows.length > 1) {
+                                rows.eq(0).attr("rowspan", rows.length);
+                                rows.not(":eq(0)").hide();
+                            }
+                        });
+
+                        // 같은 Area 행 병합
+                        var sameCnt = 1;
+                        var criteria = '';
+                        var area = '';
+                        var removeObj = [];
+                        $(".rowspanArea").each(function(i, obj) {
+                            var classIndex = $(obj).attr("class").search("step_");
+                            var step = $(obj).attr("class").substr(classIndex, 6).split("_");
+                            if((step[1] > 1) || (step[1] == '')) {
+                                $(obj).show();
+                            } else {
+                                $(obj).hide();
+                            }
+
+                            if(area == $(obj).text()) {
+                                sameCnt++;
+                            } else {
+                                $(".rowspanArea").eq(criteria).attr("rowspan", sameCnt);
+                                for(var j = 1; j <= sameCnt - 1; j++) {
+                                    removeObj.push(criteria + j);
+                                }
+                                sameCnt = 1;
+                                criteria = i;
+                            }
+                            area = $(obj).text();
+                        });
+
+                        $.each(removeObj.reverse(), function(i, num) {
+                            $(".rowspanArea").eq(num).hide();
+                        });
+
+                        // Material Grp
+                        $(".materialStep").each(function(i, obj) {
+                            var classIndex = $(obj).attr("class").search("step_");
+                            var step = $(obj).attr("class").substr(classIndex, 6).split("_");
+
+                            var step = $(obj).attr("class").substr(classIndex, 6).split("_");
+                            if((step[1] > 2) || (step[1] == '')){
+                                $(obj).show();
+                            } else {
+                                $(obj).hide();
+                            }
+                        });
+
+                        $(".dx-loadpanel-content").removeClass("dx-state-visible").addClass("dx-state-invisible");
                     });
-                });
             }
         },
         // 최신목록 내보내기
         exportWeldingExcel() {
             this.weldingDateChange();
-            var url = "welding/welding_day_download_excel.php?jno=" + this.jno + "&weldingDate=" + this.weldingDate + "&jobName=" + this.jobName;
+            var url = "welding/welding_day_download_excel.php?jno=" + this.jno + "&weldingDate=" + this.weldingDate + "&jobName=" + this.jobName + "&group=" + this.selectGrp;
             this.axiosDownload(url, "GET");
         },
         // 쿠키 삭제
@@ -241,6 +271,10 @@ var vm = new Vue({
             } else {
                 return num;
             }
+        },
+        // 날짜 키보드 입력 제한
+        dateBanKey(event) {
+            event.preventDefault();
         }
     }
 })
@@ -248,23 +282,20 @@ var vm = new Vue({
 <div id="app" style="margin-bottom:30px">
 <form id="mainForm" name="mainForm">
 <div class="row mb-1" v-show="!noData && jno">
-    <!-- <div class="col-md-1">
-        <i class="fa-solid fa-magnifying-glass"></i> <b style="font-size:large">Search</b>
-    </div> -->
+    <div class="col-md-1">
+        <select class="form-control" style="height:30px" v-model="selectGrp" @change="getWeldingDayData">
+            <option value="Area">Area</option>
+            <option value="Unit">Unit</option>
+            <option value="Level">Level</option>
+        </select>
+    </div>
     <div class="col-md text-right">
         <span class="d-flex flex-row-reverse" v-show="!noData">
-            <!-- <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="selDocDownload" :disabled="selectList.length == 0" title="선택 다운로드">
-                <i class="fa-solid fa-check" style="font-size:large"></i> 선택 다운로드
-            </button>
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="allDocDownload" :disabled="latestList.length == 0" title="전체 다운로드">
-                <i class="fa-solid fa-floppy-disk" style="font-size:large"></i> 전체 다운로드
-            </button> -->
             <button type="button" class="btn btn-outline-primary btn-sm text-left ml-3 text-center" style="width:130px;" @click="exportWeldingExcel" title="목록 내보내기">
                 <i class="fa-solid fa-file-export" style="font-size:large"></i> 목록 내보내기
             </button>
-            <input type="date" class="form-control" style="height:30px" v-model="weldingDate" @blur="weldingDateChange"/>
+            <input type="date" class="form-control" style="height:30px" v-model="weldingDate" @change="weldingDateChange" @keydown="dateBanKey($event)"/>
         </span>
-        <!-- <button type="button" class="btn btn-outline-dark btn-sm" v-html="icon" @click="collapseChange"></button> -->
     </div>
 </div>
 <div v-show="!noData && jno">
@@ -273,7 +304,7 @@ var vm = new Vue({
             <thead>
                 <tr class="table-primary" style="height:55.5px">
                     <th style="width:8%">Company</th>
-                    <th style="width:8%">Area</th>
+                    <th style="width:8%">{{ selectGrp }}</th>
                     <th style="width:8%">Material Group</th>
                     <th style="width:9%">Total</th>
                     <th style="width:9%">Previous</th>
@@ -285,10 +316,10 @@ var vm = new Vue({
                 </tr>
             </thead>
             <tbody>
-                <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
-                    <td class="rowspanCom text-center" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">{{ welding.Company }}</td>
-                    <td :class="['rowspanArea' ,{'areaColor' : (welding.Level) == ''},{'weldingSum' : (welding.Level) == 2}]" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')">{{ welding.Area }}</td>
-                    <td :class="{'materialGrp' : (welding.Level) == ''}" v-if="(welding.Level > 2) || (welding.Level == '')" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
+                <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'step3' : (welding.Step) == 3, 'step2' : (welding.Step) == 2 ,'step1' : (welding.Step) == 1, 'step0' : (welding.Step) == '0'}">
+                    <td class="rowspanCom text-center" :colspan="(welding.Step == '1') || (welding.Step == '0') ? 3 : 0">{{ welding.Company }}</td>
+                    <td :class="['rowspanArea' ,{'areaColor' : (welding.Step) == ''},{'weldingSum' : (welding.Step) == 2}, `step_${welding.Step}`]" :colspan="welding.Step == 2 ? 2 : 0">{{ welding[selectGrp] }}</td>
+                    <td :class="[{'materialGrp' : (welding.Step) == ''}, 'materialStep', `step_${welding.Step}`]" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
                     <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welding.Total) }}</td>
                     <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welding.Previous) }}</td>
                     <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welding["To Day Work"]) }}</td>
@@ -304,15 +335,36 @@ var vm = new Vue({
 <div class="alert alert-success text-center" v-show="!jno">
   <strong>PROJECT를 선택하세요.</strong>
 </div>
-<div class="alert alert-warning" v-show="noData">
+<div class="alert alert-warning" v-show="noData && !init">
     <strong>조건에 맞는 결과가 없습니다.</strong>
 </div>
 <div id="modalLoading" class="modal modal-loading" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
-            <i class="fa fa-spinner fa-pulse fa-3x text-primary"></i>
+            <!-- <i class="fa fa-spinner fa-pulse fa-3x text-primary"></i> -->
             <!-- <div id="percent" style="padding:1rem;color:white;display:none"></div> -->
         </div>
+    </div>
+</div>
+<div class="dx-overlay-content dx-loadpanel-content dx-state-visible" style="width: 200px; height: 90px; z-index: 1501; left: 50%; top: 50%;" v-show="jno">
+    <div class="dx-loadpanel-content-wrapper">
+        <div class="dx-loadpanel-indicator dx-loadindicator dx-widget">
+            <div class="dx-loadindicator-wrapper">
+                <div class="dx-loadindicator-content">
+                    <div class="dx-loadindicator-icon">
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment7"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment6"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment5"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment4"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment3"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment2"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment1"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment0"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dx-loadpanel-message">Loading...</div>
     </div>
 </div>
 </form>

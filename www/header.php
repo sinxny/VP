@@ -46,7 +46,7 @@
 <link rel="stylesheet" href="jqwidgets-ver14.0.0-src/styles/jqx.base.css" type="text/css" />
 <link rel="stylesheet" href="css/style.css" />
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <link rel="stylesheet" type="text/css" href="DevExtreme/css/dx.light.css" />
 <script src="DevExtreme/js/dx.all.js"></script>
 <style>
