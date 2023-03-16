@@ -1,6 +1,6 @@
 <style>
     #gridContainer {
-        height: 82.05vh;
+        height: 83.4vh;
         font-family: Arial,"Malgun Gothic",sans-serif !important; /*,"AppleGothicNeoSD"*/
     }
     .dx-header-row .dx-cell-focus-disabled {
@@ -26,7 +26,7 @@
         font-size: 11px !important;
     }
     .dx-datagrid-table th, .dx-datagrid-table td {
-        border: 1px solid #A0A0A0 !important;
+        border: 2px solid #A0A0A0 !important;
     }
     .dx-datagrid-headers {
         border : none !important;
@@ -47,7 +47,7 @@
             jobName: sessionStorage.getItem("jobName"),
             isDownError: false,
             noData: false,
-            isoData: []
+            init: true
         },
         created() {
             // NDE BY ISO 데이터 불러오기
@@ -58,7 +58,7 @@
             getNdeIsoData() {
                 // 데이터 여부 확인
                 var data = this;
-                var isoData = [];
+                $(".dx-loadpanel-content").removeClass("dx-state-invisible").addClass("dx-state-visible");
                 axios({
                     url: 'nde/nde_by_iso_data.php?jno=' + this.jno,
                     method: "GET"
@@ -66,10 +66,14 @@
                 .then(function(response) {
                     if(response["data"] == null || response["data"].length == 0) {
                         data.noData = true;
+                        data.init = false;
                     } else {
                         data.noData = false;
-                        data.isoData = JSON.stringify(response["data"]);
+                        data.init = false;
                     }
+                })
+                .finally(function() {
+                    $(".dx-loadpanel-content").removeClass("dx-state-visible").addClass("dx-state-invisible");
                 })
 
                 if(this.noData == false) {
@@ -193,46 +197,47 @@
 
                                 // 헤더 스타일
                                 if (e.rowType == "header" && e.column.caption == "RT") {
-                                    $(e.cellElement.get(0)).attr("style", "border-left: 2px solid red !important;border-top : 2px solid red !important;")
+                                    $(e.cellElement.get(0)).attr("style", "border-left: 3px solid red !important;border-top : 3px solid red !important;")
                                 } else if(e.rowType == "header" && (e.column.caption == "PAUT" || e.column.caption == "MT")) {
-                                    $(e.cellElement.get(0)).attr("style", "border-top : 2px solid red !important;")
+                                    $(e.cellElement.get(0)).attr("style", "border-top : 3px solid red !important;")
                                 } else if (e.rowType == "header" && e.column.caption == "PT") {
-                                    $(e.cellElement.get(0)).attr("style", "border-right: 2px solid red !important;border-top : 2px solid red !important;")
+                                    $(e.cellElement.get(0)).attr("style", "border-right: 3px solid red !important;border-top : 3px solid red !important;")
                                 }
                                 // RT
                                 if(e.columnIndex == 7) {
                                     if(e.rowType == "filter") {
-                                        $(e.cellElement.get(0)).closest(".dx-editor-cell").attr("style", "border-left: 2px solid red !important");
+                                        $(e.cellElement.get(0)).closest(".dx-editor-cell").attr("style", "border-left: 3px solid red !important");
                                     } 
                                     else if (e.rowType != "header"){
-                                        $(e.cellElement.get(0)).attr("style", "border-left: 2px solid red !important; text-align: right")
+                                        $(e.cellElement.get(0)).attr("style", "border-left: 3px solid red !important; text-align: right")
                                         if(e.rowIndex == pageSize - 1 || e.rowIndex == recordCount - 1) {
-                                            $(e.cellElement.get(0)).attr("style", "border-left: 2px solid red !important; border-bottom: 2px solid red !important; text-align: right")
+                                            $(e.cellElement.get(0)).attr("style", "border-left: 3px solid red !important; border-bottom: 3px solid red !important; text-align: right")
                                         }
                                     }
                                 }
                                 // PAUT, MT 
                                 else if(e.rowType != "filter" && (e.columnIndex == 8 || e.columnIndex == 9)) {
                                     if(e.rowIndex == pageSize - 1 || e.rowIndex == recordCount - 1) {
-                                        $(e.cellElement.get(0)).attr("style", "border-bottom: 2px solid red !important; text-align: right")
+                                        $(e.cellElement.get(0)).attr("style", "border-bottom: 3px solid red !important; text-align: right")
                                     }
                                 } 
                                 // PT
                                 else if(e.columnIndex == 10) {
                                     if(e.rowType == "filter") {
-                                        $(e.cellElement.get(0)).closest(".dx-editor-cell").attr("style", "border-right: 2px solid red !important")
+                                        $(e.cellElement.get(0)).closest(".dx-editor-cell").attr("style", "border-right: 3px solid red !important")
                                     } 
                                     else if (e.rowType != "header"){
-                                        $(e.cellElement.get(0)).attr("style", "border-right: 2px solid red !important; text-align: right")
+                                        $(e.cellElement.get(0)).attr("style", "border-right: 3px solid red !important; text-align: right")
                                         if(e.rowIndex == pageSize - 1 || e.rowIndex == recordCount - 1) {
-                                            $(e.cellElement.get(0)).attr("style", "border-right: 2px solid red !important; border-bottom: 2px solid red !important; text-align: right")
+                                            $(e.cellElement.get(0)).attr("style", "border-right: 3px solid red !important; border-bottom: 3px solid red !important; text-align: right")
                                         }
                                     }
                                 }
 
                                 // 돋보기 색깔 넣기
                                 $(e.cellElement.get(0)).find("input").on("keyup", function() {
-                                    if($(this).attr("aria-valuenow")) {
+                                    var isValue = $(this).next("div").hasClass("dx-state-invisible");
+                                    if(isValue) {
                                         $(this).closest("td").find("i").attr("style", "color: red !important");
                                     } else {
                                         $(this).closest("td").find("i").attr("style", "");
@@ -240,8 +245,8 @@
                                 });
 
                                 $(".dx-texteditor-input").each(function() {
-                                    var filterInput = $(this).attr("aria-valuenow");
-                                    if(filterInput) {
+                                    var isValue = $(this).next("div").hasClass("dx-state-invisible");
+                                    if(isValue) {
                                         $(this).closest("td").find("i").attr("style", "color: red !important");
                                     } else {
                                         $(this).closest("td").find("i").attr("style", "");
@@ -281,6 +286,7 @@
             // axios 다운로드
             axiosDownload(url, method) {
                 $("#modalLoading").modal("show");
+                $(".dx-loadpanel-content").removeClass("dx-state-invisible").addClass("dx-state-visible");
                 axios({
                         url: url,
                         method: method,
@@ -321,6 +327,7 @@
                     })
                     .finally(function() {
                         $("#modalLoading").modal("hide");
+                        $(".dx-loadpanel-content").removeClass("dx-state-visible").addClass("dx-state-invisible");
                     });
             },
             // percenatage
@@ -397,8 +404,7 @@
 </script>
 <div id="app" style="margin-bottom:30px">
     <form id="mainForm" name="mainForm">
-        <div class="row mb-1 px-4" v-show="!noData && jno">
-
+        <div class="row mb-1 px-4" v-show="!noData && jno && !init">
             <div class="dx-viewport">
                 <div class="demo-container">
                     <div id="gridContainer"></div>
@@ -414,9 +420,30 @@
         <div id="modalLoading" class="modal modal-loading" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
-                    <i class="fa fa-spinner fa-pulse fa-3x text-primary"></i>
+                    <!-- <i class="fa fa-spinner fa-pulse fa-3x text-primary"></i> -->
                     <!-- <div id="percent" style="padding:1rem;color:white;display:none"></div> -->
                 </div>
+            </div>
+        </div>
+        <div class="dx-overlay-content dx-loadpanel-content dx-state-invisible" style="width: 200px; height: 90px; z-index: 1501; left: 50%; top: 50%;" v-show="jno">
+            <div class="dx-loadpanel-content-wrapper">
+                <div class="dx-loadpanel-indicator dx-loadindicator dx-widget">
+                    <div class="dx-loadindicator-wrapper">
+                        <div class="dx-loadindicator-content">
+                            <div class="dx-loadindicator-icon">
+                                <div class="dx-loadindicator-segment dx-loadindicator-segment7"></div>
+                                <div class="dx-loadindicator-segment dx-loadindicator-segment6"></div>
+                                <div class="dx-loadindicator-segment dx-loadindicator-segment5"></div>
+                                <div class="dx-loadindicator-segment dx-loadindicator-segment4"></div>
+                                <div class="dx-loadindicator-segment dx-loadindicator-segment3"></div>
+                                <div class="dx-loadindicator-segment dx-loadindicator-segment2"></div>
+                                <div class="dx-loadindicator-segment dx-loadindicator-segment1"></div>
+                                <div class="dx-loadindicator-segment dx-loadindicator-segment0"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dx-loadpanel-message">Loading...</div>
             </div>
         </div>
     </form>

@@ -22,11 +22,12 @@
 var vm = new Vue({
     el: '#app',
     data: {
-        pkgDataList : [],
-        jno : sessionStorage.getItem("jno"),
-        jobName : sessionStorage.getItem("jobName"),
+        pkgDataList: [],
+        jno: sessionStorage.getItem("jno"),
+        jobName: sessionStorage.getItem("jobName"),
         isDownError: false,
-        noData : false
+        noData: false,
+        init: true
     },
     created() {
         // PKG 데이터 불러오기
@@ -35,12 +36,13 @@ var vm = new Vue({
     methods: {
         // 데이터 가져오기
         getPkgListData() {
-        var data = this;
-        var jno = data.jno;
-        if(jno) {
-            var url = "https://wcfservice.htenc.co.kr/apipwim/getpackage?jno=" + this.jno
-            axios.get(url).then(
-                function(response) {
+            $(".dx-loadpanel-content").removeClass("dx-state-invisible").addClass("dx-state-visible");
+            var data = this;
+            var jno = data.jno;
+            if(jno) {
+                var url = "https://wcf.htenc.co.kr/apipwim/getpackage?jno=" + this.jno
+                axios.get(url)
+                .then(function(response) {
                     var pkgData = response["data"];
                     if(pkgData["ResultType"] == "Success") {
                         data.pkgDataList = pkgData["Value"];
@@ -49,8 +51,10 @@ var vm = new Vue({
                         } else {
                             data.noData = true;
                         }
+                        data.init = false;
                     } else {
                         data.noData = true;
+                        data.init = false;
                     }
                 })
                 .finally(function () {
@@ -59,6 +63,8 @@ var vm = new Vue({
                     $(".leftFixSecond").css("left", firstWidth);
                     var secondWidth = $(".leftFixFirst").eq(1).outerWidth() + $(".leftFixSecond").eq(1).outerWidth();
                     $(".leftFixThird").css("left", secondWidth);
+
+                    $(".dx-loadpanel-content").removeClass("dx-state-visible").addClass("dx-state-invisible");
                 });
             }
         },
@@ -74,6 +80,7 @@ var vm = new Vue({
         // axios 다운로드
         axiosDownload(url, method) {
             $("#modalLoading").modal("show");
+            $(".dx-loadpanel-content").removeClass("dx-state-invisible").addClass("dx-state-visible");
             axios({
                 url: url,
                 method: method,
@@ -114,6 +121,7 @@ var vm = new Vue({
             })
             .finally(function() {
                 $("#modalLoading").modal("hide");
+                $(".dx-loadpanel-content").removeClass("dx-state-visible").addClass("dx-state-invisible");
             });
         },
         // percenatage
@@ -198,7 +206,7 @@ var vm = new Vue({
 </script>
 <div id="app" style="margin-bottom:30px">
 <form id="mainForm" name="mainForm">
-<div class="row mb-1" v-show="!noData && jno">
+<div class="row mb-1" v-show="!noData && jno && !init">
     <!-- <div class="col-md-1">
         <i class="fa-solid fa-magnifying-glass"></i> <b style="font-size:large">Search</b>
     </div> -->
@@ -210,7 +218,7 @@ var vm = new Vue({
         </span>
     </div>
 </div>
-<div v-show="!noData && jno">
+<div v-show="!noData && jno && !init">
     <div style="height: 80vh;overflow:auto">
         <table class="table table-bordered table-sm tblPkgList fixHeadColumn">
             <thead style="position: sticky; top:0">
@@ -292,15 +300,36 @@ var vm = new Vue({
 <div class="alert alert-success text-center" v-show="!jno">
   <strong>PROJECT를 선택하세요.</strong>
 </div>
-<div class="alert alert-warning" v-show="noData">
+<div class="alert alert-warning" v-show="noData && !init">
     <strong>조건에 맞는 결과가 없습니다.</strong>
 </div>
 <div id="modalLoading" class="modal modal-loading" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
-            <i class="fa fa-spinner fa-pulse fa-3x text-primary"></i>
+            <!-- <i class="fa fa-spinner fa-pulse fa-3x text-primary"></i> -->
             <!-- <div id="percent" style="padding:1rem;color:white;display:none"></div> -->
         </div>
+    </div>
+</div>
+<div class="dx-overlay-content dx-loadpanel-content dx-state-visible" style="width: 200px; height: 90px; z-index: 1501; left: 50%; top: 50%;" v-show="jno">
+    <div class="dx-loadpanel-content-wrapper">
+        <div class="dx-loadpanel-indicator dx-loadindicator dx-widget">
+            <div class="dx-loadindicator-wrapper">
+                <div class="dx-loadindicator-content">
+                    <div class="dx-loadindicator-icon">
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment7"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment6"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment5"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment4"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment3"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment2"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment1"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment0"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dx-loadpanel-message">Loading...</div>
     </div>
 </div>
 </form>

@@ -38,25 +38,37 @@ var vm = new Vue({
         jno : sessionStorage.getItem("jno"),
         jobName : sessionStorage.getItem("jobName"),
         isDownError: false,
-        weldingDate : '',
+        today : '',
+        nextday : '',
         noData : false,
         isChangeData : false,
-        headerDateList : []
+        headerDateList : [],
+        dateCnt : 0,
+        init: true
     },
     created() {
         // 날짜 min/max값 넣기
         dateMinMaxAppend();
 
         // 31일전 날짜를 기본값으로
-        var now = new Date();
-        var ntDate = new Date(now.setDate(now.getDate() - 30));
+        var stDate = new Date();
+        var ntDate = new Date(stDate.setDate(stDate.getDate() - 30));
         var year = ntDate.getFullYear();
         var month = String(ntDate.getMonth() + 1);
         month = month.padStart(2, '0');
         var day = String(ntDate.getDate());
         day = day.padStart(2, '0');
 
-        this.weldingDate = [year, month, day].join('-');
+        this.today = [year, month, day].join('-');
+
+        var now = new Date();
+        year = now.getFullYear();
+        month = String(now.getMonth() + 1);
+        month = month.padStart(2, '0');
+        day = String(now.getDate());
+        day = day.padStart(2, '0');
+
+        this.nextday = [year, month, day].join('-');
 
         // 최신문서 데이터 불러오기
         this.getWeldingMonthData();
@@ -64,33 +76,36 @@ var vm = new Vue({
     methods: {
         // 데이터 가져오기
         getWeldingMonthData() {
-        var data = this;
-        var jno = data.jno;
-        if(jno) {
-            var url = "https://wcfservice.htenc.co.kr/apipwim/getweldingmonth?jno=" + this.jno + "&today=" + this.weldingDate;
-            axios.get(url).then(
-                function(response) {
-                    var welding = response["data"];
-                    if(welding["ResultType"] == "Success") {
-                        data.weldingDayList = welding["Value"];
-                        data.noData = false;
-
-                        // 날짜 헤더
-                        var weldingKeys = Object.keys(data.weldingDayList[0]);
-
-                        // 날짜 값 가져오기
-                        var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
-                        var dateList = [];
-                        $.each(weldingKeys, function(i, value) {
-                            if ( regex.test(value) ) {
-                                dateList.push(value);
-                            }
-                        });
-                        data.headerDateList = dateList;
-
-                    } else {
-                        data.noData = true;
-                    }
+            $(".dx-loadpanel-content").removeClass("dx-state-invisible").addClass("dx-state-visible");
+            var data = this;
+            var jno = data.jno;
+            if(jno) {
+                var url = "https://wcf.htenc.co.kr/apipwim/getweldingmonth?jno=" + this.jno + "&today=" + this.today + "&nextday=" + this.nextday;
+                axios.get(url)
+                .then(function(response) {
+                        var welding = response["data"];
+                        if(welding["ResultType"] == "Success") {
+                            data.weldingDayList = welding["Value"];
+                            data.noData = false;
+                            
+                            // 날짜 헤더
+                            var weldingKeys = Object.keys(data.weldingDayList[0]);
+                            
+                            // 날짜 값 가져오기
+                            var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
+                            var dateList = [];
+                            $.each(weldingKeys, function(i, value) {
+                                if ( regex.test(value) ) {
+                                    dateList.push(value);
+                                }
+                            });
+                            data.headerDateList = dateList;
+                            data.dateCnt = dateList.length;
+                            data.init = false;
+                        } else {
+                            data.noData = true;
+                            data.init = false;
+                        }
                 })
                 .finally(function () {
                     // 같은 Company 행 병합
@@ -159,13 +174,15 @@ var vm = new Vue({
                         width += $("." + RightArray[i]).eq(1).outerWidth();
                         $("." + RightArray[i+1]).css("right", width);
                     }
+
+                    $(".dx-loadpanel-content").removeClass("dx-state-visible").addClass("dx-state-invisible");
                 });
             }
         },
         // 최신목록 내보내기
         exportWeldingExcel() {
-            this.weldingDateChange();
-            var url = "welding/welding_month_download_excel.php?jno=" + this.jno + "&weldingDate=" + this.weldingDate + "&jobName=" + this.jobName;
+            // this.weldingDateChange();
+            var url = "welding/welding_month_download_excel.php?jno=" + this.jno + "&today=" + this.today + "&jobName=" + this.jobName + "&nextday=" + this.nextday;
             this.axiosDownload(url, "GET");
         },
         // 쿠키 삭제
@@ -175,6 +192,7 @@ var vm = new Vue({
         // axios 다운로드
         axiosDownload(url, method) {
             $("#modalLoading").modal("show");
+            $(".dx-loadpanel-content").removeClass("dx-state-invisible").addClass("dx-state-visible");
             axios({
                 url: url,
                 method: method,
@@ -215,6 +233,7 @@ var vm = new Vue({
             })
             .finally(function() {
                 $("#modalLoading").modal("hide");
+                $(".dx-loadpanel-content").removeClass("dx-state-visible").addClass("dx-state-invisible");
             });
         },
         // percenatage
@@ -289,8 +308,14 @@ var vm = new Vue({
         // 날짜 데이터 변경
         weldingDateChange() {
             var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
-            if ( !regex.test(this.weldingDate) ) {
+            if ( !regex.test(this.today) || !regex.test(this.nextday)) {
                 alert("날짜 값이 잘못되었습니다.");
+            } else if (this.today > this.nextday) {
+                var temp = this.today;
+                this.today = this.nextday;
+                this.nextday = temp;
+
+                this.getWeldingMonthData();
             } else {
                 this.getWeldingMonthData();
             }
@@ -302,18 +327,22 @@ var vm = new Vue({
             } else {
                 return num;
             }
+        },
+        // 날짜 키보드 입력 제한
+        dateBanKey(event) {
+            event.preventDefault();
         }
     }
 })
 </script>
 <div id="app" style="margin-bottom:30px">
 <form id="mainForm" name="mainForm">
-<div class="row mb-1" v-show="!noData && jno">
+<div class="row mb-1" v-show="!noData && jno && !init">
     <!-- <div class="col-md-1">
         <i class="fa-solid fa-magnifying-glass"></i> <b style="font-size:large">Search</b>
     </div> -->
     <div class="col-md text-right">
-        <span class="d-flex flex-row-reverse" v-show="!noData">
+        <span class="d-flex flex-row-reverse align-items-center" v-show="!noData">
             <!-- <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="selDocDownload" :disabled="selectList.length == 0" title="선택 다운로드">
                 <i class="fa-solid fa-check" style="font-size:large"></i> 선택 다운로드
             </button>
@@ -323,12 +352,13 @@ var vm = new Vue({
             <button type="button" class="btn btn-outline-primary btn-sm text-left ml-3 text-center" style="width:130px;" @click="exportWeldingExcel" title="목록 내보내기">
                 <i class="fa-solid fa-file-export" style="font-size:large"></i> 목록 내보내기
             </button>
-            <input type="date" class="form-control" style="height:30px" v-model="weldingDate" @blur="weldingDateChange"/>
+            <input type="date" class="form-control ml-2" style="height:30px" v-model="nextday" @change="weldingDateChange" @keydown="dateBanKey($event)"/> ~
+            <input type="date" class="form-control mr-2" style="height:30px" v-model="today" @change="weldingDateChange" @keydown="dateBanKey($event)"/>
         </span>
         <!-- <button type="button" class="btn btn-outline-dark btn-sm" v-html="icon" @click="collapseChange"></button> -->
     </div>
 </div>
-<div v-show="!noData && jno">
+<div v-show="!noData && jno && !init">
     <div style="height: 80vh;overflow:auto">
         <table class="table table-bordered table-sm tblWeldingMonth fixHeadColumn">
             <thead>
@@ -338,7 +368,7 @@ var vm = new Vue({
                     <th class="responsiveTblRow fixLeft fixLeftThird" rowspan="2">Material Group</th>
                     <th class="responsiveTblRow fixLeft fixLeftFourth" rowspan="2">Total</th>
                     <th class="responsiveTblRow fixLeft fixLeftFiveth" rowspan="2">Previous</th>
-                    <th colspan="31">Work Dia-inch for Monthly</th>
+                    <th :colspan="dateCnt">Work Dia-inch for Monthly</th>
                     <th rowspan="2" class="responsiveTblRow fixRight fixRightFourth">Accumulative</th>
                     <th rowspan="2" class="responsiveTblRow fixRight fixRightThird">Remain</th>
                     <th rowspan="2" class="responsiveTblRow fixRight fixRightSecond">Work Progress(%)</th>
@@ -368,15 +398,36 @@ var vm = new Vue({
 <div class="alert alert-success text-center" v-show="!jno">
   <strong>PROJECT를 선택하세요.</strong>
 </div>
-<div class="alert alert-warning" v-show="noData">
+<div class="alert alert-warning" v-show="noData && !init">
     <strong>조건에 맞는 결과가 없습니다.</strong>
 </div>
 <div id="modalLoading" class="modal modal-loading" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
-            <i class="fa fa-spinner fa-pulse fa-3x text-primary"></i>
+            <!-- <i class="fa fa-spinner fa-pulse fa-3x text-primary"></i> -->
             <!-- <div id="percent" style="padding:1rem;color:white;display:none"></div> -->
         </div>
+    </div>
+</div>
+<div class="dx-overlay-content dx-loadpanel-content dx-state-visible" style="width: 200px; height: 90px; z-index: 1501; left: 50%; top: 50%;" v-show="jno">
+    <div class="dx-loadpanel-content-wrapper">
+        <div class="dx-loadpanel-indicator dx-loadindicator dx-widget">
+            <div class="dx-loadindicator-wrapper">
+                <div class="dx-loadindicator-content">
+                    <div class="dx-loadindicator-icon">
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment7"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment6"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment5"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment4"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment3"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment2"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment1"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment0"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dx-loadpanel-message">Loading...</div>
     </div>
 </div>
 </form>

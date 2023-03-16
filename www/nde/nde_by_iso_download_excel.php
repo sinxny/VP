@@ -137,7 +137,7 @@ if($responseResult->ResultType = "Success") {
         if($ndeRate == 0 || $ndeRate == ''){
             $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($ndeRate, ".")) {
-            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
             $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
@@ -147,7 +147,7 @@ if($responseResult->ResultType = "Success") {
         if($bw == 0 || $bw == ''){
             $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($bw, ".")) {
-            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
             $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
@@ -157,7 +157,7 @@ if($responseResult->ResultType = "Success") {
         if($sw == 0 || $sw == ''){
             $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($sw, ".")) {
-            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
             $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
@@ -167,7 +167,7 @@ if($responseResult->ResultType = "Success") {
         if($targetJoint == 0 || $targetJoint == ''){
             $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($targetJoint, ".")) {
-            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
             $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
@@ -177,7 +177,7 @@ if($responseResult->ResultType = "Success") {
         if($rt == 0 || $rt == ''){
             $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($rt, ".")) {
-            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
             $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
@@ -187,7 +187,7 @@ if($responseResult->ResultType = "Success") {
         if($paut == 0 || $paut == ''){
             $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($paut, ".")) {
-            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
             $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
@@ -197,7 +197,7 @@ if($responseResult->ResultType = "Success") {
         if($mt == 0 || $mt == ''){
             $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($mt, ".")) {
-            $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+            $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
             $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
@@ -207,7 +207,7 @@ if($responseResult->ResultType = "Success") {
         if($pt == 0 || $pt == ''){
             $sheet->getStyle("K{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($pt, ".")) {
-            $sheet->getStyle("K{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+            $sheet->getStyle("K{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
             $sheet->getStyle("K{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
@@ -217,7 +217,7 @@ if($responseResult->ResultType = "Success") {
         if($reportJoint == 0 || $reportJoint == ''){
             $sheet->getStyle("L{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($reportJoint, ".")) {
-            $sheet->getStyle("L{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+            $sheet->getStyle("L{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
             $sheet->getStyle("L{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
@@ -227,7 +227,7 @@ if($responseResult->ResultType = "Success") {
         if($balance == 0 || $balance == ''){
             $sheet->getStyle("M{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($balance, ".")) {
-            $sheet->getStyle("M{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+            $sheet->getStyle("M{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
             $sheet->getStyle("M{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
@@ -237,7 +237,7 @@ if($responseResult->ResultType = "Success") {
         if($progress == 0 || $progress == ''){
             $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($progress, ".")) {
-            $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+            $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
             $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
@@ -248,7 +248,7 @@ if($responseResult->ResultType = "Success") {
 }
 
 // 들여쓰기
-$sheet->getStyle('A5:O'.$rowCnt)->getAlignment()->setIndent(1);
+$sheet->getStyle('B5:O'.$rowCnt)->getAlignment()->setIndent(1);
 
 // 셀 높이
 for($i = 1; $i <= $rowCnt; $i++) {
@@ -261,6 +261,7 @@ for($i = 1; $i <= $rowCnt; $i++) {
 // $sheet->getStyle('A3:O'.$rowCnt)->getAlignment()->setWrapText(true);
 
 // 텍스트 맞춤
+$sheet->getStyle("A1:A{$rowCnt}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle("A1:O{$rowCnt}")->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
 // 자동 필터

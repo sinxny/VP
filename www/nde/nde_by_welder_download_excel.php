@@ -129,48 +129,76 @@ if($responseResult->ResultType = "Success") {
         $sheet->setCellValue('C'.$rowCnt, $rtUtSel);
         if($rtUtSel == 0 || $rtUtSel == ''){
             $sheet->getStyle("C{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($rtUtSel, ".")) {
+            $sheet->getStyle("C{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
+        } else {
+            $sheet->getStyle("C{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
         // SHOOT
         $shoot = str_replace(",", "", $weldingData[$i]->SHOOT);
         $sheet->setCellValue('D'.$rowCnt, $shoot);
         if($shoot == 0 || $shoot == ''){
             $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($shoot, ".")) {
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
+        } else {
+            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
         // BALANCE
         $balance = str_replace(",", "", $weldingData[$i]->BALANCE);
         $sheet->setCellValue('E'.$rowCnt, $balance);
         if($balance == 0 || $balance == ''){
             $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($balance, ".")) {
+            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
+        } else {
+            $sheet->getStyle("E{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
         // REPAIR
         $repair = str_replace(",", "", $weldingData[$i]->REPAIR);
         $sheet->setCellValue('F'.$rowCnt,$repair);
         if($repair == 0 || $repair == ''){
             $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($repair, ".")) {
+            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
+        } else {
+            $sheet->getStyle("F{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
         // REPAIR PROGRESS(%)
         $repairProgress = str_replace(",", "", $weldingData[$i]->REPAIR_PROGRESS);
         $sheet->setCellValue('G'.$rowCnt, $repairProgress);
         if($repairProgress == 0 || $repairProgress == ''){
             $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else {
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         }
         // USED FILM
         $usedFilm = str_replace(",", "", $weldingData[$i]->USED_FILM);
         $sheet->setCellValue('H'.$rowCnt, $usedFilm);
         if($usedFilm == 0 || $usedFilm == ''){
             $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($usedFilm, ".")) {
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
+        } else {
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
         // REPAIR FILM
         $repairFilm = str_replace(",", "", $weldingData[$i]->REPAIR_FILM);
         $sheet->setCellValue('I'.$rowCnt, $repairFilm);
         if($repairFilm == 0 || $repairFilm == ''){
             $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($repairFilm, ".")) {
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
+        } else {
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
         // REPAIR FILM PROGRESS(%)
         $repairFilmProgress = str_replace(",", "", $weldingData[$i]->REPAIR_FILM_PROGRESS);
         $sheet->setCellValue('J'.$rowCnt, $repairFilmProgress);
         if($repairFilmProgress == 0 || $repairFilmProgress == ''){
             $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else {
+            $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         }
         // REMARK
         $sheet->setCellValue('K'.$rowCnt, $weldingData[$i]->REMARK);

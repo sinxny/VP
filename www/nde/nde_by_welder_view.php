@@ -21,7 +21,8 @@ var vm = new Vue({
         isDownError: false,
         weldingDate : new Date().toISOString().substring(0, 10),
         noData : false,
-        isChangeData : false
+        isChangeData : false,
+        init: true
     },
     created() {
         // 최신문서 데이터 불러오기
@@ -33,19 +34,25 @@ var vm = new Vue({
     methods: {
         // 데이터 가져오기
         getWeldingDayData() {
-        var data = this;
-        var jno = data.jno;
-        if(jno) {
-            var url = "https://wcfservice.htenc.co.kr/apipwim/getndewelder?jno=" + this.jno;
-            axios.get(url).then(
-                function(response) {
+            $(".dx-loadpanel-content").removeClass("dx-state-invisible").addClass("dx-state-visible");
+            var data = this;
+            var jno = data.jno;
+            if(jno) {
+                var url = "https://wcf.htenc.co.kr/apipwim/getndewelder?jno=" + this.jno;
+                axios.get(url)
+                .then(function(response) {
                     var welder = response["data"];
                     if(welder["ResultType"] == "Success" && welder["Value"].length != 0) {
                         data.ndeWelderList = welder["Value"];
                         data.noData = false;
+                        data.init = false;
                     } else {
                         data.noData = true;
+                        data.init = false;
                     }
+                })
+                .finally(function() {
+                    $(".dx-loadpanel-content").removeClass("dx-state-visible").addClass("dx-state-invisible");
                 })
             }
         },
@@ -61,6 +68,7 @@ var vm = new Vue({
         // axios 다운로드
         axiosDownload(url, method) {
             $("#modalLoading").modal("show");
+            $(".dx-loadpanel-content").removeClass("dx-state-invisible").addClass("dx-state-visible");
             axios({
                 url: url,
                 method: method,
@@ -101,6 +109,7 @@ var vm = new Vue({
             })
             .finally(function() {
                 $("#modalLoading").modal("hide");
+                $(".dx-loadpanel-content").removeClass("dx-state-visible").addClass("dx-state-invisible");
             });
         },
         // percenatage
@@ -185,7 +194,7 @@ var vm = new Vue({
 </script>
 <div id="app" style="margin-bottom:30px">
 <form id="mainForm" name="mainForm">
-<div class="row mb-1" v-show="!noData && jno">
+<div class="row mb-1" v-show="!noData && jno && !init">
     <!-- <div class="col-md-1">
         <i class="fa-solid fa-magnifying-glass"></i> <b style="font-size:large">Search</b>
     </div> -->
@@ -204,7 +213,7 @@ var vm = new Vue({
         <!-- <button type="button" class="btn btn-outline-dark btn-sm" v-html="icon" @click="collapseChange"></button> -->
     </div>
 </div>
-<div v-show="!noData && jno">
+<div v-show="!noData && jno && !init">
     <div style="height: 80vh;overflow:auto">
         <table class="table table-bordered fixHeadColumn" id="tblNdeWelder">
             <thead>
@@ -247,15 +256,36 @@ var vm = new Vue({
 <div class="alert alert-success text-center" v-show="!jno">
   <strong>PROJECT를 선택하세요.</strong>
 </div>
-<div class="alert alert-warning" v-show="noData">
+<div class="alert alert-warning" v-show="noData && !init">
     <strong>조건에 맞는 결과가 없습니다.</strong>
 </div>
 <div id="modalLoading" class="modal modal-loading" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
-            <i class="fa fa-spinner fa-pulse fa-3x text-primary"></i>
+            <!-- <i class="fa fa-spinner fa-pulse fa-3x text-primary"></i> -->
             <!-- <div id="percent" style="padding:1rem;color:white;display:none"></div> -->
         </div>
+    </div>
+</div>
+<div class="dx-overlay-content dx-loadpanel-content dx-state-visible" style="width: 200px; height: 90px; z-index: 1501; left: 50%; top: 50%;" v-show="jno">
+    <div class="dx-loadpanel-content-wrapper">
+        <div class="dx-loadpanel-indicator dx-loadindicator dx-widget">
+            <div class="dx-loadindicator-wrapper">
+                <div class="dx-loadindicator-content">
+                    <div class="dx-loadindicator-icon">
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment7"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment6"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment5"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment4"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment3"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment2"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment1"></div>
+                        <div class="dx-loadindicator-segment dx-loadindicator-segment0"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dx-loadpanel-message">Loading...</div>
     </div>
 </div>
 </form>
