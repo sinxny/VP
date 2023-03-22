@@ -29,6 +29,16 @@ p.emptyBox {
 $(document).ready(function(){
     //로그인 버튼 클릭
     $("#btnLogin").on("click", doLogin);
+
+    var menuRight = '<?php echo $menuRight?>';
+
+    if(menuRight == "all") {
+
+    } else if(menuRight == "vp") {
+        $("#loginLabel").text("VDCS Web");
+    } else if(menuRight == "cm") {
+        $("#loginLabel").text("공사관리 시스템");
+    }
 });
 
 //엔터 키 입력
@@ -88,7 +98,7 @@ function doLogin(e) {
 <img alt="HiTech Engineering" src="../images/hi-tech_logo_2021.png" height="26px" width="180px" />
 </div>
 <div class="d-flex justify-content-center p-4">
-<h1 style="color: #006699;">VDCS Web</h1>
+<h1 style="color: #006699;" id="loginLabel"></h1>
 </div>
 <div id="divLoginValidationMsg" class="alert alert-danger" style="display: none;"></div>
 <div class="form-group">
