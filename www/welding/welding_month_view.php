@@ -187,7 +187,6 @@ var vm = new Vue({
 
                     $(".tblWeldingMonth").closest("div").on('scroll', function() {
                         var movingMonthly = thDate + $(this).scrollLeft();
-                        console.log(movingMonthly);
                         $(".dateTh").attr("style", "text-align:left;padding-left:" + movingMonthly + "px !important");
                     });
                 });
