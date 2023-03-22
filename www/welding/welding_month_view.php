@@ -32,8 +32,6 @@
 var vm = new Vue({
     el: '#app',
     data: {
-        icon: '<i class="fa-solid fa-caret-up"></i>',
-        collapse : false,
         weldingDayList : [],
         jno : sessionStorage.getItem("jno"),
         jobName : sessionStorage.getItem("jobName"),
@@ -176,6 +174,22 @@ var vm = new Vue({
                     }
 
                     $(".dx-loadpanel-content").removeClass("dx-state-visible").addClass("dx-state-invisible");
+
+                    // Work Dia-inch for Monthly 항상 가운데
+                    var tableWidth = $(".tblWeldingMonth").closest("div").width();
+
+                    $(".trFirst .responsiveTblRow").each(function() {
+                        tableWidth -= $(this).width();
+                    });
+                    var thDate = tableWidth / 2 - 120;
+
+                    $(".dateTh").attr("style", "text-align:left;padding-left:" + thDate + "px !important");
+
+                    $(".tblWeldingMonth").closest("div").on('scroll', function() {
+                        var movingMonthly = thDate + $(this).scrollLeft();
+                        console.log(movingMonthly);
+                        $(".dateTh").attr("style", "text-align:left;padding-left:" + movingMonthly + "px !important");
+                    });
                 });
             }
         },
@@ -362,13 +376,13 @@ var vm = new Vue({
     <div style="height: 80vh;overflow:auto">
         <table class="table table-bordered table-sm tblWeldingMonth fixHeadColumn">
             <thead>
-                <tr class="table-primary">
+                <tr class="table-primary trFirst">
                     <th class="responsiveTblRow fixLeft fixLeftFirst" rowspan="2">Company</th>
                     <th class="responsiveTblRow fixLeft fixLeftSecond" rowspan="2">Area</th>
                     <th class="responsiveTblRow fixLeft fixLeftThird" rowspan="2">Material Group</th>
                     <th class="responsiveTblRow fixLeft fixLeftFourth" rowspan="2">Total</th>
                     <th class="responsiveTblRow fixLeft fixLeftFiveth" rowspan="2">Previous</th>
-                    <th :colspan="dateCnt">Work Dia-inch for Monthly</th>
+                    <th :colspan="dateCnt" class="dateTh">Work Dia-inch for Monthly</th>
                     <th rowspan="2" class="responsiveTblRow fixRight fixRightFourth">Accumulative</th>
                     <th rowspan="2" class="responsiveTblRow fixRight fixRightThird">Remain</th>
                     <th rowspan="2" class="responsiveTblRow fixRight fixRightSecond">Work Progress(%)</th>

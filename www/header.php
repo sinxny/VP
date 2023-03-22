@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="google" content="notranslate" />
 <link rel="manifest" href="manifest.json" />
-<script type="text/javascript" src="js/grp.js"></script>
+<script type="text/javascript" src="js/grp.js?random=<?php echo uniqid(); ?>"></script>
 <link rel="stylesheet" href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="fontawesome-6.0.0-web/css/all.css" />
 <link rel="stylesheet" href="jquery/jquery-ui-1.13.0/jquery-ui.min.css" />
@@ -44,7 +44,7 @@
 <script type="text/javascript" src="jqwidgets-ver14.0.0-src/globalization/globalize.js"></script>
 <script type="text/javascript" src="jqwidgets-ver14.0.0-src/jqxgrid.filter.js"></script>
 <link rel="stylesheet" href="jqwidgets-ver14.0.0-src/styles/jqx.base.css" type="text/css" />
-<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/style.css?random=<?php echo uniqid(); ?>" />
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <link rel="stylesheet" type="text/css" href="DevExtreme/css/dx.light.css" />
