@@ -10,9 +10,6 @@ require_once "../../../common/func.php";
 $request_body = file_get_contents('php://input');
 $data = json_decode($request_body, true);
 
-// 도메인
-$domain = $_SERVER["HTTP_HOST"];
-
 // Create new Spreadsheet object
 $spreadsheet = new Spreadsheet();
 
@@ -174,11 +171,11 @@ if($responseResult->ResultType = "Success") {
         $sheet->setCellValue('F'.$rowCnt, $latestData[$i]->tr_doc_num);
         // 회람일
         $sheet->setCellValue('G'.$rowCnt, $latestData[$i]->doc_distribute_date_str);
-        $sheet->getCell('G'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_DE_DOWNLOAD");
+        $sheet->getCell('G'.$rowCnt)->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_DE_DOWNLOAD");
         // 회신일
         $sheet->setCellValue('H'.$rowCnt, $latestData[$i]->doc_reply_date_str);
         if($latestData[$i]->doc_reply_date_str) {
-            $sheet->getCell('H'.$rowCnt)->getHyperlink()->setUrl("http://{$domain}/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_LE_DOWNLOAD");
+            $sheet->getCell('H'.$rowCnt)->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_LE_DOWNLOAD");
         }
         // Rslt#
         $sheet->setCellValue('I'.$rowCnt, $latestData[$i]->doc_status_nick);
@@ -197,7 +194,7 @@ if($responseResult->ResultType = "Success") {
         $col='N';
         foreach($data["historyDateList"][$ms_no] as $value) {
             $sheet->setCellValue("{$col}{$rowCnt}", $value["hist_distribute_date_str"]);
-            $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/pdfViewer.php?jno={$jno}&doc_no={$value['doc_no']}&pdfPage=1&model=DOC_DE_DOWNLOAD");
+            $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$value['doc_no']}&pdfPage=1&model=DOC_DE_DOWNLOAD");
             if($col == "N") {
                 $sheet->getStyle("{$col}{$rowCnt}")->applyFromArray($link_style_array);
             }
@@ -207,7 +204,7 @@ if($responseResult->ResultType = "Success") {
             $col++;
             $sheet->setCellValue("{$col}{$rowCnt}", $value["hist_reply_date_str"]);
             if($value["hist_reply_date_str"]) {
-                $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("http://{$domain}/pdfViewer.php?jno={$jno}&doc_no={$value['doc_no']}&pdfPage=1&model=DOC_LE_DOWNLOAD");
+                $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$value['doc_no']}&pdfPage=1&model=DOC_LE_DOWNLOAD");
                 if($col == "O") {
                     $sheet->getStyle("{$col}{$rowCnt}")->applyFromArray($link_style_array);
                 }
