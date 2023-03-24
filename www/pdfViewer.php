@@ -10,6 +10,16 @@ ini_set("display_errors", 1);
 
 $isLogin = @$_SESSION["user"]["user_id"];
 
+// 도메인
+$domain = strtoupper($_SERVER["HTTP_HOST"]);
+if($domain == "DOCS.HTENC.CO.KR" || $domain == "VP.SEPARK2111") {
+	$menuRight = "all";
+} else if($domain == "VP.HTENC.CO.KR") {
+	$menuRight = "vp";
+} else if($domain == "CM.HTENC.CO.KR") {
+	$menuRight = "cm";
+}
+
 if(isset($isLogin)) {	
 	$_src = null;
 	$jno = null;
