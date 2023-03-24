@@ -1,5 +1,11 @@
 <?php if(!defined("_API_INCLUDE_")) exit;
 
+//ini_set('memory_limit','10240M');
+//ini_set('post_max_size','10000M');
+ini_set('default_socket_timeout', -1);
+// ini_set('default_socket_timeout', 180);
+set_time_limit(0);
+
 //$request_model_type = "latest";
 /*
 enum RequestVdcsModelType : string
@@ -62,10 +68,20 @@ if(isset($post) && is_array($post) && array_key_exists("so_all", $post))
     //$so_all = $post["so_all"];
     $SearchList["so_all"] = $post["so_all"];
 }
+
 if(isset($post) && is_array($post) && array_key_exists("so_doc", $post))
 {
     $SearchList["so_doc"] = $post["so_doc"];
 }
+if(isset($post) && is_array($post) && array_key_exists("so_doc_no", $post))
+{
+    $SearchList["so_doc_no"] = $post["so_doc_no"];
+}
+if(isset($post) && is_array($post) && array_key_exists("so_doc_ti", $post))
+{
+    $SearchList["so_doc_ti"] = $post["so_doc_ti"];
+}
+
 if(isset($post) && is_array($post) && array_key_exists("so_vn", $post))
 {
     $SearchList["so_vn"] = $post["so_vn"];
@@ -86,7 +102,7 @@ if(isset($post) && is_array($post) && array_key_exists("so_dc", $post))
 {
     $SearchList["so_dc"] = $post["so_dc"];
 }
-if(isset($post) && is_array($post) && array_key_exists("so_tr", $post))
+if(isset($post) && is_array($post) && array_key_exists("so_rc", $post))
 {
     $SearchList["so_rc"] = $post["so_rc"];
 }
@@ -105,39 +121,6 @@ if(isset($SearchList) && is_array($SearchList) && count($SearchList) > 0)
         }
     }
 }
-$sd_date_type = null;
-$sd_date_start = null;
-$sd_date_end = null;
-if(isset($post) && is_array($post) && array_key_exists("sd_date_type", $post))
-{
-    //$SearchList["sd_date_type"] = $post["sd_date_type"];
-    $sd_date_type = strtoupper($post["sd_date_type"]);
-    
-    if(isset($post) && is_array($post) && array_key_exists("sd_date_start", $post))
-    {
-        //$SearchList["sd_date_start"] = $post["sd_date_start"];
-        $sd_date_start = $post["sd_date_start"];
-    }
-    if(isset($post) && is_array($post) && array_key_exists("sd_date_end", $post))
-    {
-        //$SearchList["sd_date_end"] = $post["sd_date_end"];
-        $sd_date_end = $post["sd_date_end"];
-    }
-    if($sd_date_start || $sd_date_end)
-    {
-        switch($sd_date_type)
-        {
-            case "DISTRIBUTE":
-            case "REPLY":
-                $m_where .= GetQueryWhereDateCase($sd_date_type, $sd_date_start, $sd_date_end);
-                break;
-            default:
-                break;
-        }
-    }
-}
-
-
 //echo $m_where;
 //exit;
 function GetQueryWhereStringCase($col, $val)
@@ -155,6 +138,13 @@ function GetQueryWhereStringCase($col, $val)
                 $return .= " OR UPPER(doc_title) LIKE '%{$val}%' ";
                 $return .= " ) ";
                 break;
+            case "so_doc_no" :
+                $return .= " AND UPPER(doc_num) LIKE '%{$val}%' ";
+                break;
+            case "so_doc_ti" :
+                $return .= " AND UPPER(doc_title) LIKE '%{$val}%' ";
+                break;
+            
             case "so_vn" :
                 $return .= " AND UPPER(from_comp_name) LIKE '%{$val}%' ";
                 break;
@@ -174,7 +164,14 @@ function GetQueryWhereStringCase($col, $val)
                 $return .= " AND UPPER(doc_func_cd) = '{$val}' ";
                 break;
             case "so_rc" :
-                $return .= " AND UPPER(doc_status_nick) = '{$val}' ";
+				if($val == "NULL")
+				{
+					$return .= " AND doc_status_nick is NULL ";
+				}
+				else
+				{
+					$return .= " AND UPPER(doc_status_nick) = '{$val}' ";
+				}
                 break;
             case "so_all" :
                 $return .= " AND ( ";
@@ -185,7 +182,7 @@ function GetQueryWhereStringCase($col, $val)
                 $return .= "   OR UPPER(doc_tag_item) LIKE '%{$val}%' ";
                 $return .= "   OR UPPER(doc_rfq_num) LIKE '%{$val}%' ";
                 $return .= "   OR UPPER(doc_rfq_title) LIKE '%{$val}%' ";
-                $return .= "   OR UPPER(doc_func_cd) = '{$val}' ";
+                $return .= "   OR UPPER(tr_func_cd) = '{$val}' ";
                 $return .= "   OR UPPER(doc_status_nick) = '{$val}' ";
                 $return .= " ) ";
                 break;
@@ -196,17 +193,51 @@ function GetQueryWhereStringCase($col, $val)
     return $return;
 }
 
+$sd_date_type = null;
+$sd_date_start = null;
+$sd_date_end = null;
+if(isset($post) && is_array($post) && array_key_exists("sd_type", $post))
+{
+    //$SearchList["sd_date_type"] = $post["sd_date_type"];
+    $sd_date_type = strtoupper($post["sd_type"]);
+    
+    if(isset($post) && is_array($post) && array_key_exists("sd_start_date", $post))
+    {
+        //$SearchList["sd_date_start"] = $post["sd_date_start"];
+        $sd_date_start = $post["sd_start_date"];
+    }
+    if(isset($post) && is_array($post) && array_key_exists("sd_end_date", $post))
+    {
+        //$SearchList["sd_date_end"] = $post["sd_date_end"];
+        $sd_date_end = $post["sd_end_date"];
+    }
+    if($sd_date_start || $sd_date_end)
+    {
+        switch($sd_date_type)
+        {
+            case "DISTRIBUTE":
+            case "REPLY":
+                $m_where .= GetQueryWhereDateCase($sd_date_type, $sd_date_start, $sd_date_end);
+                break;
+            default:
+                break;
+        }
+    }
+}
 function GetQueryWhereDateCase($col, $start_val, $end_val)
 {
     $return = null;
     $strColName = null;
+    $strColName2 = null;
     switch($col)
     {
         case "DISTRIBUTE" :
-            $strColName = "DOC_DISTRIBUTE_STR";
+            $strColName = "DOC_DISTRIBUTE_DATE";
+            $strColName2 = "DOC_DISTRIBUTE_DATE_STR";
             break;
         case "REPLY" :
-            $strColName = "DOC_REPLY_STR";
+            $strColName = "DOC_REPLY_DATE";
+            $strColName2 = "DOC_REPLY_DATE_STR";
             break;
         default :
             $strColName = null;
@@ -217,21 +248,26 @@ function GetQueryWhereDateCase($col, $start_val, $end_val)
         $return .= " AND ";
         if($start_val && $end_val)
         {
-            $return .= " ( {$strColName} BETWEEN '{$start_val}' AND '{$end_val}' )";
+            $return .= " ( {$strColName} BETWEEN TO_DATE('{$start_val}', 'YYYY-MM-DD') AND TO_DATE('{$end_val}', 'YYYY-MM-DD') )";
+            //$return .= " ( {$strColName2} BETWEEN '{$start_val}' AND '{$end_val}' )";
         }
         else if($start_val)
         {
-            $return .= " {$strColName} >= '$start_val' ";
+            $return .= " {$strColName} >= TO_DATE('{$start_val}','YYYY-MM-DD') ";
+            //$return .= " {$strColName2} >= '{$start_val}' ";
         } 
         else if($end_val)
         {
-            $return .= " {$strColName} <= '$end_val' ";
+            $return .= " {$strColName} <= TO_DATE('{$end_val}','YYYY-MM-DD') ";
+            //$return .= " {$strColName2} <= '{$end_val}' ";
         }
         $return .= " ";
     }
-    
+    //echo $return;
+    //exit;
     return $return;
 }
+
 try 
 {
     
@@ -358,7 +394,17 @@ SELECT DC.BIND_JNO JNO
 	, TR.TR_DOC_NUM, TR.TR_DOC_TITLE, TR.TR_DOC_TYPE, TR.TR_ISSUE_STATUS
 	, TR.TR_RFQ_NUM, TR.TR_RFQ_TITLE, TR.TR_PO_NUM
 	, TR.TR_FUNC_NO, TR.TR_LE_UNO, TR.TR_LE_TITLE, TR.TR_DCC_UNO, TR.TR_DCC_TITLE, TR.DEPLOY_UNO, TR.DEPLOY_TYPE, TR.DEPLOY_DATE, TR.DEPLOY_EXPIRY_DATE
-	, TR.TR_RECEIVE_DATE, TR.TR_ISSUE_DATE, TR.TR_DUE_DATE, TR.TR_FORECAST_DATE, TR.TR_ACTUAL_DATE, TR.TR_RETURN_DATE, TR.TR_STEP_INTVAL, TR.TR_STATUS
+	, TR.TR_RECEIVE_DATE, TR.TR_ISSUE_DATE, TR.TR_DUE_DATE, TR.TR_FORECAST_DATE, TR.TR_ACTUAL_DATE
+        , DECODE(TR.TR_STATUS, 'F', 
+            CASE DC.DOC_STATUS
+                WHEN '' THEN NULL
+                WHEN '0' THEN NULL
+                WHEN '1' THEN NULL
+                WHEN '100' THEN NULL
+                ELSE TR.TR_RETURN_DATE
+            END
+            ) TR_RETURN_DATE
+        , TR.TR_STEP_INTVAL, TR.TR_STATUS
 	, TR.TR_TAG_ITEM, TR.FROM_COMP_NAME TR_FROM_COMP_NAME
     --, NVL(DECODE(TR.TR_STATUS, 'F', DC.DEPLOY_FILE_NAME), DC.DOC_FILE_NAME) ATCH_FILE_NAME
     , DC.DOC_NUM || '_r' || DC.DOC_REV_NUM || ' ' || DC.DOC_TITLE || '.pdf'  DEFAULT_FILE_NAME
@@ -411,6 +457,8 @@ SELECT DC.JNO, DC.MS_NO, COUNT (0) AS DOC_CNT, COUNT( DECODE(DC.TR_STATUS, 'F', 
     , MAX(DC.TR_ISSUE_DATE) keep (dense_rank last order by DC.REG_DATE)  LAST_TR_ISSUE_DATE
     , MIN(DC.TR_ACTUAL_DATE) keep (dense_rank first order by DC.REG_DATE) FIRST_TR_ACTUAL_DATE
     , MAX(DC.TR_ACTUAL_DATE) keep (dense_rank last order by DC.REG_DATE)  LAST_TR_ACTUAL_DATE
+    , MIN(DC.TR_RETURN_DATE) keep (dense_rank first order by DC.REG_DATE) FIRST_TR_RETURN_DATE
+    , MAX(DC.TR_RETURN_DATE) keep (dense_rank last order by DC.REG_DATE)  LAST_TR_RETURN_DATE
     , MIN(DC.REG_DATE) keep (dense_rank first order by DC.REG_DATE) FIRST_REG_DATE
     , MAX(DC.MOD_DATE) keep (dense_rank last order by DC.REG_DATE)  LAST_MOD_DATE
     , MIN(DC.REG_UNO) keep (dense_rank first order by DC.REG_DATE) REG_UNO
@@ -443,6 +491,7 @@ SELECT
 	, DC.DOC_DESC LATEST_DOC_DESC, DC.TR_RFQ_TITLE LATEST_RFQ_TITLE
 	, DCG.FIRST_TR_ISSUE_DATE, DCG.LAST_TR_ISSUE_DATE, DC.TR_ISSUE_DATE LATEST_TR_ISSUE_DATE
 	, DCG.FIRST_TR_ACTUAL_DATE, DCG.LAST_TR_ACTUAL_DATE, NVL(NVL(DC.TR_ACTUAL_DATE, DCG.LAST_TR_ACTUAL_DATE),DCG.FIRST_TR_ACTUAL_DATE) LATEST_TR_ACTUAL_DATE
+        , DCG.FIRST_TR_RETURN_DATE, DCG.LAST_TR_RETURN_DATE, NVL(NVL(DC.TR_RETURN_DATE, DCG.LAST_TR_RETURN_DATE),DCG.FIRST_TR_RETURN_DATE) LATEST_TR_RETURN_DATE
 	, NVL(NVL(TAG.TAG_ITEM_AGG, MS.DOC_TAG_ITEM), DC.DOC_TAG_ITEM) AS DOC_TAG_ITEM, DC.DOC_TAG_ITEM LATEST_DOC_TAG_ITEM
 	, DCG.TR_NO_AGG, DCG.TR_DOC_NUM_AGG, DCG.DOC_NO_AGG, DCG.DOC_NUM_AGG, DCG.DOC_TITLE_AGG, DCG.DOC_FILE_NAME_AGG
 	--, DCG.TR_NO_AGG, DCG.DOC_NO_AGG, DCG.DOC_NUM_AGG, DCG.DOC_TITLE_AGG
@@ -482,6 +531,8 @@ A AS
         --, AA.LATEST_TR_ACTUAL_DATE DOC_REPLY_DATE
         , DECODE(AA.DOC_RESULT_NO, NULL, NULL, AA.LATEST_TR_ACTUAL_DATE) DOC_REPLY_DATE
         , DECODE(AA.DOC_RESULT_NO, NULL, NULL, TO_CHAR(AA.LATEST_TR_ACTUAL_DATE, 'YYYY-MM-DD') ) DOC_REPLY_DATE_STR
+        , DECODE(AA.DOC_RESULT_NO, NULL, NULL, AA.LATEST_TR_RETURN_DATE) DOC_RETURN_DATE
+        , DECODE(AA.DOC_RESULT_NO, NULL, NULL, TO_CHAR(AA.LATEST_TR_RETURN_DATE, 'YYYY-MM-DD') ) DOC_RETURN_DATE_STR
     FROM AA
 ) ";
 
@@ -500,6 +551,7 @@ WHERE 1 = 1";
             {
                 $ms_no = intval($post["ms_no"]);
             }
+            /** 2022.12.20 이전 쿼리
             $SQL = "WITH 
 TR AS (
 SELECT 
@@ -538,7 +590,6 @@ SELECT
          ELSE TR.TR_STATUS
      END
          AS TR_STATUS_STR,         
-
     J.JOB_NO, J.JOB_NAME, J.JOB_SD, J.JOB_ED, J.JOB_STATE,
     CASE J.JOB_STATE
          WHEN 'Y' THEN '진행 중'
@@ -667,11 +718,13 @@ SELECT
         --and tr.tr_no = :tr_no
         --and dc.tr_no = :tr_no
         --and dc.doc_no = :doc_no
-    ORDER BY JNO, TR_NO, DOC_NO
+    ORDER BY JNO, FUNC_CD, DOC_NO, TR_NO, DOC_NO --ORDER BY JNO, TR_NO, DOC_NO
+    --ORDER BY JNO, FUNC_CD, DOC_NUM, TR_NO, DOC_NO --ORDER BY JNO, TR_NO, DOC_NO
 )
 SELECT 
     ROWNUM RNUM,
-    ROW_NUMBER () OVER (ORDER BY JNO, TR_NO DESC, DOC_NO DESC)     ROWNO,
+    --ROW_NUMBER () OVER (ORDER BY JNO, TR_NO DESC, DOC_NO DESC)     ROWNO,
+    ROW_NUMBER () OVER (ORDER BY JNO, FUNC_CD, DOC_NUM DESC, TR_NO DESC, DOC_NO DESC)     ROWNO,
      A.DOC_NO,A.JNO,A.TR_NO,A.FUNC_NO,A.FUNC_CD,A.BIND_JNO,A.FNO,A.MS_NO,A.DOC_NUM,A.DOC_PO_NUM,A.DOC_RFQ_NUM,A.DOC_TYPE,A.DOC_TITLE,A.DOC_DESC,A.DOC_FUNC_NO,A.DOC_CODE1,A.DOC_CODE2,A.DOC_REV_NUM,A.DOC_PAGE_CNT,A.DOC_TAG_ITEM,A.DOC_SORT_NO,A.DOC_REMARK
      ,A.DOC_STATUS
      ,A.DOC_FILE_CHECK,A.DOC_FILE_NAME,A.DOC_FILE_SAVE,A.DOC_FILE_PATH,A.DOC_FILE_SIZE,A.DOC_FILE_TYPE
@@ -692,12 +745,348 @@ SELECT
     ,A.IS_USE,A.RAW_GUID,A.REG_DATE,A.REG_AGENT,A.REG_USER,A.MOD_DATE,A.MOD_AGENT,A.MOD_USER
 FROM A
 WHERE 1 = 1 AND JNO = {$jno}";
+            */
+            /** 2023-01-19 속도 문제로 변경
+            $SQL = "WITH  --V_VDCS_VPDC_INFO
+TR AS (
+SELECT 
+    TR.*,
+    FT.FUNC_CD AS TR_FUNC_CD, FT.FUNC_NAME AS TR_FUNC_NAME, FT.FUNC_TITLE AS TR_FUNC_TITLE, 
+    CONCAT ('[' || FT.FUNC_CD || ']', FT.FUNC_NAME || ' - ' || FT.FUNC_TITLE) TR_FUNC_STR, 
+    DECODE(TR_STATUS, 'I', DECODE (TR_DUE_DATE,
+             NULL, NULL,
+             TO_NUMBER (TRUNC (SYSDATE) - TRUNC (TR_DUE_DATE)))
+         , NULL)
+         AS TR_OVER_DUE,
+     TO_CHAR (TR_ISSUE_DATE, 'YYYY-MM-DD')
+         TR_ISSUE_DATE_STR,
+     TO_CHAR (TR_DUE_DATE, 'YYYY-MM-DD')
+         TR_DUE_DATE_STR,
+     TO_CHAR (TR_RECEIVE_DATE, 'YYYY-MM-DD')
+         TR_RECEIVE_DATE_STR,
+     TO_CHAR (TR_FORECAST_DATE, 'YYYY-MM-DD')
+         TR_FORECAST_DATE_STR,
+     TO_CHAR (TR_ACTUAL_DATE, 'YYYY-MM-DD')
+         TR_ACTUAL_DATE_STR,
+     TO_CHAR (TR.REG_DATE, 'YYYY-MM-DD')
+         TR_REG_DATE_STR,
+     CASE TR.TR_STATUS
+         WHEN 'I' THEN '진행 중(In Progress)'
+         WHEN 'C' THEN '취소(Cancel)'
+         WHEN 'F' THEN '완료(Reply)'
+         WHEN 'S' THEN '발신 중'
+         WHEN 'G' THEN '수신 중'
+         WHEN 'H' THEN '대기(Hold)'
+         WHEN 'P' THEN '검토 중(Closed)'
+         WHEN 'Y' THEN '승인(Approval)'
+         WHEN 'Z' THEN 'V/P Final'
+         ELSE TR.TR_STATUS
+     END
+         AS TR_STATUS_STR,
+    J.JOB_NO, J.JOB_NAME, J.JOB_SD, J.JOB_ED, J.JOB_STATE,
+    CASE J.JOB_STATE
+         WHEN 'Y' THEN '진행 중'
+         WHEN 'H' THEN 'HOLD'
+         WHEN 'C' THEN '취소'
+         WHEN 'S' THEN '완료'
+         WHEN 'T' THEN '임시'
+         WHEN 'N' THEN '사용 안함'
+         ELSE J.JOB_STATE
+     END JOB_STATE_STR
+FROM VDCS_VPTR_SET TR
+    , (SELECT FUNC_NO,FUNC_CD,FUNC_NAME,FUNC_TITLE FROM SYS_FUNC_TYPE) FT
+    , SYS_JOB_INFO J
+WHERE 1 = 1
+    AND TR.TR_FUNC_NO = FT.FUNC_NO(+)
+    AND TR.JNO = J.JNO(+)
+),
+RT as
+(
+SELECT * FROM SYS_DOC_RESULT_TYPE WHERE CODE_GROUP_NO = 7
+),
+DC AS
+(
+SELECT 
+      MS.JNO
+    , DC.*
+    , MS.DOC_NUM ENV_DOC_NUM, MS.DOC_TITLE ENV_DOC_TITLE, MS.DOC_RFQ_NUM ENV_DOC_RFQ_NUM, MS.FROM_COMP_NAME ENV_FROM_COMP_NAME, MS.DOC_TAG_ITEM ENV_DOC_TAG_ITEM
+    , NVL(MS.DOC_NUM, DC.DOC_NUM) DLG_DOC_NUM, NVL(MS.DOC_TITLE, DC.DOC_TITLE) DLG_DOC_TITLE, NVL(MS.DOC_RFQ_NUM, DC.DOC_RFQ_NUM) DLG_DOC_RFQ_NUM, NVL(MS.FROM_COMP_NAME, DC.FROM_COMP_NAME) DLG_FROM_COMP_NAME, NVL(MS.DOC_TAG_ITEM, DC.DOC_TAG_ITEM) DLG_DOC_TAG_ITEM
+ FROM VDCS_VPDC_SET DC
+    , VDCS_VPMS_ENV MS
+ WHERE DC.MS_NO = MS.MS_NO(+)
+    AND DC.IS_USE = 'Y'
+),
+A AS
+(
+SELECT 
+           DC.DOC_NO,
+           TR.JNO,
+           DC.TR_NO,
+           TR.TR_FUNC_NO FUNC_NO,
+           TR.TR_FUNC_CD FUNC_CD,
+           DC.BIND_JNO,
+           DC.FNO,
+           DC.MS_NO,
+           DC.DLG_DOC_NUM DOC_NUM,--DC.DOC_NUM,
+           DC.DOC_PO_NUM,
+           DC.DLG_DOC_RFQ_NUM DOC_RFQ_NUM,
+           DC.DOC_TYPE,
+           DC.DLG_DOC_TITLE DOC_TITLE,
+           DC.DOC_DESC,
+           DC.DOC_FUNC_NO,
+           DC.DOC_CODE1,
+           DC.DOC_CODE2,
+           DC.DOC_REV_NUM,
+           DC.DOC_PAGE_CNT,
+           DC.DLG_DOC_TAG_ITEM DOC_TAG_ITEM,
+           DC.DOC_SORT_NO,
+           DC.DOC_REMARK,
+           DC.DOC_STATUS,
+           DC.DOC_FILE_CHECK,
+           DC.DOC_FILE_NAME,
+           DC.DOC_FILE_SAVE,
+           DC.DOC_FILE_PATH,
+           DC.DOC_FILE_SIZE,
+           DC.DOC_FILE_TYPE,
+           DC.DEPLOY_FILE_CHECK,
+           DC.DEPLOY_FILE_NAME,
+           DC.DEPLOY_FILE_SAVE,
+           DC.DEPLOY_FILE_PATH,
+           DC.DEPLOY_FILE_SIZE,
+           DC.DEPLOY_FILE_TYPE,
+           DC.DEPLOY_REMARK,
+           DC.DEPLOY_DATE,
+           DC.DEPLOY_UNO,
+           DC.FROM_COMP_NO,
+           NVL(DC.DLG_FROM_COMP_NAME, TR.FROM_COMP_NAME) FROM_COMP_NAME,
+           DC.FROM_COMP_OPT,
+           DC.FROM_COMP_REMARK,
+           DC.TO_COMP_NO,
+           DC.TO_COMP_NAME,
+           DC.TO_COMP_OPT,
+           DC.TO_COMP_REMARK,
+           TR.TR_DOC_NUM,
+           TR.TR_DOC_TITLE,
+           TR.TR_REMARK,
+           TR.TR_FUNC_NO,
+           TR.TR_FUNC_STR,
+           TR.TR_FUNC_NAME,
+           TR.TR_FUNC_TITLE,
+           TR.TR_STATUS,
+           TR.TR_STATUS_STR,
+           TR.TR_DUE_DATE,
+           TR.TR_DUE_DATE_STR,
+           TR.TR_ACTUAL_DATE,
+           TR.TR_ACTUAL_DATE_STR,
+           TR.TR_RECEIVE_DATE,
+           TR.TR_FORECAST_DATE,
+           TR.TR_RETURN_DATE,
+           TR.TR_STEP_INTVAL,
+           TR.JOB_NO,
+           TR.JOB_NAME,
+           TR.JOB_SD,
+           TR.JOB_ED,
+           TR.JOB_STATE,
+           TR.JOB_STATE_STR,
+           RT.CODE_NAME DOC_STATUS_NAME,
+           RT.CODE_NAME_NICK DOC_STATUS_NICK,
+           RT.DESCR DOC_STATUS_DESCR,
+           --DF.LAST_MK_NO SEND_LAST_MK_NO,
+           --DF.SEND_UNO,
+           --DF.SEND_TITLE,
+           --DF.SEND_RESULT,
+           --DF.SEND_MESSAGE,
+           --DF.REMARK_STR SEND_REMARK_STR,
+           --DF.IS_STATUS IS_SEND_STATUS,
+           --DF.IS_AUTH_COMMENT,
+           --DECODE(DF.DOC_NO, NULL, 'N', 'Y') IS_SEND_EXIST,
+           DC.IS_USE,
+           DC.RAW_GUID,
+           DC.REG_DATE,
+           DC.REG_AGENT,
+           DC.REG_USER,
+           DC.MOD_DATE,
+           DC.MOD_AGENT,
+           DC.MOD_USER,
+           TR.TR_ISSUE_DATE,
+           TR.IS_USE IS_TR_USE
+           --, DC.DLG_DOC_NUM
+           , DC.ENV_DOC_NUM
+           , DC.DOC_NUM SET_DOC_NUM
+           , DC.DLG_DOC_TITLE
+           , DC.ENV_DOC_TITLE
+           , DC.DOC_TITLE SET_DOC_TITLE
+           --, DC.DLG_DOC_RFQ_NUM
+           , DC.ENV_DOC_RFQ_NUM
+           , DC.DOC_RFQ_NUM SET_DOC_RFQ_NUM
+           --, DC.DLG_DOC_TAG_ITEM
+           , DC.ENV_DOC_TAG_ITEM
+           , DC.DOC_TAG_ITEM SET_DOC_TAG_ITEM
+           --, DC.DLG_FROM_COMP_NAME
+           , DC.ENV_FROM_COMP_NAME
+           , DC.FROM_COMP_NAME SET_FROM_COMP_NAME
+      FROM DC
+        , TR
+        , RT
+        --, (SELECT * FROM VDCS_VPDC_FUNC WHERE IS_USE = 'Y') DF
+     WHERE 1 = 1 
+        --AND TR.IS_USE = 'Y'
+        AND DC.TR_NO = TR.TR_NO
+        AND DC.DOC_STATUS = RT.CODE_CD(+)
+        --AND DC.DOC_NO = DF.DOC_NO(+)
+        --AND DC.TR_NO = 1016
+        --and tr.tr_no = :tr_no
+        --and dc.tr_no = :tr_no
+        --and dc.doc_no = :doc_no
+    --ORDER BY tr_no, doc_no, reg_date
+),
+AA AS (
+SELECT 
+    A.*
+    , A.DOC_STATUS DOC_STATUS_NO
+    , DECODE(A.TR_STATUS, 'F', A.DOC_STATUS, DECODE(A.TR_STATUS, 'Z', A.DOC_STATUS)) DOC_RESULT_NO
+    , DECODE(A.TR_STATUS, 'F', A.DOC_STATUS_NICK, DECODE(A.TR_STATUS, 'Z', A.DOC_STATUS_NICK)) DOC_RESULT_NICK
+    , DECODE(A.TR_STATUS, 'F', A.DOC_STATUS_NAME, DECODE(A.TR_STATUS, 'Z', A.DOC_STATUS_NAME)) DOC_RESULT_NAME
+    , DECODE(A.TR_STATUS, 'F', A.DOC_STATUS_DESCR, DECODE(A.TR_STATUS, 'Z', A.DOC_STATUS_DESCR)) DOC_RESULT_DESCR
+    , A.DOC_FILE_NAME ATCH_FILE_NAME
+    , NVL(DECODE(A.TR_STATUS, 'F', A.DEPLOY_FILE_SAVE, DECODE(A.DOC_STATUS, '0', A.DEPLOY_FILE_SAVE) ), A.DOC_FILE_SAVE)  ATCH_FILE_SAVE
+    , NVL(DECODE(A.TR_STATUS, 'F', A.DEPLOY_FILE_PATH, DECODE(A.DOC_STATUS, '0', A.DEPLOY_FILE_PATH) ), A.DOC_FILE_PATH) ATCH_FILE_PATH
+    , NVL(DECODE(A.TR_STATUS, 'F', A.DEPLOY_FILE_SIZE, DECODE(A.DOC_STATUS, '0', A.DEPLOY_FILE_SIZE) ), A.DEPLOY_FILE_SIZE) ATCH_FILE_SIZE
+    , NVL(DECODE(A.TR_STATUS, 'F', A.DEPLOY_FILE_CHECK, DECODE(A.DOC_STATUS, '0', A.DEPLOY_FILE_CHECK) ), A.DEPLOY_FILE_CHECK) ATCH_FILE_CHECK
+    , NVL(DECODE(A.TR_STATUS, 'F', A.DEPLOY_FILE_TYPE, DECODE(A.DOC_STATUS, '0', A.DEPLOY_FILE_TYPE) ), A.DEPLOY_FILE_TYPE) ATCH_FILE_TYPE
+    --, NVL(DECODE(A.TR_STATUS, 'F', 'REPLY'), 'DISTRIBUTE') ATCH_TYPE
+    , NVL(DECODE(A.TR_STATUS, 'F', 'REPLY', DECODE(A.DOC_STATUS, '0', 'ISSUE') ), 'DISTRIBUTE') ATCH_TYPE
+    , NVL(NVL(DECODE(A.TR_STATUS, 'F', A.TR_ACTUAL_DATE, DECODE(A.DOC_STATUS, '0', A.DEPLOY_DATE) ), A.TR_RECEIVE_DATE), A.REG_DATE) ATCH_DATE
+    , NVL(A.TR_RECEIVE_DATE, A.REG_DATE) RECEIVE_DATE
+    , NVL(A.TR_ISSUE_DATE, A.REG_DATE) DISTRIBUTE_DATE
+    , A.DEPLOY_DATE ISSUE_DATE
+    , DECODE(A.TR_STATUS, 'F', A.TR_ACTUAL_DATE) REPLY_DATE
+FROM A
+)
+SELECT 
+    ROWNUM RNUM,
+    ROW_NUMBER () OVER (ORDER BY JNO, TR_NO, DOC_NO) ROWNO,
+    --ROWNUM AS ROWNO,
+    AA.*
+	,AA.TR_RECEIVE_DATE HIST_RECEIVE_DATE, TO_CHAR(AA.TR_RECEIVE_DATE, 'YYYY-MM-DD') HIST_RECEIVE_DATE_STR
+    ,AA.TR_ISSUE_DATE HIST_DISTRIBUTE_DATE, TO_CHAR(AA.TR_ISSUE_DATE, 'YYYY-MM-DD') HIST_DISTRIBUTE_DATE_STR
+    ,AA.TR_DUE_DATE HIST_DUE_DATE, TO_CHAR(AA.TR_DUE_DATE, 'YYYY-MM-DD') HIST_DUE_DATE_STR
+    ,AA.DEPLOY_DATE HIST_ISSUE_DATE, TO_CHAR(AA.DEPLOY_DATE, 'YYYY-MM-DD') HIST_ISSUE_DATE_STR
+    ,AA.TR_ACTUAL_DATE HIST_REPLY_DATE, TO_CHAR(AA.TR_ACTUAL_DATE, 'YYYY-MM-DD') HIST_REPLY_DATE_STR
+FROM AA
+WHERE 1 = 1 
+  AND is_tr_use = 'Y' AND is_use = 'Y'  --AND (doc_status IS NULL OR doc_status <> '4') 
+  AND JNO = {$jno}
+";
+  
             if(isset($ms_no) && $ms_no > 0)
             {
                 $SQL .= " AND MS_NO = {$ms_no}";
             }
-            //echo $SQL;
-            //exit;
+            
+            */
+            
+            $mWhere = null;
+            if(isset($jno) && $jno > 0){
+                $mWhere .= " AND TR.JNO = '{$jno}' ";
+            }
+            if(isset($ms_no) && $ms_no > 0)
+            {
+                $mWhere .= " AND DC.MS_NO = '{$ms_no}'";
+            }
+            
+            $SQL = "WITH CD_FUNC AS 
+(
+	SELECT * FROM S_FUNC_CODE
+	--SELECT * FROM COMMON.V_COMM_FUNC_CODE
+),
+CD_TR_STATUS AS
+(
+	SELECT * FROM CODE_ITEM_INFO 
+	WHERE CODE_GROUP_NO = 20
+	--ORDER BY VIEW_ORDER
+),
+CD_DOC_REST AS 
+(
+	SELECT * 
+	FROM VDCS_REST_TYPE
+),
+TR AS
+(
+	SELECT * FROM (
+		SELECT 
+			 J.JOB_NO, J.JOB_NAME, J.JOB_STATE, J.JOB_STATE_STR
+			 , J.COMP_CODE, J.COMP_NICK, J.COMP_NAME
+			 , J.ORDER_COMP_NICK, J.ORDER_COMP_NAME
+			,TR.*
+			, TO_NUMBER(NVL(DECODE(TR.TR_STATUS, 'I', DECODE(TR.TR_DUE_DATE, NULL, NULL, TO_NUMBER (TRUNC (SYSDATE) - TRUNC (TR.TR_DUE_DATE))), NULL), NULL)) TR_OVER_DUE
+			, CFT.FUNC_CD TR_FUNC_CD, CFT.FUNC_NAME TR_FUNC_NAME, CFT.FUNC_TITLE TR_FUNC_TITLE, '[' || CFT.FUNC_CD || ']' || CFT.FUNC_NAME TR_FUNC_CAPTION
+			, CTS.CODE_NAME_NICK TR_STATUS_STR
+		FROM VDCS_VPTR_SET	TR
+			, V_PMS_JOB_INFO J
+			, CD_FUNC CFT
+			, CD_TR_STATUS CTS
+		WHERE 1 = 1 
+			AND TR.IS_USE = 'Y'
+			AND J.JNO = TR.JNO
+			AND TR.TR_FUNC_NO = CFT.FUNC_NO(+)
+			AND TR.TR_STATUS = CTS.CODE_CD(+)
+	)
+	WHERE 1 = 1 
+),
+DC AS 
+(
+	SELECT 
+		  TR.JNO JNO
+		, DC.*
+		, TR.TR_FUNC_NO, TR.TR_DOC_NUM, TR.TR_DOC_TITLE, TR.TR_STATUS
+		, TR.DEPLOY_UNO TR_DEPLOY_UNO, TR.DEPLOY_DATE TR_DEPLOY_DATE, TR.DEPLOY_REMARK TR_DEPLOY_REMARK
+		, TR.TR_RECEIVE_DATE AS HIST_RECEIVE_DATE, TO_CHAR(TR.TR_RECEIVE_DATE, 'YYYY-MM-DD') AS HIST_RECEIVE_DATE_STR
+		, TR.TR_ISSUE_DATE AS HIST_DISTRIBUTE_DATE, TO_CHAR(TR.TR_ISSUE_DATE, 'YYYY-MM-DD') AS HIST_DISTRIBUTE_DATE_STR
+		, TR.TR_DUE_DATE AS HIST_DUE_DATE, TO_CHAR(TR.TR_DUE_DATE, 'YYYY-MM-DD') AS HIST_DUE_DATE_STR
+		, DC.DEPLOY_DATE  AS HIST_ISSUE_DATE, TO_CHAR(DC.DEPLOY_DATE, 'YYYY-MM-DD') AS HIST_ISSUE_DATE_STR
+		, TR.TR_ACTUAL_DATE AS HIST_REPLY_DATE, TO_CHAR(TR.TR_ACTUAL_DATE, 'YYYY-MM-DD') AS HIST_REPLY_DATE_STR
+		, CDR.*
+	FROM VDCS_VPDC_SET DC
+		, TR
+		, CD_DOC_REST CDR
+	WHERE DC.IS_USE = 'Y'
+		AND DC.TR_NO = TR.TR_NO
+		AND DC.DOC_STATUS = CDR.RESULT_NO(+)
+                " . $mWhere . "
+),
+A AS 
+(
+	SELECT
+		ROWNUM RNUM,
+    	ROW_NUMBER () OVER (ORDER BY DC.JNO, DC.MS_NO, DC.TR_NO, DC.DOC_NO) ROWNO
+		, DC.JNO, DC.MS_NO, DC.DOC_NO, DC.TR_NO 
+		, DC.DOC_NUM, DC.DOC_TITLE, DC.DOC_REV_NUM, DC.DOC_RFQ_NUM, DC.DOC_TAG_ITEM
+		, DC.TR_FUNC_NO, DC.DOC_FUNC_NO AS FUNC_NO, CFT.FUNC_CD FUNC_CD, CFT.FUNC_NAME FUNC_NAME, CFT.FUNC_TITLE FUNC_TITLE, '[' || CFT.FUNC_CD || ']' || CFT.FUNC_NAME FUNC_CAPTION
+		, TR.TR_DOC_NUM, TR.TR_DOC_TITLE, TR.TR_STATUS, TR.TR_STATUS_STR
+		, DC.DOC_STATUS, DC.RESULT_CD DOC_STATUS_NICK, DC.RESULT_NAME  DOC_STATUS_NAME, DC.RESULT_DESC DOC_STATUS_DESCR
+		, DC.DOC_FILE_CHECK, DC.DOC_FILE_NAME, DC.DOC_FILE_SAVE, DC.DOC_FILE_PATH, DC.DOC_FILE_SIZE, DC.DOC_FILE_TYPE
+		, DC.DEPLOY_FILE_CHECK, DC.DEPLOY_FILE_NAME, DC.DEPLOY_FILE_SAVE, DC.DEPLOY_FILE_PATH, DC.DEPLOY_FILE_SIZE, DC.DEPLOY_FILE_TYPE
+		, DC.DEPLOY_REMARK, DC.DEPLOY_DATE, DC.DEPLOY_UNO
+		, DC.HIST_RECEIVE_DATE, DC.HIST_RECEIVE_DATE_STR, DC.HIST_DISTRIBUTE_DATE,DC.HIST_DISTRIBUTE_DATE_STR, DC.HIST_DUE_DATE, DC.HIST_DUE_DATE_STR, DC.HIST_ISSUE_DATE, DC.HIST_ISSUE_DATE_STR, DC.HIST_REPLY_DATE, DC.HIST_REPLY_DATE_STR
+	FROM DC
+		, TR
+		, CD_FUNC CFT
+	WHERE 1 = 1
+		AND ( DC.JNO = TR.JNO AND DC.TR_NO = TR.TR_NO )
+		AND DC.DOC_FUNC_NO = CFT.FUNC_NO(+)
+)
+SELECT A.* FROM A
+WHERE 1 = 1
+";
+            
+            
+            $SQL .= " ORDER BY JNO, MS_NO, TR_NO DESC, DOC_NO DESC";
+if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
+{
+	//echo $SQL;
+	//exit;
+}
             break;
         case RequestVdcsModelType::Latest :
         default :
@@ -712,8 +1101,12 @@ WHERE 1 = 1 AND JNO = {$jno}";
                 {
                     $SQL .= " " . $m_where;
                 }
-                //echo $SQL;
-                //exit;
+                
+if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
+{
+	//echo $SQL;
+	//exit;
+}
                 $db->query($SQL);
                 $db->next_record();
                 $nTotalCount = intval($db->f("cnt")??0);
@@ -737,12 +1130,19 @@ WHERE 1 = 1 AND JNO = {$jno}";
             {
                 $SQL .= " " . $m_where;
             }
-            //echo $SQL;
-            //exit;
+            $SQL .= " ORDER BY JNO, TR_FUNC_NO, DOC_RFQ_NUM, DOC_NUM, TR_DOC_NUM, TR_NO, DOC_NO";
+            
         break;
     }
     if(!isset($SQL)) exit;
     
+    
+if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
+{
+	//echo $SQL;
+	//exit;
+}
+            
     if($isNaviActive == true && $iStartRow >= 0 && $nLimitCount > 0)
     {
         $db->query_limit($SQL, $iStartRow, $nLimitCount);

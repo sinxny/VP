@@ -26,7 +26,15 @@ try
         case RequestVdcsModelType::Latest :
         case RequestVdcsModelType::DocHistory :
         default :
-            require_once __DIR__ . '/vdcs_info.php';
+            if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
+            {
+                //require_once __DIR__ . '/vdcs_info_test.php';
+                require_once __DIR__ . '/vdcs_info.php';
+            }
+            else 
+            {
+                require_once __DIR__ . '/vdcs_info.php';
+            }
             break;
     }
     //$Fun->print_r($_api);
