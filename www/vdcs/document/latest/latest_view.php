@@ -150,25 +150,102 @@ var vm = new Vue({
                     data.selectList = [];
             })
             .finally(function () {
-                // 검색 배경
-                // if(data.researchOption == "so_all" && data.researchSave) {
-                //     $(".tblLatestList td").each(function() {
-                //         if($(this).text().match(data.researchSave)) {
-                //             const redRegExp = new RegExp(data.researchSave);
+                // 배경 초기화
+                $(".tblLatestList td").each(function() {
+                    var removeTag = $(this).html().replace("<span style=\"background-color:pink\">", "");
+                    var removeTag = removeTag.replace("</span>", "");
+                    $(this).html(removeTag);
+                });
+                //  검색 배경
+                if(data.isRebrowsing == false) {
+                    if(data.researchOption == "so_all" && data.researchSave) {
+                        $(".tblLatestList td").each(function() {
+                            var tdText = $(this).text().toUpperCase();
+                            var upperSearch = data.researchSave.toUpperCase();
+                            if(tdText.match(upperSearch)) {
+                                var indexOri = tdText.match(upperSearch).index;
+                                var lengthOri = upperSearch.length;
+                                var oriText = $(this).text().substr(indexOri, lengthOri);
+                                const redRegExp = new RegExp(data.researchSave, 'gi');
+    
+                                var ans = $(this).html().replace(redRegExp, "<span style=\"background-color:pink\">" + oriText + "</span>")
+                                // 문서번호 일경우
+                                if($(this).hasClass("doc_num")) {
+                                    $(this).find(".so_doc_no").html(ans);
+                                } else {
+                                    $(this).html(ans);
+                                }
+                            }
+                        });
 
-                //             var ans = $(this).text().replace(redRegExp, "<span style='background-color:pink'>" + data.researchSave + "</span>")
-                //             $(this).html(ans);
+                    } else if (data.researchOption != "so_all" && data.researchSave) {
+                        $(".tblLatestList ." + data.researchOption).each(function() {
+                            var tdText = $(this).text().toUpperCase();
+                            var upperSearch = data.researchSave.toUpperCase();
+                            if(tdText.match(upperSearch)) {
+                                var indexOri = tdText.match(upperSearch).index;
+                                var lengthOri = upperSearch.length;
+                                var oriText = $(this).text().substr(indexOri, lengthOri);
+                                const redRegExp = new RegExp(data.researchSave, 'gi');
+    
+                                var ans = $(this).text().replace(redRegExp, "<span style='background-color:pink'>" + oriText + "</span>")
+                                // 문서번호 일경우
+                                if($(this).hasClass("doc_num")) {
+                                    $(this).find(".so_doc_no").html(ans);
+                                } else {
+                                    $(this).html(ans);
+                                }
+                            }
+                        });
+                    }
+                } 
+                // else {
+                //     if(Object.keys(data.searchList).length > 0) {
+                //         for (var key in data.searchList) {
+                //             var wordList = data.searchList[key].split("♡");
+                //             $(wordList).each(function(i, word) {
+                //                 if(key == "so_all") {
+                //                     $(".tblLatestList td").each(function() {
+                //                         var tdText = $(this).text().toUpperCase();
+                //                         var upperSearch = word.toUpperCase();
+                //                         if(tdText.match(upperSearch)) {
+                //                             var indexOri = tdText.match(upperSearch).index;
+                //                             var lengthOri = upperSearch.length;
+                //                             var oriText = $(this).text().substr(indexOri, lengthOri);
+                //                             const redRegExp = new RegExp(word, 'gi');
+                
+                //                             var ans = $(this).html().replace(redRegExp, "<span style=\"background-color:pink\">" + oriText + "</span>")
+                //                             // 문서번호 일경우
+                //                             if($(this).hasClass("doc_num")) {
+                //                                 $(this).find(".so_doc_no").html(ans);
+                //                             } else {
+                //                                 $(this).html(ans);
+                //                             }
+                //                         }
+                //                     });
+                //                 } else {
+                //                     $(".tblLatestList ." + key).each(function() {
+                //                         var tdText = $(this).text().toUpperCase();
+                //                         var upperSearch = word.toUpperCase();
+                //                         if(tdText.match(upperSearch)) {
+                //                             var indexOri = tdText.match(upperSearch).index;
+                //                             var lengthOri = upperSearch.length;
+                //                             var oriText = $(this).text().substr(indexOri, lengthOri);
+                //                             const redRegExp = new RegExp(word, 'gi');
+                
+                //                             var ans = $(this).text().replace(redRegExp, "<span style='background-color:pink'>" + oriText + "</span>")
+                //                             // 문서번호 일경우
+                //                             if($(this).hasClass("doc_num")) {
+                //                                 $(this).find(".so_doc_no").html(ans);
+                //                             } else {
+                //                                 $(this).html(ans);
+                //                             }
+                //                         }
+                //                     });
+                //                 }
+                //             });
                 //         }
-                //     });
-                // } else if (data.researchOption != "so_all" && data.researchSave) {
-                //     $("." + data.researchOption).each(function() {
-                //         if($(this).text().match(data.researchSave)) {
-                //             const redRegExp = new RegExp(data.researchSave);
-
-                //             var ans = $(this).text().replace(redRegExp, "<span style='background-color:pink'>" + data.researchSave + "</span>")
-                //             $(this).html(ans);
-                //         }
-                //     });
+                //     }
                 // }
             });
         },
@@ -740,7 +817,7 @@ var vm = new Vue({
                         <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
                             <td class="text-center"><input type="checkbox" v-model="selectList" :value="doc.doc_no" v-show="externalRight == 'Y'"/></td>
                             <td class="text-center" @click="docRowClick(doc.ms_no)">{{ doc.tr_func_cd }}</td>
-                            <td @click="docRowClick(doc.ms_no)" style="width:230px" :title="doc.doc_num"><div class="text-ellipsis so_doc_no">{{ doc.doc_num }}</div></td>
+                            <td @click="docRowClick(doc.ms_no)" style="width:230px" :title="doc.doc_num" class="doc_num"><div class="text-ellipsis so_doc_no">{{ doc.doc_num }}</div></td>
                             <td class="text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_rev_num }}</td>
                         </tr>
                     </tbody>
@@ -757,6 +834,7 @@ var vm = new Vue({
                                 <th class="responsiveTblRow">TR No.</th>
                                 <th class="responsiveTblRow" title="Distribute Date">배포일</th>
                                 <th class="responsiveTblRow" title="Reply Date">회신일</th>
+                                <th class="responsiveTblRow" title="Next Schedule">차기 접수일</th>
                                 <th class="responsiveTblRow">RFQ. No.</th>
                                 <th class="responsiveTblRow">RFQ. Title</th>
                                 <th class="responsiveTblRow">Item / Tag No.</th>
@@ -769,6 +847,7 @@ var vm = new Vue({
                                 <td class="responsiveTblRow so_tr" @click="docRowClick(doc.ms_no)">{{ doc.tr_doc_num }}</td>
                                 <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_distribute_date_str }}</td>
                                 <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_reply_date_str }}</td>
+                                <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_return_date_str }}</td>
                                 <td class="responsiveTblRow so_rt" @click="docRowClick(doc.ms_no)">{{ doc.doc_rfq_num }}</td>
                                 <td class="responsiveTblRow so_rt" @click="docRowClick(doc.ms_no)">{{ doc.doc_rfq_title }}</td>
                                 <td class="responsiveTblRow so_ti" @click="docRowClick(doc.ms_no)">{{ doc.doc_tag_item }}</td>
@@ -815,6 +894,7 @@ var vm = new Vue({
                     <th class="responsiveTblRow">TR No.</th>
                     <th class="responsiveTblRow">배포일</th>
                     <th class="responsiveTblRow">회신일</th>
+                    <th class="responsiveTblRow" title="Next Schedule">차기 접수일</th>
                     <th class="responsiveTblRow">RFQ. No.</th>
                     <th class="responsiveTblRow">RFQ. Title</th>
                     <th class="responsiveTblRow">Item / Tag No.</th>
@@ -838,6 +918,7 @@ var vm = new Vue({
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.tr_doc_num }}</td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_distribute_date_str }}</td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_reply_date_str }}</td>
+                    <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_return_date_str }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_rfq_num }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_rfq_title }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_tag_item }}</td>
