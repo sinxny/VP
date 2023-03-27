@@ -154,11 +154,11 @@ var vm = new Vue({
             })
             .finally(function () {
                 // 배경 초기화
-                $(".tblLatestList td").each(function() {
-                    var removeTag = $(this).html().replace("<span style=\"background-color:pink\">", "");
-                    var removeTag = removeTag.replace("</span>", "");
-                    $(this).html(removeTag);
-                });
+                // $(".tblLatestList td").each(function() {
+                //     var removeTag = $(this).html().replace("<span style=\"background-color:pink\">", "");
+                //     var removeTag = removeTag.replace("</span>", "");
+                //     $(this).html(removeTag);
+                // });
                 //  검색 배경
                 // if(data.isRebrowsing == false) {
                 //     if(data.researchOption == "so_all" && data.researchSave) {
@@ -850,7 +850,7 @@ var vm = new Vue({
                                 <td class="responsiveTblRow so_tr" @click="docRowClick(doc.ms_no)">{{ doc.tr_doc_num }}</td>
                                 <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_distribute_date_str }}</td>
                                 <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_reply_date_str }}</td>
-                                <td :class="['text-center', 'responsiveTblRow', {'beforeToday' : new Date(doc.doc_return_date_str) < new Date(doc.to_day_date_str)}]" @click="docRowClick(doc.ms_no)">{{ doc.doc_return_date_str }}</td>
+                                <td :class="['text-center', 'responsiveTblRow', {'beforeToday' : new Date(doc.doc_return_date_str) < new Date(doc.to_day_date_str)}]" @click="docRowClick(doc.ms_no)"><div v-show="doc.doc_status_nick != 'A' && doc.doc_status_nick != 'F'">{{ doc.doc_return_date_str }}</div></td>
                                 <td class="responsiveTblRow so_rt" @click="docRowClick(doc.ms_no)">{{ doc.doc_rfq_num }}</td>
                                 <td class="responsiveTblRow so_rt" @click="docRowClick(doc.ms_no)">{{ doc.doc_rfq_title }}</td>
                                 <td class="responsiveTblRow so_ti" @click="docRowClick(doc.ms_no)">{{ doc.doc_tag_item }}</td>
@@ -921,7 +921,7 @@ var vm = new Vue({
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.tr_doc_num }}</td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_distribute_date_str }}</td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_reply_date_str }}</td>
-                    <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_return_date_str }}</td>
+                    <td :class="['text-center', 'responsiveTblRow', {'beforeToday' : new Date(doc.doc_return_date_str) < new Date(doc.to_day_date_str)}]" @click="docRowClick(doc.ms_no)"><div v-show="doc.doc_status_nick != 'A' && doc.doc_status_nick != 'F'">{{ doc.doc_return_date_str }}</div></td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_rfq_num }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_rfq_title }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_tag_item }}</td>

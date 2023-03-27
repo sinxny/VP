@@ -40,10 +40,11 @@ $nowDate = $today->format('Y-m-d');
 $sheet->setCellValue('A1', "JNO : " . $jno );
 $sheet->setCellValue('C1', "PROJECT : " . $jobName);
 $sheet->getStyle("A1:C1")->getFont()->setSize(12);
-$sheet->setCellValue('J1', "※ Result Code가 R인 경우 회람횟수에 미포함");
+$sheet->setCellValue('G1', "※ Rslt# \"R\"일 때 회람횟수 미포함");
+$sheet->getStyle("G1")->getFont()->getColor()->setRGB('974706');
+$sheet->setCellValue('J1', "※ 차기접수일이 기준일시를 지난 경우 빨간색 표시");
 $sheet->getStyle("J1")->getFont()->getColor()->setRGB('FF0000');
-$sheet->setCellValue('M1', "기준일시 : " . $dateTime);
-$sheet->getStyle('M1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+$sheet->setCellValue('N1', "기준일시 : " . $dateTime);
 
 $sheet->setCellValue('A2', "공종");
 $sheet->setCellValue('B2', "문서번호");
@@ -185,15 +186,18 @@ if($responseResult->ResultType = "Success") {
             $sheet->getCell('I'.$rowCnt)->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_LE_DOWNLOAD");
         }
         // 차기 접수일
-        $sheet->setCellValue('J'.$rowCnt, $latestData[$i]->doc_return_date_str);
-        if($latestData[$i]->doc_return_date_str) {
-            $returnDate = $latestData[$i]->doc_return_date_str;
-
-            $nowDateStr = strtotime($nowDate);
-            $returnDate = strtotime($returnDate);
-            
-            if($returnDate < $nowDateStr) {
-                $sheet->getStyle('J'.$rowCnt)->getFont()->getColor()->setARGB('FF0000');
+        $resultCode = $latestData[$i]->doc_status_nick;
+        if($resultCode != "A" && $resultCode != "F") {
+            $sheet->setCellValue('J'.$rowCnt, $latestData[$i]->doc_return_date_str);
+            if($latestData[$i]->doc_return_date_str) {
+                $returnDate = $latestData[$i]->doc_return_date_str;
+    
+                $nowDateStr = strtotime($nowDate);
+                $returnDate = strtotime($returnDate);
+                
+                if($returnDate < $nowDateStr) {
+                    $sheet->getStyle('J'.$rowCnt)->getFont()->getColor()->setARGB('FF0000');
+                }
             }
         }
         // 회람 회수
@@ -270,7 +274,7 @@ $sheet->getStyle('B3:B'.$rowCnt)->getAlignment()->setIndent(1);
 $sheet->getStyle('D3:D'.$rowCnt)->getAlignment()->setIndent(1);
 $sheet->getStyle('F3:F'.$rowCnt)->getAlignment()->setIndent(1);
 $sheet->getStyle('M3:N'.$rowCnt)->getAlignment()->setIndent(1);
-$sheet->getStyle('M1')->getAlignment()->setIndent(1);
+$sheet->getStyle('N1')->getAlignment()->setIndent(1);
 
 // 자동 필터
 $spreadsheet->getActiveSheet()->setAutoFilter("A3:{$lastCol}{$rowCnt}");
