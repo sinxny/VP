@@ -48,53 +48,54 @@ $sheet->mergeCells("A2:C2");
 $sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle("A1:AD4")->getFont()->setBold(true);
 
-$sheet->setCellValue('A3', "SUBCON");
+$sheet->setCellValue('A3', "COMPANY");
 $sheet->setCellValue('B3', "NO.");
 $sheet->setCellValue('C3', "PKG. NO.");
-$sheet->setCellValue('D3', "NDE%");
-$sheet->setCellValue('E3', "MAIN LINE CONDITION");
-$sheet->setCellValue('E4', "Fluid");
-$sheet->setCellValue('F4', "Line No");
-$sheet->setCellValue('G4', "Line Class");
-$sheet->setCellValue('H4', "Test\nFluid");
-$sheet->setCellValue('I4', "Operating\nPressure");
-$sheet->setCellValue('J4', "Design\nPressure");
-$sheet->setCellValue('K4', "Test\nPressure");
-$sheet->setCellValue('L3', "Method CLIENT");
-$sheet->setCellValue('M3', "인허가\n항목");
-$sheet->setCellValue('N3', "TOTAL\nWELDING\nD/INCH");
-$sheet->setCellValue('O3', "COMPLETE\nD/INCH");
-$sheet->setCellValue('P3', "WELDING\nPROGRESS\n(%)");
-$sheet->setCellValue('Q3', "TOTAL\nPWHT QTY");
-$sheet->setCellValue('R3', "PWHT\nON\nPROGRESS\nQTY");
-$sheet->setCellValue('S3', "PWHT\nCOMPLETE\nQTY");
-$sheet->setCellValue('T3', "Walk Down\nReady");
-$sheet->setCellValue('U3', "Punch W/D");
-$sheet->setCellValue('U4', "SUBCON\nWalk Down");
-$sheet->setCellValue('V4', "HTENG\nWalk Down");
-$sheet->setCellValue('W3', "A Punch\nClear DATE");
-$sheet->setCellValue('X3', "TEST DATE");
-$sheet->setCellValue('X4', "Plan");
-$sheet->setCellValue('Y4', "Request");
-$sheet->setCellValue('Z4', "Actual");
-$sheet->setCellValue('AA4', "B Punch");
-$sheet->setCellValue('AB4', "Flushing");
-$sheet->setCellValue('AC4', "Box-Up");
-$sheet->setCellValue('AD3', "REMARK");
-$sheet->getStyle("A3:AD4")->getFont()->setSize(10);
-$sheet->getStyle("A3:K4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('C6E0B4');
-$sheet->getStyle("AD3:AD4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('C6E0B4');
-$sheet->getStyle("L3:W4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9E1F2');
-$sheet->getStyle("X3:AC4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('333F4F');
-$sheet->getStyle("A3:AD4")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('X3:AC4')->getFont()->getColor()->setARGB('FFFFFF');
+// $sheet->setCellValue('D3', "NDE%");
+$sheet->setCellValue('D3', "MAIN LINE CONDITION");
+$sheet->setCellValue('D4', "Fluid");
+$sheet->setCellValue('E4', "Line No");
+// $sheet->setCellValu('G4', "Line Class");
+$sheet->setCellValue('F4', "Test\nFluid");
+$sheet->setCellValue('G4', "Operating\nPressure");
+$sheet->setCellValue('H4', "Design\nPressure");
+$sheet->setCellValue('I4', "Test\nPressure");
+$sheet->setCellValue('J3', "Method\nCLIENT");
+$sheet->setCellValue('K3', "인허가\n항목");
+$sheet->setCellValue('L3', "TOTAL\nWELDING\nD/INCH");
+$sheet->setCellValue('M3', "COMPLETE\nD/INCH");
+$sheet->setCellValue('N3', "WELDING\nPROGRESS\n(%)");
+$sheet->setCellValue('O3', "TOTAL\nPWHT QTY");
+$sheet->setCellValue('P3', "PWHT\nON\nPROGRESS\nQTY");
+$sheet->setCellValue('Q3', "PWHT\nCOMPLETE\nQTY");
+$sheet->setCellValue('R3', "Walk Down\nReady");
+$sheet->setCellValue('S3', "Punch W/D");
+$sheet->setCellValue('S4', "SUBCON\nWalk Down");
+$sheet->setCellValue('T4', "HTENG\nWalk Down");
+$sheet->setCellValue('U3', "A Punch\nClear DATE");
+$sheet->setCellValue('V3', "TEST DATE");
+$sheet->setCellValue('V4', "Plan");
+$sheet->setCellValue('W4', "Request");
+$sheet->setCellValue('X4', "Actual");
+$sheet->setCellValue('Y4', "B Punch");
+$sheet->setCellValue('Z4', "Flushing");
+$sheet->setCellValue('AA4', "Box-Up");
+$sheet->setCellValue('AB3', "REMARK");
+$sheet->getStyle("A3:AB4")->getFont()->setSize(10);
+$sheet->getStyle("A3:I4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('004377');
+$sheet->getStyle("J3:U4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('0067B4');
+$sheet->getStyle("V3:AB4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('1199FF');
+$sheet->getStyle("A3:AB4")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('A3:AB4')->getFont()->getColor()->setARGB('FFFFFF');
 
 // 셀 병합
 $sheet->mergeCells("A3:A4");
 $sheet->mergeCells("B3:B4");
 $sheet->mergeCells("C3:C4");
-$sheet->mergeCells("D3:D4");
-$sheet->mergeCells("E3:K3");
+// $sheet->mergeCells("D3:D4");
+$sheet->mergeCells("D3:I3");
+$sheet->mergeCells("J3:J4");
+$sheet->mergeCells("K3:K4");
 $sheet->mergeCells("L3:L4");
 $sheet->mergeCells("M3:M4");
 $sheet->mergeCells("N3:N4");
@@ -102,15 +103,15 @@ $sheet->mergeCells("O3:O4");
 $sheet->mergeCells("P3:P4");
 $sheet->mergeCells("Q3:Q4");
 $sheet->mergeCells("R3:R4");
-$sheet->mergeCells("S3:S4");
-$sheet->mergeCells("T3:T4");
-$sheet->mergeCells("U3:V3");
-$sheet->mergeCells("W3:W4");
-$sheet->mergeCells("X3:AC3");
-$sheet->mergeCells("AD3:AD4");
+// $sheet->mergeCells("S3:S4");
+// $sheet->mergeCells("T3:T4");
+$sheet->mergeCells("S3:T3");
+$sheet->mergeCells("U3:U4");
+$sheet->mergeCells("V3:AA3");
+$sheet->mergeCells("AB3:AB4");
 
 // 들여쓰기
-$sheet->getStyle("A3:AD4")->getAlignment()->setWrapText(true);
+$sheet->getStyle("A3:AB4")->getAlignment()->setWrapText(true);
 
 $url = "http://wcfservice.htenc.co.kr/apipwim/getpackage?jno={$jno}";
 
@@ -148,139 +149,139 @@ if($responseResult->ResultType = "Success") {
         // PKG. NO
         $sheet->setCellValue('C'.$rowCnt, $pkgData[$i]->PKG_NO);
         // NDE%
-        $nde = str_replace(",", "", $pkgData[$i]->NDE);
-        $sheet->setCellValue('D'.$rowCnt, $nde);
-        if($nde == 0 || $nde == ''){
-            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($nde, ".")) {
-            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
-        } else {
-            $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
-        }
+        // $nde = str_replace(",", "", $pkgData[$i]->NDE);
+        // $sheet->setCellValue('D'.$rowCnt, $nde);
+        // if($nde == 0 || $nde == ''){
+        //     $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        // } else if(strpos($nde, ".")) {
+        //     $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        // } else {
+        //     $sheet->getStyle("D{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        // }
         // Fluid
-        $sheet->setCellValue('E'.$rowCnt, $pkgData[$i]->FLUID);
+        $sheet->setCellValue('D'.$rowCnt, $pkgData[$i]->FLUID);
         // Line No
-        $sheet->setCellValue('F'.$rowCnt, $pkgData[$i]->LINE_NO);
+        $sheet->setCellValue('E'.$rowCnt, $pkgData[$i]->LINE_NO);
         // Line Class
-        $sheet->setCellValue('G'.$rowCnt, $pkgData[$i]->LINE_CLASS);
+        // $sheet->setCellValue('F'.$rowCnt, $pkgData[$i]->LINE_CLASS);
         // Test Fluid
-        $sheet->setCellValue('H'.$rowCnt, $pkgData[$i]->TEST_FLUID);
+        $sheet->setCellValue('F'.$rowCnt, $pkgData[$i]->TEST_FLUID);
         // Operating Pressure
         $operationPressure = str_replace(",", "", $pkgData[$i]->OPERATION_PRESSURE);
-        $sheet->setCellValue('I'.$rowCnt, $operationPressure);
+        $sheet->setCellValue('G'.$rowCnt, $operationPressure);
         if($operationPressure == 0 || $operationPressure == ''){
-            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($operationPressure, ".")) {
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("G{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
+        // Design Pressure
+        $designPressure = str_replace(",", "", $pkgData[$i]->DESIGN_PRESSURE);
+        $sheet->setCellValue('H'.$rowCnt, $designPressure);
+        if($designPressure == 0 || $designPressure == ''){
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($designPressure, ".")) {
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("H{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
+        // Test Pressure
+        $testPressure = str_replace(",", "", $pkgData[$i]->TEST_PRESSURE);
+        $sheet->setCellValue('I'.$rowCnt, $testPressure);
+        if($testPressure == 0 || $testPressure == ''){
+            $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($testPressure, ".")) {
             $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("I{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
-        // Design Pressure
-        $designPressure = str_replace(",", "", $pkgData[$i]->DESIGN_PRESSURE);
-        $sheet->setCellValue('J'.$rowCnt, $designPressure);
-        if($designPressure == 0 || $designPressure == ''){
-            $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($designPressure, ".")) {
-            $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
-        } else {
-            $sheet->getStyle("J{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
-        }
-        // Test Pressure
-        $testPressure = str_replace(",", "", $pkgData[$i]->TEST_PRESSURE);
-        $sheet->setCellValue('K'.$rowCnt, $testPressure);
-        if($testPressure == 0 || $testPressure == ''){
-            $sheet->getStyle("K{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($testPressure, ".")) {
-            $sheet->getStyle("K{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
-        } else {
-            $sheet->getStyle("K{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
-        }
         // Method CLIENT
-        $sheet->setCellValue('L'.$rowCnt, $pkgData[$i]->METHOD_CLIENT);
+        $sheet->setCellValue('J'.$rowCnt, $pkgData[$i]->METHOD_CLIENT);
         // 인허가 항목
-        $sheet->setCellValue('M'.$rowCnt, $pkgData[$i]->LICENSING);
+        $sheet->setCellValue('K'.$rowCnt, $pkgData[$i]->LICENSING);
         // TOTAL WELDING D/INCH
         $totalDiaInch = str_replace(",", "", $pkgData[$i]->TOTAL_DIA_INCH);
-        $sheet->setCellValue('N'.$rowCnt, $totalDiaInch);
+        $sheet->setCellValue('L'.$rowCnt, $totalDiaInch);
         if($totalDiaInch == 0 || $totalDiaInch == ''){
-            $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+            $sheet->getStyle("L{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($totalDiaInch, ".")) {
-            $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle("L{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
-            $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle("L{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
         // COMPLETE D/INCH
         $completeDiaInch = str_replace(",", "", $pkgData[$i]->COMPLETE_DIA_INCH);
-        $sheet->setCellValue('O'.$rowCnt, $completeDiaInch);
+        $sheet->setCellValue('M'.$rowCnt, $completeDiaInch);
         if($completeDiaInch == 0 || $completeDiaInch == ''){
-            $sheet->getStyle("O{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+            $sheet->getStyle("M{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($completeDiaInch, ".")) {
-            $sheet->getStyle("O{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle("M{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.00');
         } else {
-            $sheet->getStyle("O{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle("M{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
         // WELDING PROGRESS(%)
         $weldingProgress = str_replace(",", "", $pkgData[$i]->WELDING_PROGRESS);
-        $sheet->setCellValue('P'.$rowCnt, $weldingProgress);
+        $sheet->setCellValue('N'.$rowCnt, $weldingProgress);
         if($weldingProgress == 0 || $weldingProgress == ''){
-            $sheet->getStyle("P{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+            $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
         } else if(strpos($weldingProgress, ".")) {
+            $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("N{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
+        // TOTAL PWHT QTY
+        $totalPwht = str_replace(",", "", $pkgData[$i]->TOTAL_PWHT);
+        $sheet->setCellValue('O'.$rowCnt, $totalPwht);
+        if($totalPwht == 0 || $totalPwht == ''){
+            $sheet->getStyle("O{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($totalPwht, ".")) {
+            $sheet->getStyle("O{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
+        } else {
+            $sheet->getStyle("O{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
+        }
+        // PWHT ON PROGRESS QTY
+        $pwhtProgress = str_replace(",", "", $pkgData[$i]->PWHT_PROGRESS);
+        $sheet->setCellValue('P'.$rowCnt, $pwhtProgress);
+        if($pwhtProgress == 0 || $pwhtProgress == ''){
+            $sheet->getStyle("P{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
+        } else if(strpos($pwhtProgress, ".")) {
             $sheet->getStyle("P{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("P{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
-        // TOTAL PWHT QTY
-        $totalPwht = str_replace(",", "", $pkgData[$i]->TOTAL_PWHT);
-        $sheet->setCellValue('Q'.$rowCnt, $totalPwht);
-        if($totalPwht == 0 || $totalPwht == ''){
+        // PWHT COMPLETE QTY
+        $completePwht = str_replace(",", "", $pkgData[$i]->COMPLETE_PWHT);
+        $sheet->setCellValue('Q'.$rowCnt, $completePwht);
+        if($completePwht == 0 || $completePwht == ''){
             $sheet->getStyle("Q{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($totalPwht, ".")) {
+        } else if(strpos($completePwht, ".")) {
             $sheet->getStyle("Q{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
         } else {
             $sheet->getStyle("Q{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
         }
-        // PWHT ON PROGRESS QTY
-        $pwhtProgress = str_replace(",", "", $pkgData[$i]->PWHT_PROGRESS);
-        $sheet->setCellValue('R'.$rowCnt, $pwhtProgress);
-        if($pwhtProgress == 0 || $pwhtProgress == ''){
-            $sheet->getStyle("R{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($pwhtProgress, ".")) {
-            $sheet->getStyle("R{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
-        } else {
-            $sheet->getStyle("R{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
-        }
-        // PWHT COMPLETE QTY
-        $completePwht = str_replace(",", "", $pkgData[$i]->COMPLETE_PWHT);
-        $sheet->setCellValue('S'.$rowCnt, $completePwht);
-        if($completePwht == 0 || $completePwht == ''){
-            $sheet->getStyle("S{$rowCnt}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_ACCOUNTING);
-        } else if(strpos($completePwht, ".")) {
-            $sheet->getStyle("S{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0.0#');
-        } else {
-            $sheet->getStyle("S{$rowCnt}")->getNumberFormat()->setFormatCode('#,##0');
-        }
         // Walk Down Ready
-        $sheet->setCellValue('T'.$rowCnt, $pkgData[$i]->WALK_DOWN_READY);
+        $sheet->setCellValue('R'.$rowCnt, $pkgData[$i]->WALK_DOWN_READY);
         // SUBCON Walk Down
-        $sheet->setCellValue('U'.$rowCnt, $pkgData[$i]->SUBCON_WALK_DOWN);
+        $sheet->setCellValue('S'.$rowCnt, $pkgData[$i]->SUBCON_WALK_DOWN);
         // HTENG Walk Down
-        $sheet->setCellValue('V'.$rowCnt, $pkgData[$i]->HTENC_WALK_DOWN);
+        $sheet->setCellValue('T'.$rowCnt, $pkgData[$i]->HTENC_WALK_DOWN);
         // A Punch Clear DATE
-        $sheet->setCellValue('W'.$rowCnt, $pkgData[$i]->A_PUNCH_CLEAR_DATE);
+        $sheet->setCellValue('U'.$rowCnt, $pkgData[$i]->A_PUNCH_CLEAR_DATE);
         // Plan
-        $sheet->setCellValue('X'.$rowCnt, $pkgData[$i]->PLAN);
+        $sheet->setCellValue('V'.$rowCnt, $pkgData[$i]->PLAN);
         // Request
-        $sheet->setCellValue('Z'.$rowCnt, $pkgData[$i]->REQUEST);
+        $sheet->setCellValue('W'.$rowCnt, $pkgData[$i]->REQUEST);
         // Actual
-        $sheet->setCellValue('AA'.$rowCnt, $pkgData[$i]->ACTUAL);
+        $sheet->setCellValue('X'.$rowCnt, $pkgData[$i]->ACTUAL);
         // B Punch
-        $sheet->setCellValue('AB'.$rowCnt, $pkgData[$i]->B_PUNCH);
+        $sheet->setCellValue('Y'.$rowCnt, $pkgData[$i]->B_PUNCH);
         // Flushing
-        $sheet->setCellValue('AC'.$rowCnt, $pkgData[$i]->FLUSHING);
+        $sheet->setCellValue('Z'.$rowCnt, $pkgData[$i]->FLUSHING);
         // Box-Up
-        $sheet->setCellValue('AD'.$rowCnt, $pkgData[$i]->BOX_UP);
+        $sheet->setCellValue('AA'.$rowCnt, $pkgData[$i]->BOX_UP);
         // REMARK
-        $sheet->setCellValue('AD'.$rowCnt, $pkgData[$i]->REMARK);
+        $sheet->setCellValue('AB'.$rowCnt, $pkgData[$i]->REMARK);
 
         $rowCnt++;
     }
@@ -288,25 +289,26 @@ if($responseResult->ResultType = "Success") {
 
 // 들여쓰기
 $sheet->getStyle('C5:C'.$rowCnt)->getAlignment()->setIndent(1);
-$sheet->getStyle('F5:F'.$rowCnt)->getAlignment()->setIndent(1);
-$sheet->getStyle('I5:K'.$rowCnt)->getAlignment()->setIndent(1);
-$sheet->getStyle('N5:S'.$rowCnt)->getAlignment()->setIndent(1);
-$sheet->getStyle('AD5:AD'.$rowCnt)->getAlignment()->setIndent(1);
+$sheet->getStyle('E5:E'.$rowCnt)->getAlignment()->setIndent(1);
+$sheet->getStyle('G5:I'.$rowCnt)->getAlignment()->setIndent(1);
+$sheet->getStyle('L5:Q'.$rowCnt)->getAlignment()->setIndent(1);
+$sheet->getStyle('AB5:AB'.$rowCnt)->getAlignment()->setIndent(1);
 
 // 표 그리기
 $rowCnt--;
-$sheet->getStyle("A3:AD{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-$sheet->getStyle("A3:AD3")->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
-$sheet->getStyle("AD3:AD{$rowCnt}")->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
-$sheet->getStyle("A{$rowCnt}:AD{$rowCnt}")->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+$sheet->getStyle("A3:AB{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("A3:AB3")->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+$sheet->getStyle("AB3:AB{$rowCnt}")->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+$sheet->getStyle("A{$rowCnt}:AB{$rowCnt}")->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
 
 // 행 가운데 정렬
 $sheet->getStyle('A5:B'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('D5:E'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('I5:K'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-$sheet->getStyle('G5:H'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('L5:M'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('T5:AC'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('D5:D'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('F5:F'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('G5:I'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+$sheet->getStyle('F5:F'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('J5:K'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('R5:AA'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
 // 셀 높이
 for($i = 1; $i <= $rowCnt; $i++) {
@@ -323,15 +325,15 @@ $sheet->getColumnDimension('A')->setWidth(15);
 $sheet->getColumnDimension('B')->setWidth(5);
 $sheet->getColumnDimension('C')->setWidth(28);
 $sheet->getColumnDimension('D')->setWidth(6);
-$sheet->getColumnDimension('E')->setWidth(6);
-$sheet->getColumnDimension('F')->setWidth(150);
+$sheet->getColumnDimension('E')->setWidth(150);
+$sheet->getColumnDimension('F')->setWidth(10);
 $sheet->getColumnDimension('G')->setWidth(10);
 $sheet->getColumnDimension('H')->setWidth(10);
 $sheet->getColumnDimension('I')->setWidth(10);
-$sheet->getColumnDimension('J')->setWidth(10);
-$sheet->getColumnDimension('K')->setWidth(10);
-$sheet->getColumnDimension('L')->setWidth(17);
-$sheet->getColumnDimension('M')->setWidth(17);
+$sheet->getColumnDimension('J')->setWidth(17);
+$sheet->getColumnDimension('K')->setWidth(17);
+$sheet->getColumnDimension('L')->setWidth(12);
+$sheet->getColumnDimension('M')->setWidth(12);
 $sheet->getColumnDimension('N')->setWidth(12);
 $sheet->getColumnDimension('O')->setWidth(12);
 $sheet->getColumnDimension('P')->setWidth(12);
@@ -347,10 +349,8 @@ $sheet->getColumnDimension('Y')->setWidth(12);
 $sheet->getColumnDimension('Z')->setWidth(12);
 $sheet->getColumnDimension('AA')->setWidth(12);
 $sheet->getColumnDimension('AB')->setWidth(12);
-$sheet->getColumnDimension('AC')->setWidth(12);
-$sheet->getColumnDimension('AD')->setWidth(10);
-$sheet->getRowDimension(3)->setRowHeight(33);
-$sheet->getRowDimension(4)->setRowHeight(33);
+$sheet->getRowDimension(3)->setRowHeight(30);
+$sheet->getRowDimension(4)->setRowHeight(30);
 
 // 틀 고정
 $sheet->freezePane("D5");

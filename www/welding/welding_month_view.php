@@ -181,7 +181,7 @@ var vm = new Vue({
                     $(".trFirst .responsiveTblRow").each(function() {
                         tableWidth -= $(this).width();
                     });
-                    var thDate = tableWidth / 2 - 120;
+                    var thDate = tableWidth / 2 - 150;
 
                     $(".dateTh").attr("style", "text-align:left;padding-left:" + thDate + "px !important");
 
@@ -376,16 +376,16 @@ var vm = new Vue({
         <table class="table table-bordered table-sm tblWeldingMonth fixHeadColumn">
             <thead>
                 <tr class="table-primary trFirst">
-                    <th class="responsiveTblRow fixLeft fixLeftFirst" rowspan="2">Company</th>
-                    <th class="responsiveTblRow fixLeft fixLeftSecond" rowspan="2">Area</th>
-                    <th class="responsiveTblRow fixLeft fixLeftThird" rowspan="2">Material Group</th>
-                    <th class="responsiveTblRow fixLeft fixLeftFourth" rowspan="2">Total</th>
-                    <th class="responsiveTblRow fixLeft fixLeftFiveth" rowspan="2">Previous</th>
-                    <th :colspan="dateCnt" class="dateTh">Work Dia-inch for Monthly</th>
-                    <th rowspan="2" class="responsiveTblRow fixRight fixRightFourth">Accumulative</th>
-                    <th rowspan="2" class="responsiveTblRow fixRight fixRightThird">Remain</th>
-                    <th rowspan="2" class="responsiveTblRow fixRight fixRightSecond">Work Progress(%)</th>
-                    <th rowspan="2" class="responsiveTblRow fixRight fixRightFirst">Remark</th>
+                    <th class="responsiveTblRow fixLeft fixLeftFirst" rowspan="2">업체명<br />Company</th>
+                    <th class="responsiveTblRow fixLeft fixLeftSecond" rowspan="2">구역<br />Area</th>
+                    <th class="responsiveTblRow fixLeft fixLeftThird" rowspan="2">재질<br />Material<br />Group</th>
+                    <th class="responsiveTblRow fixLeft fixLeftFourth" rowspan="2">총 물량<br />Total</th>
+                    <th class="responsiveTblRow fixLeft fixLeftFiveth" rowspan="2">누계<br />Previous<br />(D/I)</th>
+                    <th :colspan="dateCnt" class="dateTh">선택 기간 물량_Work Dia-inch for Date (D/I)</th>
+                    <th rowspan="2" class="responsiveTblRow fixRight fixRightFourth">합 계<br />Accumulative<br />(D/I)</th>
+                    <th rowspan="2" class="responsiveTblRow fixRight fixRightThird">잔여물량<br />Remain (D/I)</th>
+                    <th rowspan="2" class="responsiveTblRow fixRight fixRightSecond">진행률<br />Work<br />Progress(%)</th>
+                    <th rowspan="2" class="responsiveTblRow fixRight fixRightFirst">비고<br />Remark</th>
                 </tr>
                 <tr class="table-primary">
                     <th :key="index" v-for="(date, index) in headerDateList" class="responsiveTblRow text-center" style="font-weight:normal !important">{{ date }}</th>
@@ -393,8 +393,17 @@ var vm = new Vue({
             </thead> 
             <tbody>
                 <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'level3' : (welding.Level) == 3, 'level2' : (welding.Level) == 2 ,'level1' : (welding.Level) == 1, 'level0' : (welding.Level) == '0'}">
-                    <td :class="['rowspanCom', 'text-center', 'fixLeft', 'fixLeftFirst', 'responsiveTblRow', {'companyColor': (welding.Level) == ''}, {'level1': (welding.Level) == 1}, {'level0': (welding.Level) == '0'}]" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">{{ welding.Company }}</td>
-                    <td :class="['rowspanArea', {'areaColor' : (welding.Level) == ''}, {'level2' : (welding.Level) == 2}, {'weldingSum' : (welding.Level) == 2}, 'fixLeft', 'fixLeftSecond', 'responsiveTblRow']" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')">{{ welding.Area }}</td>
+                    <td :class="['rowspanCom', 'text-center', 'fixLeft', 'fixLeftFirst', 'responsiveTblRow', {'companyColor': (welding.Level) == ''}, {'level1': (welding.Level) == 1}, {'level0': (welding.Level) == '0'}]" :colspan="(welding.Level == '1') || (welding.Level == '0') ? 3 : 0">
+                        <span v-show="(welding.Level) == '0'">종합 물량 합계_</span>{{ welding.Company }}
+                    </td>
+                    <td :class="['rowspanArea', {'areaColor' : (welding.Level) == ''}, {'level2' : (welding.Level) == 2}, {'weldingSum' : (welding.Level) == 2}, 'fixLeft', 'fixLeftSecond', 'responsiveTblRow']" :colspan="welding.Level == 2 ? 2 : 0" v-if="(welding.Level > 1) || (welding.Level == '')">
+                        <div v-show="(welding.Level) == 2 && !init">
+                            {{ welding.Area == "Welding Sum" ? "용접 합계_" + welding.Area : "비용접 합계_" + welding.Area }}
+                        </div>
+                        <div v-show="(welding.Level) == ''">
+                            {{ welding.Area }}
+                        </div>
+                    </td>
                     <td :class="[{'materialGrp' : (welding.Level) == ''},{'level3' : (welding.Level) == 3}, 'fixLeft', 'fixLeftThird', 'responsiveTblRow']" v-if="(welding.Level > 2) || (welding.Level == '')" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
                     <td :class="['text-right', 'responsiveTblRow', 'fixLeft', 'fixLeftFourth', {'level3' : (welding.Level) == 3}, {'level2' : (welding.Level) == 2}, {'level1': (welding.Level) == 1}, {'level0': (welding.Level) == '0'}, {'companyColor': (welding.Level) == ''}]" style="padding-right:10px !important">{{ numberToAccounting(welding.Total) }}</td> 
                     <td :class="['text-right', 'responsiveTblRow', 'fixLeft', 'fixLeftFiveth', {'level3' : (welding.Level) == 3}, {'level2' : (welding.Level) == 2}, {'level1': (welding.Level) == 1}, {'level0': (welding.Level) == '0'}, {'companyColor': (welding.Level) == ''}]" style="padding-right:10px !important">{{ numberToAccounting(welding.Previous) }}</td> 

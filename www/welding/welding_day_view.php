@@ -39,7 +39,8 @@ var vm = new Vue({
         noData : true,
         isChangeData : false,
         init: true,
-        selectGrp: 'Area'
+        selectGrp: 'Area',
+        grpTitle: ''
     },
     created() {
         // 최신문서 데이터 불러오기
@@ -54,6 +55,17 @@ var vm = new Vue({
             $(".dx-loadpanel-content").removeClass("dx-state-invisible").addClass("dx-state-visible");
             var data = this;
             var jno = data.jno;
+
+            data.init = true;
+
+            // 칼럼명 변경
+            if(this.selectGrp == "Area") {
+                this.grpTitle = "구역";
+            } else if(this.selectGrp == "Unit") {
+                this.grpTitle = "경계";
+            } else if(this.selectGrp == "Level") {
+                this.grpTitle = "위치";
+            }
             if(jno) {
                 var url = "https://wcf.htenc.co.kr/apipwim/getweldingtoday?jno="+ jno +"&today=" + this.weldingDate + "&group=" + this.selectGrp;
                 axios.get(url).then(
@@ -302,23 +314,32 @@ var vm = new Vue({
     <div style="height: 80vh;overflow:auto">
         <table class="table table-bordered fixHeadColumn" id="tblWeldingDay">
             <thead>
-                <tr class="table-primary" style="height:55.5px">
-                    <th style="width:8%">Company</th>
-                    <th style="width:8%">{{ selectGrp }}</th>
-                    <th style="width:8%">Material Group</th>
-                    <th style="width:9%">Total</th>
-                    <th style="width:9%">Previous</th>
-                    <th style="width:9%">To Day Work</th>
-                    <th style="width:9%">Accumulative</th>
-                    <th style="width:9%">Remain</th>
-                    <th style="width:9%">Work Progress(%)</th>
-                    <th>Remark</th>
+                <tr class="table-primary">
+                    <th style="width:8%">업체명<br />Company</th>
+                    <th style="width:8%">{{ grpTitle }}<br />{{ selectGrp }}</th>
+                    <th style="width:8%">재질<br />Material Group</th>
+                    <th style="width:9%">총 물량<br />Total (D/I)</th>
+                    <th style="width:9%">누계<br />Previous<br />(D/I)</th>
+                    <th style="width:9%">금일 물량<br />To Day Work<br />(D/I)</th>
+                    <th style="width:9%">합 계<br />Accumulative<br />(D/I)</th>
+                    <th style="width:9%">잔여물량<br />Remain (D/I)</th>
+                    <th style="width:9%">진행률<br />Work<br />Progress(%)</th>
+                    <th>비고<br />Remark</th>
                 </tr>
             </thead>
             <tbody>
                 <tr :key="index" v-for="(welding, index) in weldingDayList" :class="{'step3' : (welding.Step) == 3, 'step2' : (welding.Step) == 2 ,'step1' : (welding.Step) == 1, 'step0' : (welding.Step) == '0'}">
-                    <td class="rowspanCom text-center" :colspan="(welding.Step == '1') || (welding.Step == '0') ? 3 : 0">{{ welding.Company }}</td>
-                    <td :class="['rowspanArea' ,{'areaColor' : (welding.Step) == ''},{'weldingSum' : (welding.Step) == 2}, `step_${welding.Step}`]" :colspan="welding.Step == 2 ? 2 : 0">{{ welding[selectGrp] }}</td>
+                    <td class="rowspanCom text-center" :colspan="(welding.Step == '1') || (welding.Step == '0') ? 3 : 0">
+                        <span v-show="(welding.Step) == '0'">종합 물량 합계_</span>{{ welding.Company }}
+                    </td>
+                    <td :class="['rowspanArea' ,{'areaColor' : (welding.Step) == ''},{'weldingSum' : (welding.Step) == 2}, `step_${welding.Step}`]" :colspan="welding.Step == 2 ? 2 : 0">
+                        <div v-show="(welding.Step) == 2 && !init">
+                            {{ welding[selectGrp] == "Welding Sum" ? "용접 합계_" + welding[selectGrp] : "비용접 합계_" + welding[selectGrp] }}
+                        </div>
+                        <div v-show="(welding.Step) == ''">
+                            {{ welding[selectGrp] }}
+                        </div>
+                    </td>
                     <td :class="[{'materialGrp' : (welding.Step) == ''}, 'materialStep', `step_${welding.Step}`]" style="padding-left:10px !important">{{ welding["Material Group"] }}</td>
                     <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welding.Total) }}</td>
                     <td class="text-right" style="padding-right:10px !important">{{ numberToAccounting(welding.Previous) }}</td>

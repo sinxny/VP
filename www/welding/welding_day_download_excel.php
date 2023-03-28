@@ -51,7 +51,7 @@ $sheet->setCellValue('A2', "Daily Report");
 $sheet->mergeCells("A2:B2");
 $sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle("A1:A2")->getFont()->setBold(true);
-$sheet->setCellValue('H2', "Period");
+$sheet->setCellValue('H2', "날짜 Date");
 $sheet->getStyle('H2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 $sheet->setCellValue('I2', $weldingDate);
 $sheet->mergeCells("I2:J2");
@@ -59,16 +59,27 @@ $sheet->getStyle("I2")->getFont()->setBold(true);
 $sheet->getStyle("I1:I2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle("I2:I2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
 
-$sheet->setCellValue('A3', "Company");
-$sheet->setCellValue('B3', $group);
-$sheet->setCellValue('C3', "Material Group");
-$sheet->setCellValue('D3', "Total");
-$sheet->setCellValue('E3', "Previous");
-$sheet->setCellValue('F3', "To Day Work");
-$sheet->setCellValue('G3', "Accumulative");
-$sheet->setCellValue('H3', "Remain");
-$sheet->setCellValue('I3', "Work Progress(%)");
-$sheet->setCellValue('J3', "Remark");
+if($group == "Area") {
+    $grpTitle = "구역";
+} else if ($group == "Unit") {
+    $grpTitle = "경계";
+} else if ($group == "Level") {
+    $grpTitle = "위치";
+}
+$sheet->setCellValue('A3', "업체명\nCompany");
+$sheet->setCellValue('B3', $grpTitle. "\n" .$group);
+$sheet->setCellValue('C3', "재질\nMaterial Group");
+$sheet->setCellValue('D3', "총 물량\nTotal (D/I)");
+$sheet->setCellValue('E3', "누계\nPrevious\n(D/I)");
+$sheet->setCellValue('F3', "금일 물량\nTo Day Work\n(D/I)");
+$sheet->setCellValue('G3', "합 계\nAccumulative\n(D/I)");
+$sheet->setCellValue('H3', "잔여물량\nRemain (D/I)");
+$sheet->setCellValue('I3', "진행률\nWork\nProgress(%)");
+$sheet->setCellValue('J3', "비고\nRemark");
+
+// 줄바꿈
+$sheet->getStyle("A3:J3")->getAlignment()->setWrapText(true);
+
 $sheet->getStyle("A3:J3")->getFont()->setSize(10);
 $sheet->getStyle("A3:J3")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('BDD7EE');
 $sheet->getStyle("A3:J3")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -109,7 +120,11 @@ if($responseResult->ResultType = "Success") {
         // Company
         if($isSameCom != $weldingData[$i]->Company) {
             $comEdRow = $rowCnt - 1;
-            $sheet->setCellValue('A'.$rowCnt, $weldingData[$i]->Company);
+            if($weldingData[$i]->Step == "0") {
+                $sheet->setCellValue('A'.$rowCnt, "종합 물량 합계_" . $weldingData[$i]->Company);
+            } else {
+                $sheet->setCellValue('A'.$rowCnt, $weldingData[$i]->Company);
+            }
             if($rowCnt != 4 && ($comEdRow - $comStRow != 0)) {
                 $sheet->mergeCells("A{$comStRow}:A{$comEdRow}");
             }
@@ -122,7 +137,15 @@ if($responseResult->ResultType = "Success") {
             if($rowCnt != 4 && ($areaEdRow - $areaStRow != 0)) {
                 $sheet->mergeCells("B{$areaStRow}:B{$areaEdRow}");
             }
-            $sheet->setCellValue('B'.$rowCnt, $weldingData[$i]->{$group});
+            if($weldingData[$i]->Step == 2) {
+                if($weldingData[$i]->{$group} == "Welding Sum") {
+                    $sheet->setCellValue('B'.$rowCnt, "용접 합계_" . $weldingData[$i]->{$group});
+                } else {
+                    $sheet->setCellValue('B'.$rowCnt, "비용접 합계_" . $weldingData[$i]->{$group});
+                }
+            } else {
+                $sheet->setCellValue('B'.$rowCnt, $weldingData[$i]->{$group});
+            }
             $sheet->getStyle('B'.$rowCnt)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A9D08E');
             $areaStRow = $rowCnt;
         }
@@ -231,7 +254,7 @@ $sheet->getColumnDimension('G')->setWidth(15);
 $sheet->getColumnDimension('H')->setWidth(15);
 $sheet->getColumnDimension('I')->setWidth(15);
 $sheet->getColumnDimension('J')->setWidth(15);
-$sheet->getRowDimension(3)->setRowHeight(33);
+$sheet->getRowDimension(3)->setRowHeight(40);
 
 // 파일명
 $title = "welding_day_report";

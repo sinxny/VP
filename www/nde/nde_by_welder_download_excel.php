@@ -47,7 +47,7 @@ $sheet->setCellValue('A2', "By WELDER");
 $sheet->mergeCells("A2:B2");
 $sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle("A1:A2")->getFont()->setBold(true);
-$sheet->setCellValue('I2', "Period");
+$sheet->setCellValue('I2', "날짜 Date");
 $sheet->getStyle('I2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 $sheet->setCellValue('J2', $dateTime);
 $sheet->mergeCells("J2:K2");

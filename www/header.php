@@ -66,6 +66,7 @@
 <body>
 <?php
 if($isLogin) {
+require_once "admin/right_setting_view.php";
 ?>
 <script>
 $(document).ready(function() {
@@ -118,6 +119,12 @@ $(document).ready(function() {
         //     sessionStorage.setItem("cmRight", false);
         // }
     }
+    // 권한 설정 모달
+    if($("#uno").val() == "10065") {
+        $("#btnRightSetting").show();
+    } else {
+        $("#btnRightSetting").hide();
+    }
 
     //JOB 표시
     if(sessionStorage.getItem('jobName')) {
@@ -131,7 +138,7 @@ $(document).ready(function() {
     //jobCondition 초기값
     var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
     sessionStorage.setItem("isStaff", IsInterStaff);
-    if(menuRight == "vp" || menuRight == "all") {
+    if(menuRight == "vp") {
         if(IsInterStaff == "Y") {
             $("#jobFilter").val($("input[name='jobCondition']:checked").val());
             $("#btnStaffOnly").show();
@@ -145,6 +152,10 @@ $(document).ready(function() {
             $("#btnStaffOnly").hide();
             $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
         }
+    } else if(menuRight == "cm") {
+        $("#jobFilter").val($("input[name='jobCondition']:checked").val());
+        $("#btnStaffOnly").show();
+        $("#selJobFilter").show();
     }
 
     // 비밀번호 변경 버튼
@@ -173,7 +184,7 @@ $(document).ready(function() {
     if (sessionStorage.getItem("subMenu")) {
         subMenu = sessionStorage.getItem("subMenu");
     }  else if(menuRight == "cm") {
-        subMenu = "WELDING_DAY";
+        subMenu = "w_day";
     } else {
         subMenu = "vpLatest";
     }
@@ -757,6 +768,7 @@ function validatePwdInputs() {
             <div class="dropdown-menu dropdown-menu-right">
                 <div class="dropdown-item-text" href="#" onclick="onUserInfoClick()"><?php echo $_SESSION["user"]["user_name"]?>(<?php echo $_SESSION["user"]["user_id"]?>)</div>
                 <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalRightSetting" id="btnRightSetting" style="display:none">사용자 권한 설정</a>
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalChangePassword" id="btnChangePassword">비밀번호 변경</a>
                 <a class="dropdown-item" href="#" onclick="onLogoutClick()">Logout</a>
             </div>
@@ -788,19 +800,19 @@ function validatePwdInputs() {
             <span style="width:min-content" onclick="collapseTree(this)"><i class="indicator fas fa-minus-circle"></i>Welding</span>
             <ul>
                 <li>
-                    <a id="WELDING_DAY" onclick="activeSubMenu(this)">WELDING DAY</span></a>
+                    <a id="w_day" onclick="activeSubMenu(this)">WELDING DAY</span></a>
                 </li>
                 <li>
-                    <a id="WELDING_MONTH" onclick="activeSubMenu(this)">WELDING MONTH</span></a>
+                    <a id="w_month" onclick="activeSubMenu(this)">WELDING MONTH</span></a>
                 </li>
                 <li>
-                    <a id="NDE_BY_ISO" onclick="activeSubMenu(this)">NDE BY ISO</span></a>
+                    <a id="n_iso" onclick="activeSubMenu(this)">NDE BY ISO</span></a>
                 </li>
                 <li>
-                    <a id="NDE_BY_WELDER" onclick="activeSubMenu(this)">NDE BY WELDER</span></a>
+                    <a id="n_welder" onclick="activeSubMenu(this)">NDE BY WELDER</span></a>
                 </li>
                 <li>
-                    <a id="PACKAGE_LIST" onclick="activeSubMenu(this)">PKG LIST</span></a>
+                    <a id="pkg" onclick="activeSubMenu(this)">PKG LIST</span></a>
                 </li>
                 <!-- <li>
                     <a id="Report4" onclick="activeSubMenu(this)">Report4</span></a>

@@ -17,6 +17,18 @@
 .tblPkgList .leftFixThird { 
     position: sticky;
 }
+.mainColor {
+    background-color: #004377;
+    color: white
+}
+.punchColor {
+    background-color: #0067B4;
+    color: white
+}
+.testColor {
+    background-color: #1199FF;
+    color: white
+}
 </style>
 <script>
 var vm = new Vue({
@@ -222,42 +234,42 @@ var vm = new Vue({
     <div style="height: 80vh;overflow:auto">
         <table class="table table-bordered table-sm tblPkgList fixHeadColumn">
             <thead style="position: sticky; top:0">
-                <tr class="table-primary">
-                    <th class="leftFixFirst responsiveTblRow" rowspan="2">SUBCON</th>
-                    <th class="leftFixSecond" rowspan="2" style="min-width:70px;">NO.</th>
-                    <th class="leftFixThird responsiveTblRow" rowspan="2">PKG. NO</th>
-                    <th class="responsiveTblRow" rowspan="2">NDE%</th>
-                    <th class="responsiveTblRow" colspan="7">MAIN LINE CONDITION</th>
-                    <th class="responsiveTblRow" rowspan="2">Method CLIENT</th>
-                    <th class="responsiveTblRow" rowspan="2">인허가<br />항목</th>
-                    <th class="responsiveTblRow" rowspan="2">TOTAL<br />WELDING<br />D/INCH</th>
-                    <th class="responsiveTblRow" rowspan="2">COMPLETE<br />D/INCH</th>
-                    <th class="responsiveTblRow" rowspan="2">WELDING<br />PROGRESS<br />(%)</th>
-                    <th class="responsiveTblRow" rowspan="2">TOTAL<br />PWHT QTY</th>
-                    <th class="responsiveTblRow" rowspan="2">PWHT<br />ON<br />PROGRESS<br />QTY</th>
-                    <th class="responsiveTblRow" rowspan="2">PWHT<br />COMPLETE<br />QTY</th>
-                    <th class="responsiveTblRow" rowspan="2">Walk<br />Down<br />Ready</th>
-                    <th class="responsiveTblRow" colspan="2">Punch W/D</th>
-                    <th class="responsiveTblRow" rowspan="2">A Punch<br />Clear DATE</th>
-                    <th class="responsiveTblRow" colspan="6">TEST DATE</th>
-                    <th class="responsiveTblRow" rowspan="2">REMARK</th>
+                <tr>
+                    <th class="leftFixFirst responsiveTblRow mainColor" rowspan="2">COMPANY</th>
+                    <th class="leftFixSecond mainColor" rowspan="2" style="min-width:70px;">NO.</th>
+                    <th class="leftFixThird responsiveTblRow mainColor" rowspan="2">PKG. NO.</th>
+                    <!-- <th class="responsiveTblRow" rowspan="2">NDE%</th> -->
+                    <th class="responsiveTblRow mainColor" colspan="6">MAIN LINE CONDITION</th>
+                    <th class="responsiveTblRow punchColor" rowspan="2">Method<br />CLIENT</th>
+                    <th class="responsiveTblRow punchColor" rowspan="2">인허가<br />항목</th>
+                    <th class="responsiveTblRow punchColor" rowspan="2">TOTAL<br />WELDING<br />D/INCH</th>
+                    <th class="responsiveTblRow punchColor" rowspan="2">COMPLETE<br />D/INCH</th>
+                    <th class="responsiveTblRow punchColor" rowspan="2">WELDING<br />PROGRESS<br />(%)</th>
+                    <th class="responsiveTblRow punchColor" rowspan="2">TOTAL<br />PWHT QTY</th>
+                    <th class="responsiveTblRow punchColor" rowspan="2">PWHT<br />ON<br />PROGRESS<br />QTY</th>
+                    <th class="responsiveTblRow punchColor" rowspan="2">PWHT<br />COMPLETE<br />QTY</th>
+                    <th class="responsiveTblRow punchColor" rowspan="2">Walk Down<br />Ready</th>
+                    <th class="responsiveTblRow punchColor" colspan="2">Punch W/D</th>
+                    <th class="responsiveTblRow punchColor" rowspan="2">A Punch<br />Clear DATE</th>
+                    <th class="responsiveTblRow testColor" colspan="6">TEST DATE</th>
+                    <th class="responsiveTblRow testColor" rowspan="2">REMARK</th>
                 </tr>
-                <tr class="table-primary">
-                    <th class="responsiveTblRow">Fluid</th>
-                    <th class="responsiveTblRow">Line No</th>
-                    <th class="responsiveTblRow">Line Class</th>
-                    <th class="responsiveTblRow">Test<br />Fluid</th>
-                    <th class="responsiveTblRow">Operating<br />Pressure</th>
-                    <th class="responsiveTblRow">Design<br />Pressure</th>
-                    <th class="responsiveTblRow">Test<br />Pressure</th>
-                    <th class="responsiveTblRow">SUBCON<br />Walk Down</th>
-                    <th class="responsiveTblRow">HTENC<br />Walk Down</th>
-                    <th class="responsiveTblRow">Plan</th>
-                    <th class="responsiveTblRow">Request</th>
-                    <th class="responsiveTblRow">Actual</th>
-                    <th class="responsiveTblRow">B Punch</th>
-                    <th class="responsiveTblRow">Flushing</th>
-                    <th class="responsiveTblRow">Box-Up</th>
+                <tr>
+                    <th class="responsiveTblRow mainColor">Fluid</th>
+                    <th class="responsiveTblRow mainColor">Line No</th>
+                    <!-- <th class="responsiveTblRow">Line Class</th> -->
+                    <th class="responsiveTblRow mainColor">Test<br />Fluid</th>
+                    <th class="responsiveTblRow mainColor">Operating<br />Pressure</th>
+                    <th class="responsiveTblRow mainColor">Design<br />Pressure</th>
+                    <th class="responsiveTblRow mainColor">Test<br />Pressure</th>
+                    <th class="responsiveTblRow punchColor">SUBCON<br />Walk Down</th>
+                    <th class="responsiveTblRow punchColor">HTENC<br />Walk Down</th>
+                    <th class="responsiveTblRow testColor">Plan</th>
+                    <th class="responsiveTblRow testColor">Request</th>
+                    <th class="responsiveTblRow testColor">Actual</th>
+                    <th class="responsiveTblRow testColor">B Punch</th>
+                    <th class="responsiveTblRow testColor">Flushing</th>
+                    <th class="responsiveTblRow testColor">Box-Up</th>
                 </tr>
             </thead> 
             <tbody>
@@ -265,10 +277,10 @@ var vm = new Vue({
                     <td class="responsiveTblRow text-center leftFixFirst" style="background-color:white">{{ pkg.COMPANY_NAME }}</td>
                     <td class="text-center leftFixSecond" style="min-width:70px; background-color:white">{{ pkg.NO }}</td>
                     <td class="responsiveTblRow leftFixThird" style="padding-left: 10px !important; background-color:white">{{ pkg.PKG_NO }}</td>
-                    <td class="responsiveTblRow text-center">{{ numberToAccounting(pkg.NDE) }}</td>
+                    <!-- <td class="responsiveTblRow text-center">{{ numberToAccounting(pkg.NDE) }}</td> -->
                     <td class="responsiveTblRow text-center">{{ pkg.FLUID }}</td>
                     <td class="responsiveTblRow" style="padding-left: 10px !important">{{ pkg.LINE_NO }}</td>
-                    <td class="responsiveTblRow text-center">{{ pkg.LINE_CLASS }}</td>
+                    <!-- <td class="responsiveTblRow text-center">{{ pkg.LINE_CLASS }}</td> -->
                     <td class="responsiveTblRow text-center">{{ pkg.TEST_FLUID }}</td>
                     <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ numberToAccounting(pkg.OPERATION_PRESSURE) }}</td>
                     <td class="responsiveTblRow text-right" style="padding-right: 10px !important">{{ numberToAccounting(pkg.DESIGN_PRESSURE) }}</td>

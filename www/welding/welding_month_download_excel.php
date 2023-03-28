@@ -46,12 +46,12 @@ $sheet->mergeCells("A2:B2");
 $sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle("A1:A2")->getFont()->setBold(true);
 
-$sheet->setCellValue('A3', "Company");
-$sheet->setCellValue('B3', "Area");
-$sheet->setCellValue('C3', "Material\nGroup");
-$sheet->setCellValue('D3', "Total");
-$sheet->setCellValue('E3', "Previous");
-$sheet->setCellValue('F3', "Work Dia-inch for Monthly");
+$sheet->setCellValue('A3', "업체명\nCompany");
+$sheet->setCellValue('B3', "구역\nArea");
+$sheet->setCellValue('C3', "재질\nMaterial\nGroup");
+$sheet->setCellValue('D3', "총 물량\nTotal (D/I)");
+$sheet->setCellValue('E3', "누계\nPrevious\n(D/I)");
+$sheet->setCellValue('F3', "선택 기간 물량_Work Dia-inch for Date (D/I)");
 
 $sheet->mergeCells("A3:A4");
 $sheet->mergeCells("B3:B4");
@@ -59,12 +59,9 @@ $sheet->mergeCells("C3:C4");
 $sheet->mergeCells("D3:D4");
 $sheet->mergeCells("E3:E4");
 
-// 줄바꿈
-$sheet->getStyle("C3")->getAlignment()->setWrapText(true);
-
 // 헤더 행높이
-$sheet->getRowDimension(3)->setRowHeight(33);
-$sheet->getRowDimension(4)->setRowHeight(33);
+$sheet->getRowDimension(3)->setRowHeight(25);
+$sheet->getRowDimension(4)->setRowHeight(25);
 
 $url = "http://wcfservice.htenc.co.kr/apipwim/getweldingmonth?jno={$jno}&today={$today}&nextday={$nextday}";
 
@@ -114,30 +111,33 @@ if($responseResult->ResultType = "Success") {
 
     $sheet->mergeCells("F3:{$col}3");
     $col++;
-    $sheet->setCellValue($col."3", "Accumlative");
+    $sheet->setCellValue($col."3", "합 계\nAccumulative\n(D/I)");
     $sheet->mergeCells("{$col}3:{$col}4");
     $col++;
-    $sheet->setCellValue($col."2", "Period");
+    $sheet->setCellValue($col."2", "날짜 Date");
     $sheet->getStyle($col."2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-    $sheet->setCellValue($col."3", "Remain");
+    $sheet->setCellValue($col."3", "잔여물량\nRemain (D/I)");
     $sheet->mergeCells("{$col}3:{$col}4");
     $periodCol = $col;
     $col++;
     $sheet->setCellValue($col."2", $today . " ~ ". $nextday);
     $sheet->getStyle($col."2")->getFont()->setBold(true);
     $preCol = $col;
-    $sheet->setCellValue($col."3", "Work Progress(%)");
+    $sheet->setCellValue($col."3", "진행률\nWork\nProgress(%)");
     $sheet->mergeCells("{$col}3:{$col}4");
     $lastCol = ++$col;
     $sheet->mergeCells("{$preCol}2:{$lastCol}2");
     $sheet->getStyle("{$preCol}2:{$lastCol}2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
     $sheet->getStyle("{$periodCol}2:{$lastCol}2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
-    $sheet->setCellValue($lastCol."3", "Remark");
+    $sheet->setCellValue($lastCol."3", "비고\nRemark");
     $sheet->mergeCells("{$lastCol}3:{$lastCol}4");
     $sheet->getStyle("A3:{$lastCol}4")->getFont()->setSize(10);
     $sheet->getStyle("A3:{$lastCol}4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('BDD7EE');
     $sheet->getStyle("A3:{$lastCol}4")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
     $sheet->mergeCells("A1:{$lastCol}1");
+    
+    // 줄바꿈
+    $sheet->getStyle("A3:{$lastCol}3")->getAlignment()->setWrapText(true);
 
     $rowCnt = 5;
     $isSameCom = '';
@@ -149,7 +149,11 @@ if($responseResult->ResultType = "Success") {
         // Company
         if($isSameCom != $weldingData[$i]->Company) {
             $comEdRow = $rowCnt - 1;
-            $sheet->setCellValue('A'.$rowCnt, $weldingData[$i]->Company);
+            if($weldingData[$i]->Level == "0") {
+                $sheet->setCellValue('A'.$rowCnt, "종합 물량 합계_" . $weldingData[$i]->Company);
+            } else {
+                $sheet->setCellValue('A'.$rowCnt, $weldingData[$i]->Company);
+            }
             if($rowCnt != 5 && ($comEdRow - $comStRow != 0)) {
                 $sheet->mergeCells("A{$comStRow}:A{$comEdRow}");
             }
@@ -158,11 +162,19 @@ if($responseResult->ResultType = "Success") {
         $isSameCom = $weldingData[$i]->Company;
         // Area
         if($isSameArea != $weldingData[$i]->Area) {
-            $areaEdRow = $rowCnt - 1;
+            $areaEdRow = $rowCnt - 1; 
             if($rowCnt != 5 && ($areaEdRow - $areaStRow != 0)) {
                 $sheet->mergeCells("B{$areaStRow}:B{$areaEdRow}");
             }
-            $sheet->setCellValue('B'.$rowCnt, $weldingData[$i]->Area);
+            if($weldingData[$i]->Level == 2) {
+                if($weldingData[$i]->Area == "Welding Sum") {
+                    $sheet->setCellValue('B'.$rowCnt, "용접 합계_" . $weldingData[$i]->Area);
+                } else {
+                    $sheet->setCellValue('B'.$rowCnt, "비용접 합계_" . $weldingData[$i]->Area);
+                }
+            } else {
+                $sheet->setCellValue('B'.$rowCnt, $weldingData[$i]->Area);
+            }
             $sheet->getStyle('B'.$rowCnt)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A9D08E');
             $areaStRow = $rowCnt;
         }

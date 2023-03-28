@@ -6,19 +6,19 @@ switch($subMenu) {
     case "vpLatest" :
         $pageUrl = "vdcs/document/latest/latest_view.php";
         break;
-    case "WELDING_DAY" :
+    case "w_day" :
         $pageUrl = "welding/welding_day_view.php";
         break;
-    case "WELDING_MONTH" :
+    case "w_month" :
         $pageUrl = "welding/welding_month_view.php";
         break;
-    case "NDE_BY_ISO" :
+    case "n_iso" :
         $pageUrl = "nde/nde_by_iso_view.php";
         break;
-    case "NDE_BY_WELDER" :
+    case "n_welder" :
         $pageUrl = "nde/nde_by_welder_view.php";
         break;
-    case "PACKAGE_LIST" :
+    case "pkg" :
         $pageUrl = "pkg/pkg_list_view.php";
         break;
     // cm 권한 없음

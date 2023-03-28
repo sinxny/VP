@@ -73,6 +73,9 @@
                     }
                 })
                 .finally(function() {
+                    // 통합 검색창 삭제
+                    $(".dx-toolbar-after .dx-datagrid-search-panel").remove();
+                    // 로딩창 숨기기
                     $(".dx-loadpanel-content").removeClass("dx-state-visible").addClass("dx-state-invisible");
                 })
 

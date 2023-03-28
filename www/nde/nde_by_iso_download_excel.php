@@ -52,7 +52,7 @@ $sheet->setCellValue('A2', "By ISO DWG");
 $sheet->mergeCells("A2:B2");
 $sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle("A1:A2")->getFont()->setBold(true);
-$sheet->setCellValue('M2', "Period");
+$sheet->setCellValue('M2', "날짜 Date");
 $sheet->getStyle('M2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 $sheet->setCellValue('N2', $dateTime);
 $sheet->mergeCells("N2:O2");
