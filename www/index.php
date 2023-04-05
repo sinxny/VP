@@ -3,11 +3,11 @@ $isLogin = @$_SESSION["user"]["user_id"];
 
 // 도메인
 $domain = strtoupper($_SERVER["HTTP_HOST"]);
-if($domain == "DOCS.HTENC.CO.KR" || $domain == "VP.SEPARK2111") {
+if($domain == "DOCS.HTENC.CO.KR" || $domain == "DOCS.SEPARK2111" || $domain == "DOCS.SEPARK2111.HTENC.CO.KR") {
 	$menuRight = "all";
-} else if($domain == "VP.HTENC.CO.KR") {
+} else if($domain == "VP.HTENC.CO.KR" || $domain == "VP.SEPARK2111.HTENC.CO.KR") {
 	$menuRight = "vp";
-} else if($domain == "CM.HTENC.CO.KR") {
+} else if($domain == "CM.HTENC.CO.KR" || $domain == "CM.SEPARK2111.HTENC.CO.KR") {
 	$menuRight = "cm";
 }
 

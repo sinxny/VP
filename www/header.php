@@ -43,6 +43,7 @@
 <script type="text/javascript" src="jqwidgets-ver14.0.0-src/jqxdatetimeinput.js"></script>
 <script type="text/javascript" src="jqwidgets-ver14.0.0-src/globalization/globalize.js"></script>
 <script type="text/javascript" src="jqwidgets-ver14.0.0-src/jqxgrid.filter.js"></script>
+<script type="text/javascript" src="jqwidgets-ver14.0.0-src/jqxdropdownbutton.js"></script>
 <link rel="stylesheet" href="jqwidgets-ver14.0.0-src/styles/jqx.base.css" type="text/css" />
 <link rel="stylesheet" href="css/style.css?random=<?php echo uniqid(); ?>" />
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
@@ -73,52 +74,7 @@ $(document).ready(function() {
     // uno, userId
     $("#uno").val('<?php echo $_SESSION["user"]["uno"]?>');
     $("#userId").val('<?php echo $_SESSION["user"]["user_id"]?>');
-
-    // 도메인 별 권한
-    var menuRight = '<?php echo $menuRight?>';
-    var teamId = '<?php echo @$_SESSION["user"]["team_id"] ?>';
-    sessionStorage.setItem("cmRight", true);
-    if(menuRight == "all") {
-        $("#vdcs").show();
-        $("#btnStaffOnly").show();
-        $("#jobFilter").val($("input[name='jobCondition']:checked").val());
-        // 사장님, 기술연구소
-        if(teamId == 11 || teamId == 90) {
-            $("#welding").show();
-        }        
-        // 사업팀, 공사팀 
-        else if(teamId == 48 || teamId == 49) {
-            $("#welding").show();
-        } else {
-            $("#welding").hide();
-        }
-    } else if(menuRight == "vp") {
-        $("#vdcs").show();
-        $("#welding").hide();
-        document.title = "VDCS Latest";
-        $("#headerTitle").text("VDCS - Latest");
-    } else if(menuRight == "cm") {
-        $("#vdcs").hide();
-        $("#welding").show();
-        document.title = "공사관리 시스템";
-        $("#headerTitle").text("공사관리 시스템");
-
-        // 사장님, 기술연구소
-        // if(teamId == 11 || teamId == 90) {
-            $("#jobFilter").val($("input[name='jobCondition']:checked").val());
-            $("#btnStaffOnly").show();
-        // }
-        // 사업팀, 공사팀 
-        // else if(teamId == 48 || teamId == 49) {
-        //     $("#jobFilter").val("STAFF");
-        //     $("#selJobFilter").hide();
-        //     $("#btnStaffOnly").show();
-        // } else {
-        //     $("#btnStaffOnly").hide();
-        //     $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
-        //     sessionStorage.setItem("cmRight", false);
-        // }
-    }
+        
     // 권한 설정 모달
     if($("#uno").val() == "10065") {
         $("#btnRightSetting").show();
@@ -126,10 +82,91 @@ $(document).ready(function() {
         $("#btnRightSetting").hide();
     }
 
+    // 잡 여부에 따라 화면 변경
+    var jno = sessionStorage.getItem("jno");
+
+    if(jno) {
+        $("#noPjtHeader").hide();
+    } else {
+        $("#noPjtHeader").show();
+    }
+
+    // 도메인 별 권한
+    var menuRight = '<?php echo $menuRight?>';
+    var teamId = '<?php echo @$_SESSION["user"]["team_id"] ?>';
+
+    // 조직도 표시
+    var organiUser = importOrganization();
+
+    // db 권한 사용자 리스트
+    var dbRightList = getDbRightList();
+    var userList = Object.keys(dbRightList);
+
+    if(menuRight == "all") {
+        $("#vdcs").show();
+        $("#welding").show();
+        $("#btnStaffOnly").show();
+        $("#jobFilter").val($("input[name='jobCondition']:checked").val());
+        sessionStorage.setItem("cmRight", true);
+    } else if(menuRight == "vp") {
+        $("#vdcs").show();
+        $("#welding").remove();
+        document.title = "VDCS Latest";
+        $("#headerTitle").text("VDCS - Latest");
+        sessionStorage.setItem("cmRight", false);
+    } else if(menuRight == "cm") {
+        $("#vdcs").remove();
+        document.title = "공사관리 시스템";
+        $("#headerTitle").text("공사관리 시스템");
+        $("#jobFilter").val("ALL");
+        $("#btnStaffOnly").hide();
+
+        // 사장님, 부사장님, 기술연구소
+        if(teamId == 11 || teamId == 90 || $("#uno").val() == 95 || $("#uno").val() == "10065") {
+            $("#welding").show();
+            $("#welding").find("ul").show();
+            sessionStorage.setItem("cmRight", true);
+        }
+        // db change right user
+        else if (userList.includes($("#uno").val()) && sessionStorage.getItem("jno")) {
+            var uno = $("#uno").val();
+            var codeText = dbRightList[uno]["codeText"];
+            $($("#welding").find("ul").find("a")).each(function() {
+                var elementId = $(this).attr("id");
+                if(codeText.includes(elementId)) {
+                    $(this).closest("li").show();
+                } else {
+                    $(this).closest("li").remove();
+                }
+            })
+
+            $("#welding").show();
+            sessionStorage.setItem("cmRight", true);
+
+            organiUser = organiUser.filter((user) => {
+                return user != uno;
+            });
+        }
+        // 조직도 직원
+        else if(organiUser.includes($("#uno").val()) && sessionStorage.getItem("jno")) {
+            $("#welding").show();
+            $("#welding").find("ul").show();
+            sessionStorage.setItem("cmRight", true);
+        } 
+        // 나머지 직원
+        else {
+            if(sessionStorage.getItem("jno")) {
+                $("#welding").remove();
+                $("#vdcsContent").load("no_right.php");
+                sessionStorage.setItem("cmRight", false);
+            }
+        }
+    }
+
     //JOB 표시
     if(sessionStorage.getItem('jobName')) {
         $("#pjtJobName").val(sessionStorage.getItem('jobName'));
-        importOrganization();
+        // importOrganization();
     }
 
     //JOB 선택 모달
@@ -153,9 +190,9 @@ $(document).ready(function() {
             $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
         }
     } else if(menuRight == "cm") {
-        $("#jobFilter").val($("input[name='jobCondition']:checked").val());
+        $("#jobFilter").val("ALL");
         $("#btnStaffOnly").show();
-        $("#selJobFilter").show();
+        $("#selJobFilter").hide();
     }
 
     // 비밀번호 변경 버튼
@@ -181,15 +218,38 @@ $(document).ready(function() {
 
     // 화면 보이기
     var subMenu = '';
-    if (sessionStorage.getItem("subMenu")) {
-        subMenu = sessionStorage.getItem("subMenu");
-    }  else if(menuRight == "cm") {
-        subMenu = "w_day";
-    } else {
-        subMenu = "vpLatest";
-    }
-    activeSubMenu($("#" + subMenu));
 
+    if(menuRight == "vp") {
+        if (sessionStorage.getItem("subMenu")) {
+            subMenu = sessionStorage.getItem("subMenu");
+        } else {
+            subMenu = "vpLatest";
+        }
+        activeSubMenu($("#" + subMenu));
+    } else if(menuRight == "cm") {
+        var cmRight = sessionStorage.getItem("cmRight");
+        if(sessionStorage.getItem("jno")) {
+            if (sessionStorage.getItem("subMenu") && cmRight == "true") {
+                subMenu = sessionStorage.getItem("subMenu");
+                $("#smMenu").css("visibility", "visible");
+                activeSubMenu($("#" + subMenu));
+            } else if($("#welding").find("a").length > 0) {
+                var elementId = $("#welding").find("a").eq(0).attr("id");
+                subMenu = elementId
+                $("#smMenu").css("visibility", "visible");
+                activeSubMenu($("#" + subMenu));
+            } else {
+                $("#vdcsContent").load("no_right.php");
+                $("#smMenu").css("visibility", "hidden");
+                sessionStorage.setItem("subMenu", "noRight");
+                subMenu = "noRight";
+            }
+        } else {
+            $("#smMenu").css("visibility", "hidden");
+        }
+    }
+    console.log(subMenu);
+    
     // 모바일 header 조정
     if($(window).width() <= 576) {
         $(".selJob").hide();
@@ -255,8 +315,7 @@ var basicDemo = (function () {
         $('#pjtJobName').click(function () {
             var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
             var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
-            var cmRight = sessionStorage.getItem("cmRight");
-            if(IsInterStaff != "LG" && cmRight != "false") {
+            if(IsInterStaff != "LG") {
                 $('#jobSelWindow').jqxWindow('open');
             }
         });
@@ -322,11 +381,6 @@ function showSubMenu() {
 // 메인화면 보이기
 function showContent(subMenu) {
     $("#vdcsContent").empty();
-
-    var cmRight = sessionStorage.getItem("cmRight");
-    if(cmRight == "false") {
-        subMenu = "noRight";
-    }
 
     $.ajax({
         type: "POST",
@@ -433,6 +487,8 @@ function onBtnJobSelectClick(jobNm, jno, jobNo) {
     sessionStorage.setItem("jobName", jobNm);
     sessionStorage.removeItem("jobNo");
     sessionStorage.setItem("jobNo", jobNo);
+    sessionStorage.removeItem("subMenu");
+    sessionStorage.removeItem("cmRight");
 
     $("#pjtJobName").val(jobNm);
 
@@ -450,165 +506,174 @@ function organizationOpen() {
 function importOrganization() {
     var jno = sessionStorage.getItem("jno");
 
-    $.ajax({
-        type: "GET",
-        url: "/api/common/job/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=STAFF_INFO&jno=" + jno,
-        dataType: "json",
-        success: function(result) {
-            if(result["Message"] == "Success") {
-                var html = '';
-                var onceExternal = false;
-                $(result["Value"]).each(function(i, info) {
-                    if(info["comp_type_str"] == "External" && onceExternal == false) {
-                        html += '<tr class="compName">';
-                        html += '<td colspan="10">';
-                        html += info["order_comp_name"];
-                        html += '</td>';
-                        html += '</tr>';
+    var organiUserList = [];
 
-                        onceExternal = true;
-                    }
-                });
-
-                var externalNo = 1
-                $(result["Value"]).each(function(i, info) {
-                    if(info["comp_type_str"] == "External") {
-                        html += '<tr>';
-                        html += '<td class="text-center">';
-                        html += externalNo
-                        html += '</td>';
-                        html += '<td class="rowspanFunc" style="padding-left:0.75rem !important">';
-                        html += info["func_title"];
-                        html += '</td>';
-                        html += '<td class="text-center">';
-                        html += info["charge_cd"];
-                        html += '</td>';
-                        html += '<td class="text-center">';
-                        html += info["charge_detail"];
-                        html += '</td>';
-                        html += '<td class="text-center">';
-                        html += info["member_name"];
-                        html += '</td>';
-                        html += '<td class="text-center">';
-                        html += info["grade_name"];
-                        html += '</td>';
-                        html += '<td class="text-center">';
-                        html += info["comp_name"];
-                        html += '</td>';
-                        html += '<td class="text-center">';
-                        html += info["cell"];
-                        html += '</td>';
-                        html += '<td class="text-center">';
-                        html += info["tel"];
-                        html += '</td>';
-                        html += '<td style="padding-left:0.75rem !important">';
-                        html += info["email"];
-                        html += '</td>';
-                        html += '</tr>';
-
-                        externalNo++;
-                    }
-                });
-
-                var onceInternal = false;
-                $(result["Value"]).each(function(i, info) {
-                    if(info["comp_type_str"] == "Internal" && onceInternal == false) {
-                        html += '<tr class="compName">';
-                        html += '<td colspan="10">';
-                        html += info["order_comp_name"];
-                        html += '<span style="float:right;border: 1px solid #999999; padding: 1px 5px;background-color:white">'
-                        html += '<span class="mr-2" style="font-weight: bold;">내부직원</span>';
-                        html += '<span class="resignation mr-2">퇴사직원</span>';
-                        html += '<span class="mr-2">외부직원</span>';
-                        html += '<span style="background-color: #eeeedd;">협력업체직원</span>';
-                        html += '</span>'
-                        html += '</td>';
-                        html += '</tr>';
-
-                        onceInternal = true;
-                    }
-                });
-
-                var InternalNo = 1
-                var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
-                $(result["Value"]).each(function(i, info) {
-                    // 내부직원 외부직원 협력업체 구분
-                    var staffClass = "";
-                    if (!info["co_id"]) {
-                        staffClass = "";
-                    }
-                    else if(info["co_id"] == 1) {
-                        staffClass = "internalStaff";
-                    } else if(info["co_id"] != 1) {
-                        staffClass = "subconStaff";
-                    }
-                    // 퇴사여부
-                    var resignation = "";
-                    if(info["is_state"] == "N") {
-                        resignation = "resignation";
-                    }
-
-                    if(info["comp_type_str"] == "Internal") {
-                        html += '<tr>';
-                        html += '<td class="text-center">';
-                        html += InternalNo
-                        html += '</td>';
-                        html += '<td class="rowspanFunc" style="padding-left:0.75rem !important">';
-                        html += info["func_title"];
-                        html += '</td>';
-                        html += '<td class="text-center '+ resignation +'">';
-                        html += info["charge_cd"];
-                        html += '</td>';
-                        html += '<td class="text-center '+ resignation +'">';
-                        html += info["charge_detail"];
-                        html += '</td>';
-                        html += '<td class="text-center '+ staffClass +' '+ resignation +'">';
-                        html += info["member_name"];
-                        html += '</td>';
-                        html += '<td class="text-center '+ resignation +'">';
-                        if(IsInterStaff == "LG") {
-                            html += info["grade_name"].replace("수습사원", "사원");
-                        } else {
-                            html += info["grade_name"];
+    if(jno) {
+        $.ajax({
+            type: "GET",
+            url: "/api/common/job/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=STAFF_INFO&jno=" + jno,
+            dataType: "json",
+            async: false,
+            success: function(result) {
+                if(result["Message"] == "Success") {
+                    var html = '';
+                    var onceExternal = false;
+                    $(result["Value"]).each(function(i, info) {
+                        if(info["comp_type_str"] == "External" && onceExternal == false) {
+                            html += '<tr class="compName">';
+                            html += '<td colspan="10">';
+                            html += info["order_comp_name"];
+                            html += '</td>';
+                            html += '</tr>';
+    
+                            onceExternal = true;
                         }
-                        html += '</td>';
-                        html += '<td class="text-center '+ resignation +'">';
-                        html += info["dept_name"];
-                        html += '</td>';
-                        html += '<td class="text-center '+ resignation +'">';
-                        html += info["cell"];
-                        html += '</td>';
-                        html += '<td class="text-center '+ resignation +'">';
-                        html += info["tel"];
-                        html += '</td>';
-                        html += '<td style="padding-left:0.75rem !important">';
-                        html += info["email"];
-                        html += '</td>';
-                        html += '</tr>';
-
-                        InternalNo++;
-                    }
-                });
-
-                $("#tblOrganization tbody").empty().append(html);
-
-                // 같은 공종 행 병합
-                $(".rowspanFunc").each(function() {
-                    var rows = $(".rowspanFunc:contains('" + $(this).text() + "')");
-                    if(rows.length > 1) {
-                        rows.eq(0).attr("rowspan", rows.length);
-                        rows.not(":eq(0)").remove();
-                    }
-
-                    // 대문자 변환
-                    $(this).text($(this).text().toUpperCase());
-                });
+                    });
+    
+                    var externalNo = 1
+                    $(result["Value"]).each(function(i, info) {
+                        if(info["comp_type_str"] == "External") {
+                            html += '<tr>';
+                            html += '<td class="text-center">';
+                            html += externalNo
+                            html += '</td>';
+                            html += '<td class="rowspanFunc" style="padding-left:0.75rem !important">';
+                            html += info["func_title"];
+                            html += '</td>';
+                            html += '<td class="text-center">';
+                            html += info["charge_cd"];
+                            html += '</td>';
+                            html += '<td class="text-center">';
+                            html += info["charge_detail"];
+                            html += '</td>';
+                            html += '<td class="text-center">';
+                            html += info["member_name"];
+                            html += '</td>';
+                            html += '<td class="text-center">';
+                            html += info["grade_name"];
+                            html += '</td>';
+                            html += '<td class="text-center">';
+                            html += info["comp_name"];
+                            html += '</td>';
+                            html += '<td class="text-center">';
+                            html += info["cell"];
+                            html += '</td>';
+                            html += '<td class="text-center">';
+                            html += info["tel"];
+                            html += '</td>';
+                            html += '<td style="padding-left:0.75rem !important">';
+                            html += info["email"];
+                            html += '</td>';
+                            html += '</tr>';
+    
+                            externalNo++;
+                        }
+                    });
+    
+                    var onceInternal = false;
+                    $(result["Value"]).each(function(i, info) {
+                        if(info["comp_type_str"] == "Internal" && onceInternal == false) {
+                            html += '<tr class="compName">';
+                            html += '<td colspan="10">';
+                            html += info["order_comp_name"];
+                            html += '<span style="float:right;border: 1px solid #999999; padding: 1px 5px;background-color:white">'
+                            html += '<span class="mr-2" style="font-weight: bold;">내부직원</span>';
+                            html += '<span class="resignation mr-2">퇴사직원</span>';
+                            html += '<span class="mr-2">외부직원</span>';
+                            html += '<span style="background-color: #eeeedd;">협력업체직원</span>';
+                            html += '</span>'
+                            html += '</td>';
+                            html += '</tr>';
+    
+                            onceInternal = true;
+                        }
+                    });
+    
+                    var InternalNo = 1
+                    var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
+                    $(result["Value"]).each(function(i, info) {
+                        // 내부직원 외부직원 협력업체 구분
+                        var staffClass = "";
+                        if (!info["co_id"]) {
+                            staffClass = "";
+                        }
+                        else if(info["co_id"] == 1) {
+                            staffClass = "internalStaff";
+                        } else if(info["co_id"] != 1) {
+                            staffClass = "subconStaff";
+                        }
+                        // 퇴사여부
+                        var resignation = "";
+                        if(info["is_state"] == "N") {
+                            resignation = "resignation";
+                        }
+    
+                        if(info["comp_type_str"] == "Internal") {
+                            html += '<tr>';
+                            html += '<td class="text-center">';
+                            html += InternalNo
+                            html += '</td>';
+                            html += '<td class="rowspanFunc" style="padding-left:0.75rem !important">';
+                            html += info["func_title"];
+                            html += '</td>';
+                            html += '<td class="text-center '+ resignation +'">';
+                            html += info["charge_cd"];
+                            html += '</td>';
+                            html += '<td class="text-center '+ resignation +'">';
+                            html += info["charge_detail"];
+                            html += '</td>';
+                            html += '<td class="text-center '+ staffClass +' '+ resignation +'">';
+                            html += info["member_name"];
+                            html += '</td>';
+                            html += '<td class="text-center '+ resignation +'">';
+                            if(IsInterStaff == "LG") {
+                                html += info["grade_name"].replace("수습사원", "사원");
+                            } else {
+                                html += info["grade_name"];
+                            }
+                            html += '</td>';
+                            html += '<td class="text-center '+ resignation +'">';
+                            html += info["dept_name"];
+                            html += '</td>';
+                            html += '<td class="text-center '+ resignation +'">';
+                            html += info["cell"];
+                            html += '</td>';
+                            html += '<td class="text-center '+ resignation +'">';
+                            html += info["tel"];
+                            html += '</td>';
+                            html += '<td style="padding-left:0.75rem !important">';
+                            html += info["email"];
+                            html += '</td>';
+                            html += '</tr>';
+    
+                            // 내부직원 리스트
+                            organiUserList.push(info["uno"]);
+    
+                            InternalNo++;
+                        }
+                    });
+    
+                    $("#tblOrganization tbody").empty().append(html);
+    
+                    // 같은 공종 행 병합
+                    $(".rowspanFunc").each(function() {
+                        var rows = $(".rowspanFunc:contains('" + $(this).text() + "')");
+                        if(rows.length > 1) {
+                            rows.eq(0).attr("rowspan", rows.length);
+                            rows.not(":eq(0)").remove();
+                        }
+    
+                        // 대문자 변환
+                        $(this).text($(this).text().toUpperCase());
+                    });
+                }
+            },
+            error: function (request, status, error) {
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
-        },
-        error: function (request, status, error) {
-            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-        }
-    });
+        });
+    }
+    return organiUserList;
 }
 
 // subMenu 열고 닫기
@@ -628,13 +693,17 @@ function collapseTree(obj) {
 
 // subMenu Click
 function activeSubMenu(obj) {
-    $(".branch").find("a").removeClass("active");
-
-    $(obj).addClass("active");
-
-    sessionStorage.setItem("subMenu", $(obj).attr("id"));
-
-    showContent($(obj).attr("id"));
+    if(obj != "#noRight") {
+        $(".branch").find("a").removeClass("active");
+    
+        $(obj).addClass("active");
+    
+        sessionStorage.setItem("subMenu", $(obj).attr("id"));
+    
+        showContent($(obj).attr("id"));
+    } else {
+        $("#smMenu").css("visibility", "hidden");
+    }
 }
 
 //비밀번호 변경 - 저장 버튼
@@ -796,7 +865,7 @@ function validatePwdInputs() {
                 </li>
             </ul>
         </li>
-        <li class="branch" id="welding">
+        <li class="branch" id="welding" style="display:none">
             <span style="width:min-content" onclick="collapseTree(this)"><i class="indicator fas fa-minus-circle"></i>Welding</span>
             <ul>
                 <li>
@@ -881,7 +950,11 @@ function validatePwdInputs() {
 </div>
 </div> -->
 </div>
-<div id="vdcsContent" class="page-content p-2"></div>
+<div id="vdcsContent" class="page-content p-2">
+    <div class="alert alert-success text-center" style="display:none" id="noPjtHeader">
+        <strong>PROJECT를 선택하세요.</strong>
+    </div>
+</div>
 
   <!-- 조직도 모달 -->
 <div class="modal fade" id="modalOrganization">

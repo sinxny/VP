@@ -26,7 +26,7 @@ switch($subMenu) {
         $pageUrl = "no_right.php";
         break;
     default: 
-        $pageUrl = "vdcs/document/latest/latest_view.php";
+        $pageUrl = "no_right.php";
         break;
 }
 
