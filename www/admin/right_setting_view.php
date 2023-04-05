@@ -265,54 +265,58 @@ function showUserList() {
         width: "100%", height: 30
     });
     $("#userListGrid").on('rowselect', function (event) {
+        var userList = [];
+        $(".dropMenuButton").each(function() {
+            var userId = $(this).attr("id").split("_");
+            var uno = userId[1];
+            userList.push(uno);
+        });
         var args = event.args;
         var row = $("#userListGrid").jqxGrid('getrowdata', args.rowindex);
-        var dept = row["deptPath"].split(">");
-        var deptName = dept[1];
-        var html = '';
-        html += '<tr>';
-        html += '<td class="text-center">'
-        html += '</td>'
-        html += '<td class="text-center">'
-        html += row["userName"];
-        html += '</td>'
-        html += '<td class="text-center">'
-        html += deptName;
-        html += '</td>'
-        html += '<td>'
-        html += `<div class='jqxWidget'>
-                    <div class="dropMenuButton" id="dropBtn_${row["uno"]}">
-                        <div style="border: none;" class='jqxTree uno_${row["uno"]}'>
-                            <ul>
-                                <li item-expanded='true'>Welding
-                                    <ul>
-                                        <li>WELDING DAY</li>
-                                        <li>WELDING MONTH</li>
-                                        <li>NDE BY ISO</li>
-                                        <li>NDE BY WELDER</li>
-                                        <li>PKG LIST</li>
-                                    </ul>
-                                </li>
-                            </ul>
+
+        // 중복 체크
+        if(!userList.includes(row["uno"].toString())) {
+            var dept = row["deptPath"].split(">");
+            var deptName = dept[1];
+            var html = '';
+            html += '<tr>';
+            html += '<td class="text-center">'
+            html += '</td>'
+            html += '<td class="text-center">'
+            html += row["userName"];
+            html += '</td>'
+            html += '<td class="text-center">'
+            html += deptName;
+            html += '</td>'
+            html += '<td>'
+            html += `<div class='jqxWidget'>
+                        <div class="dropMenuButton" id="dropBtn_${row["uno"]}">
+                            <div style="border: none;" class='jqxTree uno_${row["uno"]}'>
+                                <ul>
+                                    <li item-expanded='true'>Welding
+                                        <ul>
+                                            <li>WELDING DAY</li>
+                                            <li>WELDING MONTH</li>
+                                            <li>NDE BY ISO</li>
+                                            <li>NDE BY WELDER</li>
+                                            <li>PKG LIST</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                </div>`
-        html += '</td>'
-        html += '</tr>';
-
-        $("#tblMenuRight tbody").append(html);
-
-        $('#jqxdropdownbutton').jqxDropDownButton('close');
-        // 스크롤 조정
-        $('.modal-body').scrollTop($('.modal-body')[0].scrollHeight);
-        // 권한 체크 드롭다운
-        dropDownMenuRight();
-        
-        // $("#selUnoSV").val(row["uno"]);
-        // var dropDownContent = '<div id="selectRow" style="position: relative; margin-left: 3px; margin-top: 6px;">'+ row["userName"] + " " + row["dutyName"] +'</div>';
-        // $("#jqxdropdownbutton").jqxDropDownButton('setContent', dropDownContent);
-        // $(".selSV").find(".invalid-feedback").html('');
-        // $(".selSV").find(".invalid-feedback").hide();
+                    </div>`
+            html += '</td>'
+            html += '</tr>';
+    
+            $("#tblMenuRight tbody").append(html);
+    
+            $('#jqxdropdownbutton').jqxDropDownButton('close');
+            // 스크롤 조정
+            $('.modal-body').scrollTop($('.modal-body')[0].scrollHeight);
+            // 권한 체크 드롭다운
+            dropDownMenuRight();
+        }
     });
 }
 
