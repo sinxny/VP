@@ -118,7 +118,6 @@ $(document).ready(function() {
         $("#vdcs").remove();
         document.title = "공사관리 시스템";
         $("#headerTitle").text("공사관리 시스템");
-        $("#jobFilter").val("ALL");
         $("#btnStaffOnly").hide();
 
         // 사장님, 부사장님, 기술연구소
@@ -190,9 +189,11 @@ $(document).ready(function() {
             $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
         }
     } else if(menuRight == "cm") {
-        $("#jobFilter").val("ALL");
+        $("#vdcsOnly").hide();
+        $("#jobFilter").val("STAFF");
+        $("input[name='jobCondition'][value='STAFF']").prop("checked", true);
         $("#btnStaffOnly").show();
-        $("#selJobFilter").hide();
+        $("#selJobFilter").show();
     }
 
     // 비밀번호 변경 버튼
@@ -248,7 +249,6 @@ $(document).ready(function() {
             $("#smMenu").css("visibility", "hidden");
         }
     }
-    console.log(subMenu);
     
     // 모바일 header 조정
     if($(window).width() <= 576) {
@@ -904,7 +904,7 @@ function validatePwdInputs() {
             </div>
             <div style="overflow: hidden;" id="jobSelWindowContent">
                 <div class="container-fluid p-3 my-3 border" id="selJobFilter">
-                    <div class="form-check-inline">
+                    <div class="form-check-inline" id="vdcsOnly">
                         <label class="form-check-label">
                             <input type="radio" class="form-check-input" name="jobCondition" value="VDCS_USE" checked>VDCS Used
                         </label>
