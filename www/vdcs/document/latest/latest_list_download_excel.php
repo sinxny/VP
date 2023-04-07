@@ -1,5 +1,6 @@
 <?php
 ini_set('memory_limit','-1');
+ini_set( "display_errors", 1 );
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
@@ -259,15 +260,15 @@ if($responseResult->ResultType = "Success") {
 }
 
 // 10차수 이상일 경우 숨기기
-if($maxSeq > 10) {
-    for($col='AV'; true; $col++) {
-        // $sheet->getRowDimension($col)->setOutlineLevel(1);
-        $sheet->getColumnDimension($col)->setVisible(false);
-        if($col == $lastCol) {
-            break;
-        }
-    }
-}
+// if($maxSeq > 10) {
+//     for($col='AV'; true; $col++) {
+//         // $sheet->getRowDimension($col)->setOutlineLevel(1);
+//         $sheet->getColumnDimension($col)->setVisible(false);
+//         if($col == $lastCol) {
+//             break;
+//         }
+//     }
+// }
 
 // 들여쓰기
 $sheet->getStyle('B3:B'.$rowCnt)->getAlignment()->setIndent(1);
