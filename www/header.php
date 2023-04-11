@@ -149,7 +149,12 @@ $(document).ready(function() {
         // 조직도 직원
         else if(organiUser.includes($("#uno").val()) && sessionStorage.getItem("jno")) {
             $("#welding").show();
-            $("#welding").find("ul").show();
+            // welding day, welding month만 공개
+            $("#welding").find("li").eq(0).show();
+            $("#welding").find("li").eq(1).show();
+            $("#welding").find("li").eq(2).remove();
+            $("#welding").find("li").eq(2).remove();
+            $("#welding").find("li").eq(2).remove();
             sessionStorage.setItem("cmRight", true);
         } 
         // 나머지 직원

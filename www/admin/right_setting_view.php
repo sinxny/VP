@@ -111,10 +111,10 @@ $(document).ready(function() {
                                         <div class="dropMenuButton" id="dropBtn_${person["uno"]}">
                                             <div style="border: none;" class='jqxTree uno_${person["uno"]}'>
                                                 <ul>
-                                                    <li item-checked='true' item-expanded='true'>Welding
+                                                    <li item-expanded='true'>Welding
                                                         <ul>
-                                                            <li>WELDING DAY</li>
-                                                            <li>WELDING MONTH</li>
+                                                            <li item-checked="true">WELDING DAY</li>
+                                                            <li item-checked="true">WELDING MONTH</li>
                                                             <li>NDE BY ISO</li>
                                                             <li>NDE BY WELDER</li>
                                                             <li>PKG LIST</li>
