@@ -2,6 +2,9 @@
 .jqx-dropdownbutton-popup {
     border: 1px solid #808080 !important;
 }
+.jqx-grid-column-header div div{
+    text-align: center !important;
+}
 </style>
 <script>
 $(document).ready(function() {
@@ -205,24 +208,32 @@ $(document).ready(function() {
 // 직원리스트
 function showUserList() {
     var url = "/common/user_list_data.php";
+    // 헤더 가운데 정렬
+    var cellsrenderer = function (row, column, value) {
+	    return '<div style="text-align: center">' + value + '</div>';
+    }
     // prepare the data
     var source = {
         datatype: "json",
         datafields: [{
                 name: 'uno',
-                type: 'int'
+                type: 'int',
+                renderer: cellsrenderer
             },
             {
                 name: 'userName',
-                type: 'string'
+                type: 'string',
+                renderer: cellsrenderer
             },
             {
                 name: 'dutyName',
-                type: 'string'
+                type: 'string',
+                renderer: cellsrenderer
             },
             {
                 name: 'deptPath',
-                type: 'string'
+                type: 'string',
+                renderer: cellsrenderer
             }
         ],
         id: 'jno',
