@@ -1,6 +1,6 @@
 <style>
-.jqx-dropdownlist-content {
-    width: 90% !important;
+.jqx-dropdownbutton-popup {
+    border: 1px solid #808080 !important;
 }
 </style>
 <script>
@@ -92,6 +92,9 @@ $(document).ready(function() {
                             }
                             html += `                    </ul>
                                                     </li>
+                                                    <div class="text-right mr-2 py-2">
+                                                        <button class="btn btn-sm btn-outline-secondary closeTree">닫기</button>
+                                                    </div>
                                                 </ul>
                                             </div>
                                         </div>
@@ -114,6 +117,9 @@ $(document).ready(function() {
                                                             <li>PKG LIST</li>
                                                         </ul>
                                                     </li>
+                                                    <div class="text-right mr-2 py-2">
+                                                        <button class="btn btn-sm btn-outline-secondary closeTree">닫기</button>
+                                                    </div>
                                                 </ul>
                                             </div>
                                         </div>
@@ -170,6 +176,9 @@ $(document).ready(function() {
                     }
                     html += `                    </ul>
                                             </li>
+                                            <div class="text-right mr-2 py-2">
+                                                <button class="btn btn-sm btn-outline-secondary closeTree">닫기</button>
+                                            </div>
                                         </ul>
                                     </div>
                                 </div>
@@ -224,7 +233,7 @@ function showUserList() {
     };
     var dataAdapter = new $.jqx.dataAdapter(source);
     $("#userListGrid").jqxGrid({
-        width: "740",
+        width: "795",
         source: dataAdapter,
         sortable: true,
         pageable: true,
@@ -243,10 +252,7 @@ function showUserList() {
         ready: function() {
             
         },
-        columns: [{
-                text: '부서',
-                datafield: 'deptPath'
-            },
+        columns: [
             {
                 text: '성명',
                 datafield: 'userName',
@@ -258,11 +264,15 @@ function showUserList() {
                 datafield: 'dutyName',
                 width: 150,
                 cellsalign: 'center'
+            },
+            {
+                text: '부서',
+                datafield: 'deptPath'
             }
         ]
     });
     $("#jqxdropdownbutton").jqxDropDownButton({
-        width: "100%", height: 30
+        width: "98%", height: 30
     });
     $("#userListGrid").on('rowselect', function (event) {
         var userList = [];
@@ -302,6 +312,9 @@ function showUserList() {
                                             <li>PKG LIST</li>
                                         </ul>
                                     </li>
+                                    <div class="text-right mr-2 py-2">
+                                        <button class="btn btn-sm btn-outline-secondary closeTree">닫기</button>
+                                    </div>
                                 </ul>
                             </div>
                         </div>
@@ -322,10 +335,31 @@ function showUserList() {
 
 // 권한 체크 드롭다운
 function dropDownMenuRight() {
-    $(".dropMenuButton").jqxDropDownButton({ width: "auto", height: 25 });
+    $(".dropMenuButton").jqxDropDownButton({ 
+        width: "auto",
+        height: 25,
+        dropDownVerticalAlignment: 'bottom'
+    });
+    // 마지막 드롭다운 위로 펼침
+    var lastIndex = $(".dropMenuButton").length - 1;
+    $(".dropMenuButton").last().jqxDropDownButton({ 
+        width: "auto",
+        height: 25,
+        dropDownVerticalAlignment: 'top'
+    }); 
+    $(".dropMenuButton").eq(lastIndex - 1).jqxDropDownButton({ 
+        width: "auto",
+        height: 25,
+        dropDownVerticalAlignment: 'top'
+    });
+    $(".dropMenuButton").eq(lastIndex - 2).jqxDropDownButton({ 
+        width: "auto",
+        height: 25,
+        dropDownVerticalAlignment: 'top'
+    }); 
     $(".jqxTree").jqxTree({ 
         width: 200,
-        height: 220,
+        height: "auto",
         hasThreeStates: true,
         checkboxes: true
     });
@@ -335,6 +369,11 @@ function dropDownMenuRight() {
 
         // 권한 저장
         menuRightSave(this);
+    });
+                
+    // 트리 닫기 버튼
+    $(".closeTree").on('click', function() {
+        $(".dropMenuButton").jqxDropDownButton("close");
     });
 }
 
@@ -480,13 +519,13 @@ function getDbRightList() {
                 </div>
 
                 <!-- Modal Body -->
-                <div class="modal-body p-5">
+                <div class="modal-body p-4">
                     <div id="userSetting">
-                        <div class="row my-5">
-                            <div class="col-2 text-center">
+                        <div class="row pb-4 pl-4" style="align-items: center">
+                            <div class="col-3 text-center d-flex align-content-center justify-content-center">
                                 직원 추가
                             </div>
-                            <div class="col-8">
+                            <div class="col-9 pr-5">
                                 <div id="jqxdropdownbutton">
                                     <div style="border-color: transparent;" id="userListGrid">
                                     </div>
@@ -497,7 +536,7 @@ function getDbRightList() {
                             <table class="table table-bordered" id="tblMenuRight">
                                 <thead>
                                     <tr>
-                                        <th width="5%"></th>
+                                        <th width="5%">구분</th>
                                         <th width="10%">직원명</th>
                                         <th width="10%">부서명</th>
                                         <th>권한</th>
