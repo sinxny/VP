@@ -235,15 +235,21 @@ $(document).ready(function() {
     } else if(menuRight == "cm") {
         var cmRight = sessionStorage.getItem("cmRight");
         if(sessionStorage.getItem("jno")) {
-            if (sessionStorage.getItem("subMenu") && cmRight == "true") {
-                subMenu = sessionStorage.getItem("subMenu");
-                $("#smMenu").css("visibility", "visible");
-                activeSubMenu($("#" + subMenu));
-            } else if($("#welding").find("a").length > 0) {
+            if($("#welding").find("a").length > 0) {
                 var elementId = $("#welding").find("a").eq(0).attr("id");
                 subMenu = elementId
                 $("#smMenu").css("visibility", "visible");
                 activeSubMenu($("#" + subMenu));
+            } else if (sessionStorage.getItem("subMenu") && cmRight == "true") {
+                subMenu = sessionStorage.getItem("subMenu");
+                if(subMenu != "noRight" && $("#welding").find("a").length != 0) {
+                    $("#smMenu").css("visibility", "visible");
+                    activeSubMenu($("#" + subMenu));
+                } else {
+                    $("#vdcsContent").load("no_right.php");
+                    $("#smMenu").css("visibility", "hidden");
+                    sessionStorage.setItem("subMenu", "noRight");
+                }
             } else {
                 $("#vdcsContent").load("no_right.php");
                 $("#smMenu").css("visibility", "hidden");
