@@ -47,147 +47,152 @@ $(document).ready(function() {
                 var userList = Object.keys(dbRightList);
 
                 var html = '';
+                var adminList = getAdminList();
                 $(oriPersonList).each(function(i, person) {
-                    if(person["comp_type_str"] == "Internal" && !overList.includes(i)) {
-                        html += '<tr>';
-                        html += '<td class="text-center">'
-                        html += '<i class="fa-solid fa-sitemap"></i>';
-                        html += '</td>'
-                        html += '<td class="text-center">'
-                        html += person["member_name"];
-                        html += '</td>'
-                        html += '<td class="text-center">'
-                        html += person["dept_name"];
-                        html += '</td>'
-                        html += '<td>'
-                        if(userList.includes(person["uno"])) {
-                            html += `<div class='jqxWidget'>
-                                        <div class="dropMenuButton" id="dropBtn_${person["uno"]}">
-                                            <div style="border: none;" class='jqxTree uno_${person["uno"]}'>
-                                                <ul>
-                                                    <li item-expanded='true'>Welding
-                                                        <ul>`;
-                            var codeList = dbRightList[person["uno"]]["codeText"];
-                            if(codeList.includes("w_day")) {
-                                html += '<li item-checked="true">WELDING DAY</li>';
-                            } else {
-                                html += '<li>WELDING DAY</li>';
-                            }
-                            if(codeList.includes("w_month")) {
-                                html += '<li item-checked="true">WELDING MONTH</li>';
-                            } else {
-                                html += '<li>WELDING MONTH</li>';
-                            }
-                            if(codeList.includes("n_iso")) {
-                                html += '<li item-checked="true">NDE BY ISO</li>';
-                            } else {
-                                html += '<li>NDE BY ISO</li>';
-                            }
-                            if(codeList.includes("n_welder")) {
-                                html += '<li item-checked="true">NDE BY WELDER</li>';
-                            } else {
-                                html += '<li>NDE BY WELDER</li>';
-                            }
-                            if(codeList.includes("pkg")) {
-                                html += '<li item-checked="true">PKG LIST</li>';
-                            } else {
-                                html += '<li>PKG LIST</li>';
-                            }
-                            html += `                    </ul>
-                                                    </li>
-                                                    <div class="text-right mr-2 py-2">
-                                                        <button class="btn btn-sm btn-outline-secondary closeTree">닫기</button>
-                                                    </div>
-                                                </ul>
+                    if(!adminList.includes(i)) {
+                        if(person["comp_type_str"] == "Internal" && !overList.includes(i)) {
+                            html += '<tr>';
+                            html += '<td class="text-center">'
+                            html += '<i class="fa-solid fa-sitemap"></i>';
+                            html += '</td>'
+                            html += '<td class="text-center">'
+                            html += person["member_name"];
+                            html += '</td>'
+                            html += '<td class="text-center">'
+                            html += person["dept_name"];
+                            html += '</td>'
+                            html += '<td>'
+                            if(userList.includes(person["uno"])) {
+                                html += `<div class='jqxWidget'>
+                                            <div class="dropMenuButton" id="dropBtn_${person["uno"]}">
+                                                <div style="border: none;" class='jqxTree uno_${person["uno"]}'>
+                                                    <ul>
+                                                        <li item-expanded='true'>Welding
+                                                            <ul>`;
+                                var codeList = dbRightList[person["uno"]]["codeText"];
+                                if(codeList.includes("w_day")) {
+                                    html += '<li item-checked="true">WELDING DAY</li>';
+                                } else {
+                                    html += '<li>WELDING DAY</li>';
+                                }
+                                if(codeList.includes("w_month")) {
+                                    html += '<li item-checked="true">WELDING MONTH</li>';
+                                } else {
+                                    html += '<li>WELDING MONTH</li>';
+                                }
+                                if(codeList.includes("n_iso")) {
+                                    html += '<li item-checked="true">NDE BY ISO</li>';
+                                } else {
+                                    html += '<li>NDE BY ISO</li>';
+                                }
+                                if(codeList.includes("n_welder")) {
+                                    html += '<li item-checked="true">NDE BY WELDER</li>';
+                                } else {
+                                    html += '<li>NDE BY WELDER</li>';
+                                }
+                                if(codeList.includes("pkg")) {
+                                    html += '<li item-checked="true">PKG LIST</li>';
+                                } else {
+                                    html += '<li>PKG LIST</li>';
+                                }
+                                html += `                    </ul>
+                                                        </li>
+                                                        <div class="text-right mr-2 py-2">
+                                                            <button class="btn btn-sm btn-outline-secondary closeTree">닫기</button>
+                                                        </div>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>`;
-                            // 조직도 인원 제외
-                            userList = userList.filter((user) => {
-                                return user != person["uno"];
-                            });
-                        } else {
-                            html += `<div class='jqxWidget'>
-                                        <div class="dropMenuButton" id="dropBtn_${person["uno"]}">
-                                            <div style="border: none;" class='jqxTree uno_${person["uno"]}'>
-                                                <ul>
-                                                    <li item-expanded='true'>Welding
-                                                        <ul>
-                                                            <li item-checked="true">WELDING DAY</li>
-                                                            <li item-checked="true">WELDING MONTH</li>
-                                                            <li>NDE BY ISO</li>
-                                                            <li>NDE BY WELDER</li>
-                                                            <li>PKG LIST</li>
-                                                        </ul>
-                                                    </li>
-                                                    <div class="text-right mr-2 py-2">
-                                                        <button class="btn btn-sm btn-outline-secondary closeTree">닫기</button>
-                                                    </div>
-                                                </ul>
+                                        </div>`;
+                                // 조직도 인원 제외
+                                userList = userList.filter((user) => {
+                                    return user != person["uno"];
+                                });
+                            } else {
+                                html += `<div class='jqxWidget'>
+                                            <div class="dropMenuButton" id="dropBtn_${person["uno"]}">
+                                                <div style="border: none;" class='jqxTree uno_${person["uno"]}'>
+                                                    <ul>
+                                                        <li item-expanded='true'>Welding
+                                                            <ul>
+                                                                <li item-checked="true">WELDING DAY</li>
+                                                                <li item-checked="true">WELDING MONTH</li>
+                                                                <li>NDE BY ISO</li>
+                                                                <li>NDE BY WELDER</li>
+                                                                <li>PKG LIST</li>
+                                                            </ul>
+                                                        </li>
+                                                        <div class="text-right mr-2 py-2">
+                                                            <button class="btn btn-sm btn-outline-secondary closeTree">닫기</button>
+                                                        </div>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>`
+                                        </div>`
+                            }
+                            html += '</td>'
+                            // overUno = person["uno"];
                         }
-                        html += '</td>'
-                        overUno = person["uno"];
                     }
                 });
                 
                 // db user
                 $(userList).each(function(i, user) {
-                    html +=  '<tr>';
-                    html += '<td class="text-center">'
-                    html += '</td>'
-                    html += '<td class="text-center">'
-                    html += dbRightList[user]["userName"];
-                    html += '</td>'
-                    html += '<td class="text-center">'
-                    html += dbRightList[user]["deptName"];
-                    html += '</td>'
-                    html += '<td>'
-                    html += `<div class='jqxWidget'>
-                                <div class="dropMenuButton" id="dropBtn_${user}">
-                                    <div style="border: none;" class='jqxTree uno_${user}'>
-                                        <ul>
-                                            <li item-expanded='true'>Welding
-                                                <ul>`;
-                    var codeList = dbRightList[user]["codeText"];
-                    if(codeList.includes("w_day")) {
-                        html += '<li item-checked="true">WELDING DAY</li>';
-                    } else {
-                        html += '<li>WELDING DAY</li>';
-                    }
-                    if(codeList.includes("w_month")) {
-                        html += '<li item-checked="true">WELDING MONTH</li>';
-                    } else {
-                        html += '<li>WELDING MONTH</li>';
-                    }
-                    if(codeList.includes("n_iso")) {
-                        html += '<li item-checked="true">NDE BY ISO</li>';
-                    } else {
-                        html += '<li>NDE BY ISO</li>';
-                    }
-                    if(codeList.includes("n_welder")) {
-                        html += '<li item-checked="true">NDE BY WELDER</li>';
-                    } else {
-                        html += '<li>NDE BY WELDER</li>';
-                    }
-                    if(codeList.includes("pkg")) {
-                        html += '<li item-checked="true">PKG LIST</li>';
-                    } else {
-                        html += '<li>PKG LIST</li>';
-                    }
-                    html += `                    </ul>
-                                            </li>
-                                            <div class="text-right mr-2 py-2">
-                                                <button class="btn btn-sm btn-outline-secondary closeTree">닫기</button>
-                                            </div>
-                                        </ul>
+                    if(!adminList.includes(user)) {
+                        html +=  '<tr>';
+                        html += '<td class="text-center">'
+                        html += '</td>'
+                        html += '<td class="text-center">'
+                        html += dbRightList[user]["userName"];
+                        html += '</td>'
+                        html += '<td class="text-center">'
+                        html += dbRightList[user]["deptName"];
+                        html += '</td>'
+                        html += '<td>'
+                        html += `<div class='jqxWidget'>
+                                    <div class="dropMenuButton" id="dropBtn_${user}">
+                                        <div style="border: none;" class='jqxTree uno_${user}'>
+                                            <ul>
+                                                <li item-expanded='true'>Welding
+                                                    <ul>`;
+                        var codeList = dbRightList[user]["codeText"];
+                        if(codeList.includes("w_day")) {
+                            html += '<li item-checked="true">WELDING DAY</li>';
+                        } else {
+                            html += '<li>WELDING DAY</li>';
+                        }
+                        if(codeList.includes("w_month")) {
+                            html += '<li item-checked="true">WELDING MONTH</li>';
+                        } else {
+                            html += '<li>WELDING MONTH</li>';
+                        }
+                        if(codeList.includes("n_iso")) {
+                            html += '<li item-checked="true">NDE BY ISO</li>';
+                        } else {
+                            html += '<li>NDE BY ISO</li>';
+                        }
+                        if(codeList.includes("n_welder")) {
+                            html += '<li item-checked="true">NDE BY WELDER</li>';
+                        } else {
+                            html += '<li>NDE BY WELDER</li>';
+                        }
+                        if(codeList.includes("pkg")) {
+                            html += '<li item-checked="true">PKG LIST</li>';
+                        } else {
+                            html += '<li>PKG LIST</li>';
+                        }
+                        html += `                    </ul>
+                                                </li>
+                                                <div class="text-right mr-2 py-2">
+                                                    <button class="btn btn-sm btn-outline-secondary closeTree">닫기</button>
+                                                </div>
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>`;
-                    html += '</td>';
-                    html += '</tr>';
+                                </div>`;
+                        html += '</td>';
+                        html += '</tr>';
+                    }
                 });
 
                 $("#tblMenuRight tbody").append(html);
@@ -353,21 +358,23 @@ function dropDownMenuRight() {
     });
     // 마지막 드롭다운 위로 펼침
     var lastIndex = $(".dropMenuButton").length - 1;
-    $(".dropMenuButton").last().jqxDropDownButton({ 
-        width: "auto",
-        height: 25,
-        dropDownVerticalAlignment: 'top'
-    }); 
-    $(".dropMenuButton").eq(lastIndex - 1).jqxDropDownButton({ 
-        width: "auto",
-        height: 25,
-        dropDownVerticalAlignment: 'top'
-    });
-    $(".dropMenuButton").eq(lastIndex - 2).jqxDropDownButton({ 
-        width: "auto",
-        height: 25,
-        dropDownVerticalAlignment: 'top'
-    }); 
+    if(lastIndex > 3) {
+        $(".dropMenuButton").last().jqxDropDownButton({ 
+            width: "auto",
+            height: 25,
+            dropDownVerticalAlignment: 'top'
+        }); 
+        $(".dropMenuButton").eq(lastIndex - 1).jqxDropDownButton({ 
+            width: "auto",
+            height: 25,
+            dropDownVerticalAlignment: 'top'
+        });
+        $(".dropMenuButton").eq(lastIndex - 2).jqxDropDownButton({ 
+            width: "auto",
+            height: 25,
+            dropDownVerticalAlignment: 'top'
+        }); 
+    }
     $(".jqxTree").jqxTree({ 
         width: 200,
         height: "auto",
@@ -516,6 +523,23 @@ function getDbRightList() {
         }
     })
     
+    return dbUserList;
+}
+
+// 관리자 리스트
+function getAdminList() {
+    var url = '/admin/admin_list.php';
+    var dbUserList = [];
+    $.ajax({
+        type: "GET",
+        url: url,
+        async: false,
+        dataType: "json",
+        success: function(result) {
+            dbUserList = result;
+        }
+    })
+
     return dbUserList;
 }
 </script>

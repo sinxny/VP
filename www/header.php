@@ -120,8 +120,8 @@ $(document).ready(function() {
         $("#headerTitle").text("공사관리 시스템");
         $("#btnStaffOnly").hide();
 
-        // 사장님, 부사장님, 기술연구소
-        if(teamId == 11 || teamId == 90 || $("#uno").val() == 95 || $("#uno").val() == "10065") {
+        // 사장님, 부사장님, 기술연구소, 관리자계정
+        if(teamId == 11 || teamId == 90 || $("#uno").val() == 95 || $("#uno").val() == 10065) {
             $("#welding").show();
             $("#welding").find("ul").show();
             sessionStorage.setItem("cmRight", true);
@@ -195,8 +195,14 @@ $(document).ready(function() {
         }
     } else if(menuRight == "cm") {
         $("#vdcsOnly").hide();
-        $("#jobFilter").val("STAFF");
-        $("input[name='jobCondition'][value='STAFF']").prop("checked", true);
+        // 관리자는 ALL
+        if($("#uno").val() == 10065) {
+            $("#jobFilter").val("ALL");
+            $("input[name='jobCondition'][value='ALL']").prop("checked", true);
+        } else {
+            $("#jobFilter").val("STAFF");
+            $("input[name='jobCondition'][value='STAFF']").prop("checked", true);
+        }
         $("#btnStaffOnly").show();
         $("#selJobFilter").show();
     }
@@ -235,14 +241,11 @@ $(document).ready(function() {
     } else if(menuRight == "cm") {
         var cmRight = sessionStorage.getItem("cmRight");
         if(sessionStorage.getItem("jno")) {
-            if($("#welding").find("a").length > 0) {
-                var elementId = $("#welding").find("a").eq(0).attr("id");
-                subMenu = elementId
-                $("#smMenu").css("visibility", "visible");
-                activeSubMenu($("#" + subMenu));
-            } else if (sessionStorage.getItem("subMenu") && cmRight == "true") {
-                subMenu = sessionStorage.getItem("subMenu");
+            var firtMenu = $("#welding").find("a").eq(0).attr("id");
+            var subMenu = sessionStorage.getItem("subMenu");
+            if (subMenu && cmRight == "true" && subMenu == firtMenu) {
                 if(subMenu != "noRight" && $("#welding").find("a").length != 0) {
+                    $("#welding").find("a").eq()
                     $("#smMenu").css("visibility", "visible");
                     activeSubMenu($("#" + subMenu));
                 } else {
@@ -250,12 +253,20 @@ $(document).ready(function() {
                     $("#smMenu").css("visibility", "hidden");
                     sessionStorage.setItem("subMenu", "noRight");
                 }
-            } else {
+            }
+            else if($("#welding").find("a").length > 0) {
+                var elementId = $("#welding").find("a").eq(0).attr("id");
+                subMenu = elementId
+                $("#smMenu").css("visibility", "visible");
+                activeSubMenu($("#" + subMenu));
+            }
+            else {
                 $("#vdcsContent").load("no_right.php");
                 $("#smMenu").css("visibility", "hidden");
                 sessionStorage.setItem("subMenu", "noRight");
                 subMenu = "noRight";
             }
+            console.log(subMenu);
         } else {
             $("#smMenu").css("visibility", "hidden");
         }

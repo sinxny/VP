@@ -81,29 +81,29 @@ var vm = new Vue({
                 var url = "https://wcf.htenc.co.kr/apipwim/getweldingmonth?jno=" + this.jno + "&today=" + this.today + "&nextday=" + this.nextday;
                 axios.get(url)
                 .then(function(response) {
-                        var welding = response["data"];
-                        if(welding["ResultType"] == "Success") {
-                            data.weldingDayList = welding["Value"];
-                            data.noData = false;
-                            
-                            // 날짜 헤더
-                            var weldingKeys = Object.keys(data.weldingDayList[0]);
-                            
-                            // 날짜 값 가져오기
-                            var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
-                            var dateList = [];
-                            $.each(weldingKeys, function(i, value) {
-                                if ( regex.test(value) ) {
-                                    dateList.push(value);
-                                }
-                            });
-                            data.headerDateList = dateList;
-                            data.dateCnt = dateList.length;
-                            data.init = false;
-                        } else {
-                            data.noData = true;
-                            data.init = false;
-                        }
+                    var welding = response["data"];
+                    if(welding["ResultType"] == "Success") {
+                        data.weldingDayList = welding["Value"];
+                        data.noData = false;
+                        
+                        // 날짜 헤더
+                        var weldingKeys = Object.keys(data.weldingDayList[0]);
+                        
+                        // 날짜 값 가져오기
+                        var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
+                        var dateList = [];
+                        $.each(weldingKeys, function(i, value) {
+                            if ( regex.test(value) ) {
+                                dateList.push(value);
+                            }
+                        });
+                        data.headerDateList = dateList;
+                        data.dateCnt = dateList.length;
+                        data.init = false;
+                    } else {
+                        data.noData = true;
+                        data.init = false;
+                    }
                 })
                 .finally(function () {
                     // 같은 Company 행 병합

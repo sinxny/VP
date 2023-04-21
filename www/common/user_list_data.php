@@ -3,12 +3,41 @@ ini_set("display_errors", 1);
 session_start();
 require_once '../../../VP/api/_inc.php';
 
+$domain = $_SERVER["HTTP_HOST"];
+
+// 관리자 리스트
+$url = "{$domain}/admin/admin_list.php";
+
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+        // CURLOPT_PORT => "80",
+    CURLOPT_URL => $url,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 30,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "GET",
+    CURLOPT_HTTPHEADER => array(
+        "cache-control: no-cache",
+        "content-type: text/plain; charset=utf-8"
+    ),
+    CURLOPT_SSL_VERIFYPEER => false
+));
+
+$response = curl_exec($curl);
+    // $err = curl_error($curl);
+curl_close($curl);
+
+$responseResult = json_decode($response);
+$adminList = implode(',', $responseResult);
+
 $SQL = "SELECT U.UNO, U.USER_NAME, U.DUTY_NAME, D.DEPT_PATH_S 
         FROM S_SYS_USER_SET U, COMMON.V_BIZ_DEPT_SET D
         WHERE U.DEPT_ID = D.DEPT_NO
         AND (IS_STATE = 'Y' OR IS_STATE = 'S')
-        AND U.UNO NOT IN (1, 9562, 9716, 9414, 9946, 95, 19)
-        AND U.TEAM_ID NOT IN (90)
+        AND U.UNO NOT IN ($adminList)
         ORDER BY U.DEPT_CD, U.DUTY_CD, U.JOBDUTY_ID, U.JOIN_DATE, U.USER_NAME";
 
 $db->query($SQL);
