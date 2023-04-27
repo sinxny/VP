@@ -60,7 +60,7 @@
                 var data = this;
                 $(".dx-loadpanel-content").removeClass("dx-state-invisible").addClass("dx-state-visible");
                 axios({
-                    url: 'nde/nde_by_iso_data.php?jno=' + this.jno,
+                    url: 'welding/nde_by_iso_data.php?jno=' + this.jno,
                     method: "GET"
                 })
                 .then(function(response) {
@@ -83,7 +83,7 @@
                     var pageSize = 18;
                     $(() => {
                         const dataGrid = $('#gridContainer').dxDataGrid({
-                            dataSource: 'nde/nde_by_iso_data.php?jno=' + this.jno,
+                            dataSource: 'welding/nde_by_iso_data.php?jno=' + this.jno,
                             showRowLines: true,
                             showColumnLines: true,
                             columns: [
@@ -279,7 +279,7 @@
             },
             // 목록 내보내기 버튼 클릭
             exportNdeExcel() {
-                var url = "nde/nde_by_iso_download_excel.php?jno=" + this.jno + "&jobName=" + this.jobName;
+                var url = "welding/nde_by_iso_download_excel.php?jno=" + this.jno + "&jobName=" + this.jobName;
                 this.axiosDownload(url, "GET");
             },
             // 쿠키 삭제

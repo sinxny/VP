@@ -116,8 +116,8 @@ $(document).ready(function() {
         sessionStorage.setItem("cmRight", false);
     } else if(menuRight == "cm") {
         $("#vdcs").remove();
-        document.title = "공사관리 시스템";
-        $("#headerTitle").text("공사관리 시스템");
+        document.title = "CMS";
+        $("#headerTitle").text("CMS");
         $("#btnStaffOnly").hide();
 
         // 사장님, 부사장님, 기술연구소, 관리자계정
@@ -241,9 +241,12 @@ $(document).ready(function() {
     } else if(menuRight == "cm") {
         var cmRight = sessionStorage.getItem("cmRight");
         if(sessionStorage.getItem("jno")) {
-            var firtMenu = $("#welding").find("a").eq(0).attr("id");
+            var menuList = [];
+            $($("#welding").find("a")).each(function() {
+                menuList.push($(this).attr("id"));
+            });
             var subMenu = sessionStorage.getItem("subMenu");
-            if (subMenu && cmRight == "true" && subMenu == firtMenu) {
+            if (cmRight == "true" && menuList.includes(subMenu)) {
                 if(subMenu != "noRight" && $("#welding").find("a").length != 0) {
                     $("#welding").find("a").eq()
                     $("#smMenu").css("visibility", "visible");
@@ -266,7 +269,6 @@ $(document).ready(function() {
                 sessionStorage.setItem("subMenu", "noRight");
                 subMenu = "noRight";
             }
-            console.log(subMenu);
         } else {
             $("#smMenu").css("visibility", "hidden");
         }

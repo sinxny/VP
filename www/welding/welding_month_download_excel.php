@@ -36,15 +36,15 @@ $jobName = $_GET["jobName"];
 $today = $_GET["today"];
 $nextday = $_GET["nextday"];
 
-// 헤더-
-// $today = new DateTime();
-// $dateTime = $today->format('Y-m-d H:i');
-$sheet->setCellValue('A1', $jobName);
-$sheet->getStyle('A1')->getFont()->setSize(16);
-$sheet->setCellValue('A2', "By Day. Week. Monthly");
-$sheet->mergeCells("A2:B2");
-$sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("A1:A2")->getFont()->setBold(true);
+// 헤더
+$printDate = new DateTime();
+$dateTime = $printDate->format('Y-m-d');
+$sheet->setCellValue('C1', $jobName);
+$sheet->getStyle('C1')->getFont()->setSize(16);
+$sheet->setCellValue('A1', "Welding Monthly");
+$sheet->mergeCells("A1:B2");
+// $sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle("A1:C2")->getFont()->setBold(true);
 
 $sheet->setCellValue('A3', "업체명\nCompany");
 $sheet->setCellValue('B3', "구역\nArea");
@@ -113,19 +113,23 @@ if($responseResult->ResultType = "Success") {
     $col++;
     $sheet->setCellValue($col."3", "합 계\nAccumulative\n(D/I)");
     $sheet->mergeCells("{$col}3:{$col}4");
+    $sheet->mergeCells("C1:{$col}2");
     $col++;
+    $sheet->setCellValue($col."1", "Print Date");
     $sheet->setCellValue($col."2", "날짜 Date");
-    $sheet->getStyle($col."2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+    $sheet->getStyle($col."2")->getFont()->setBold(true);
     $sheet->setCellValue($col."3", "잔여물량\nRemain (D/I)");
     $sheet->mergeCells("{$col}3:{$col}4");
     $periodCol = $col;
     $col++;
+    $sheet->setCellValue($col."1", $dateTime);
     $sheet->setCellValue($col."2", $today . " ~ ". $nextday);
     $sheet->getStyle($col."2")->getFont()->setBold(true);
     $preCol = $col;
     $sheet->setCellValue($col."3", "진행률\nWork\nProgress(%)");
     $sheet->mergeCells("{$col}3:{$col}4");
     $lastCol = ++$col;
+    $sheet->mergeCells("{$preCol}1:{$lastCol}1");
     $sheet->mergeCells("{$preCol}2:{$lastCol}2");
     $sheet->getStyle("{$preCol}2:{$lastCol}2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
     $sheet->getStyle("{$periodCol}2:{$lastCol}2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
@@ -133,8 +137,7 @@ if($responseResult->ResultType = "Success") {
     $sheet->mergeCells("{$lastCol}3:{$lastCol}4");
     $sheet->getStyle("A3:{$lastCol}4")->getFont()->setSize(10);
     $sheet->getStyle("A3:{$lastCol}4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('BDD7EE');
-    $sheet->getStyle("A3:{$lastCol}4")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-    $sheet->mergeCells("A1:{$lastCol}1");
+    $sheet->getStyle("A1:{$lastCol}4")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
     
     // 줄바꿈
     $sheet->getStyle("A3:{$lastCol}3")->getAlignment()->setWrapText(true);
@@ -175,7 +178,7 @@ if($responseResult->ResultType = "Success") {
             } else {
                 $sheet->setCellValue('B'.$rowCnt, $weldingData[$i]->Area);
             }
-            $sheet->getStyle('B'.$rowCnt)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A9D08E');
+            // $sheet->getStyle('B'.$rowCnt)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A9D08E');
             $areaStRow = $rowCnt;
         }
         $isSameArea = $weldingData[$i]->Area;
@@ -183,7 +186,7 @@ if($responseResult->ResultType = "Success") {
         if($weldingData[$i]->Level > 2 || !$weldingData[$i]->Level) {
             $sheet->setCellValue('C'.$rowCnt, $weldingData[$i]->{'Material Group'});
         }
-        $sheet->getStyle('C'.$rowCnt)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('E2EFDA');
+        // $sheet->getStyle('C'.$rowCnt)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('E2EFDA');
         if($weldingData[$i]->Level == 3) {
             $sheet->getStyle("C{$rowCnt}:{$lastCol}{$rowCnt}")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFF2CC');
         } else if($weldingData[$i]->Level == 2) {
@@ -263,7 +266,9 @@ $sheet->getStyle("B5:{$lastCol}{$rowCnt}")->getAlignment()->setIndent(1);
 
 // 표 그리기
 $rowCnt--;
-$sheet->getStyle("A3:{$lastCol}{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("A1:{$lastCol}{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("{$periodCol}1:{$periodCol}2")->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE);
+$sheet->getStyle("{$preCol}1:{$preCol}2")->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE);
 
 // 행 가운데 정렬
 $sheet->getStyle('A5:A'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -295,10 +300,11 @@ for($col='F'; true; $col++) {
 $sheet->freezePane("F5");
 
 // 파일명
-$title = "welding_month_report";
+$title = "WELDING MONTH_{$jobName}_{$today}-{$nextday}";
+$title = rawurlencode($title);
 
 // Rename worksheet
-$sheet->setTitle($title);
+$sheet->setTitle("WELDING MONTH");
 setcookie("fileDownload", true, 0, "/");
 // Redirect output to a client’s web browser (Excel2007)
 @header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

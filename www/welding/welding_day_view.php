@@ -12,10 +12,10 @@
     background-color:#F4B084;
 }
 .materialGrp {
-    background-color: #E2EFDA;
+    /* background-color: #E2EFDA; */
 }
 .areaColor {
-    background-color: #A9D08E;
+    /* background-color: #A9D08E; */
     text-align: center;
 }
 #tblWeldingDay td, #tblWeldingDay th {

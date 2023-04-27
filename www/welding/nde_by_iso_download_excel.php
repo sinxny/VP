@@ -45,20 +45,19 @@ $jobName = $_GET["jobName"];
 // 헤더
 $today = new DateTime();
 $dateTime = $today->format('Y-m-d');
-$sheet->setCellValue('A1', $jobName);
-$sheet->mergeCells("A1:O1");
-$sheet->getStyle('A1')->getFont()->setSize(16);
-$sheet->setCellValue('A2', "By ISO DWG");
-$sheet->mergeCells("A2:B2");
-$sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("A1:A2")->getFont()->setBold(true);
-$sheet->setCellValue('M2', "날짜 Date");
-$sheet->getStyle('M2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-$sheet->setCellValue('N2', $dateTime);
-$sheet->mergeCells("N2:O2");
-$sheet->getStyle("N2")->getFont()->setBold(true);
+$sheet->setCellValue('A1', "NDE by ISO");
+$sheet->mergeCells("A1:B2");
+$sheet->setCellValue('C1', $jobName);
+$sheet->mergeCells("C1:L2");
+$sheet->getStyle('C1')->getFont()->setSize(16);
+$sheet->setCellValue('M1', "날짜 Date");
+$sheet->mergeCells("M1:M2");
+$sheet->setCellValue('N1', $dateTime);
+$sheet->mergeCells("N1:O2");
 $sheet->getStyle("N2:O2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("M2:O2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
+$sheet->getStyle("M1:O2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
+$sheet->getStyle("A1:O2")->getFont()->setBold(true);
+$sheet->getStyle("A1:O2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
 $sheet->setCellValue('A3', "No.");
 $sheet->setCellValue('B3', "ISO DWG NO.");
@@ -269,7 +268,10 @@ $sheet->setAutoFilter("A4:O{$rowCnt}");
 
 // 표 그리기
 $rowCnt--;
-$sheet->getStyle("A3:O{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("A1:O{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("M1:M2")->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE);
+$sheet->getStyle("N1:N2")->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE);
+
 // SELECTION 테두리
 $sheet->getStyle("H4:K{$rowCnt}")->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('FF0000'));
 
@@ -291,10 +293,11 @@ $sheet->getColumnDimension('N')->setWidth(15);
 $sheet->getColumnDimension('O')->setWidth(15);
 
 // 파일명
-$title = "nde_by_iso_report";
+$title = "NDE BY ISO_{$jobName}_{$dateTime}";
+$title = rawurlencode($title);
 
 // Rename worksheet
-$sheet->setTitle($title);
+$sheet->setTitle("NDE BY ISO");
 setcookie("fileDownload", true, 0, "/");
 // Redirect output to a client’s web browser (Excel2007)
 @header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

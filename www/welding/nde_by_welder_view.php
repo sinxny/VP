@@ -58,7 +58,7 @@ var vm = new Vue({
         },
         // 최신목록 내보내기
         exportWelderExcel() {
-            var url = "nde/nde_by_welder_download_excel.php?jno=" + this.jno + "&jobName=" + this.jobName;
+            var url = "welding/nde_by_welder_download_excel.php?jno=" + this.jno + "&jobName=" + this.jobName;
             this.axiosDownload(url, "GET");
         },
         // 쿠키 삭제

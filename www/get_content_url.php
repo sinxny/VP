@@ -13,13 +13,13 @@ switch($subMenu) {
         $pageUrl = "welding/welding_month_view.php";
         break;
     case "n_iso" :
-        $pageUrl = "nde/nde_by_iso_view.php";
+        $pageUrl = "welding/nde_by_iso_view.php";
         break;
     case "n_welder" :
-        $pageUrl = "nde/nde_by_welder_view.php";
+        $pageUrl = "welding/nde_by_welder_view.php";
         break;
     case "pkg" :
-        $pageUrl = "pkg/pkg_list_view.php";
+        $pageUrl = "welding/pkg_list_view.php";
         break;
     // cm 권한 없음
     case "noRight" :

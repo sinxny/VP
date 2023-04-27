@@ -29,6 +29,9 @@
     background-color: #1199FF;
     color: white
 }
+.babyblue {
+    background-color: #E7F3FF;
+}
 </style>
 <script>
 var vm = new Vue({
@@ -82,7 +85,7 @@ var vm = new Vue({
         },
         // 최신목록 내보내기
         exportPkgExcel() {
-            var url = "pkg/pkg_list_download_excel.php?jno=" + this.jno + "&jobName=" + this.jobName;
+            var url = "welding/pkg_list_download_excel.php?jno=" + this.jno + "&jobName=" + this.jobName;
             this.axiosDownload(url, "GET");
         },
         // 쿠키 삭제
@@ -297,13 +300,13 @@ var vm = new Vue({
                     <td class="responsiveTblRow text-center">{{ pkg.SUBCON_WALK_DOWN }}</td>
                     <td class="responsiveTblRow text-center">{{ pkg.HTENC_WALK_DOWN }}</td>
                     <td class="responsiveTblRow text-center">{{ pkg.A_PUNCH_CLEAR_DATE }}</td>
-                    <td class="responsiveTblRow text-center">{{ pkg.PLAN }}</td>
-                    <td class="responsiveTblRow text-center">{{ pkg.REQUEST }}</td>
-                    <td class="responsiveTblRow text-center">{{ pkg.ACTUAL }}</td>
-                    <td class="responsiveTblRow text-center">{{ pkg.B_PUNCH }}</td>
-                    <td class="responsiveTblRow text-center">{{ pkg.FLUSHING }}</td>
-                    <td class="responsiveTblRow text-center">{{ pkg.BOX_UP }}</td>
-                    <td class="responsiveTblRow" style="padding-left: 10px !important">{{ pkg.REMARK }}</td>
+                    <td class="responsiveTblRow text-center babyblue">{{ pkg.PLAN }}</td>
+                    <td class="responsiveTblRow text-center babyblue">{{ pkg.REQUEST }}</td>
+                    <td class="responsiveTblRow text-center babyblue">{{ pkg.ACTUAL }}</td>
+                    <td class="responsiveTblRow text-center babyblue">{{ pkg.B_PUNCH }}</td>
+                    <td class="responsiveTblRow text-center babyblue">{{ pkg.FLUSHING }}</td>
+                    <td class="responsiveTblRow text-center babyblue">{{ pkg.BOX_UP }}</td>
+                    <td class="responsiveTblRow babyblue" style="padding-left: 10px !important">{{ pkg.REMARK }}</td>
                 </tr>
             </tbody>
         </table>

@@ -40,20 +40,18 @@ $jobName = $_GET["jobName"];
 // 헤더
 $today = new DateTime();
 $dateTime = $today->format('Y-m-d');
-$sheet->setCellValue('A1', $jobName);
-$sheet->mergeCells("A1:K1");
-$sheet->getStyle('A1')->getFont()->setSize(16);
-$sheet->setCellValue('A2', "By WELDER");
-$sheet->mergeCells("A2:B2");
-$sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("A1:A2")->getFont()->setBold(true);
-$sheet->setCellValue('I2', "날짜 Date");
-$sheet->getStyle('I2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-$sheet->setCellValue('J2', $dateTime);
-$sheet->mergeCells("J2:K2");
-$sheet->getStyle("J2")->getFont()->setBold(true);
-$sheet->getStyle("J2:K2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("I2:K2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
+$sheet->setCellValue('C1', $jobName);
+$sheet->mergeCells("C1:I2");
+$sheet->getStyle('C1')->getFont()->setSize(16);
+$sheet->setCellValue('A1', "NDE by Welder");
+$sheet->mergeCells("A1:B2");
+$sheet->setCellValue('J1', "날짜 Date");
+$sheet->setCellValue('K1', $dateTime);
+$sheet->mergeCells("J1:J2");
+$sheet->mergeCells("K1:K2");
+$sheet->getStyle("J1:K1")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
+$sheet->getStyle("A1:K2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle("A1:K2")->getFont()->setBold(true);
 
 $sheet->setCellValue('A3', "No.");
 $sheet->setCellValue('B3', "WELDER");
@@ -224,7 +222,12 @@ $sheet->getStyle("A1:K{$rowCnt}")->getAlignment()->setVertical(\PhpOffice\PhpSpr
 
 // 표 그리기
 $rowCnt--;
-$sheet->getStyle("A3:K{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("A1:K{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("J1:J2")->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE);
+$sheet->getStyle("K1:K2")->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE);
+
+// 흐림 효과 방지
+$sheet->getStyle("Z{$rowCnt}")->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
 // 칼럼 사이즈
 $sheet->getColumnDimension('A')->setWidth(9);
@@ -240,10 +243,11 @@ $sheet->getColumnDimension('J')->setWidth(15);
 $sheet->getColumnDimension('K')->setWidth(15);
 
 // 파일명
-$title = "nde_by_welder_report";
+$title = "NDE BY WELDER_{$jobName}_{$dateTime}";
+$title = rawurlencode($title);
 
 // Rename worksheet
-$sheet->setTitle($title);
+$sheet->setTitle("NDE BY WELDER");
 setcookie("fileDownload", true, 0, "/");
 // Redirect output to a client’s web browser (Excel2007)
 @header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

@@ -38,15 +38,20 @@ $jno = $_GET["jno"];
 $jobName = $_GET["jobName"];
 
 // 헤더
-// $today = new DateTime();
-// $dateTime = $today->format('Y-m-d H:i');
-$sheet->setCellValue('A1', $jobName);
-$sheet->mergeCells("A1:AD1");
-$sheet->getStyle('A1')->getFont()->setSize(16);
-$sheet->setCellValue('A2', "LATEST");
-$sheet->mergeCells("A2:C2");
-$sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("A1:AD4")->getFont()->setBold(true);
+$today = new DateTime();
+$date = $today->format('Y-m-d');
+$sheet->setCellValue('A1', "PKG List");
+$sheet->mergeCells("A1:C2");
+$sheet->setCellValue('D1', $jobName);
+$sheet->mergeCells("D1:Y2");
+$sheet->getStyle('D1')->getFont()->setSize(16);
+$sheet->setCellValue('Z1', "날짜 Date");
+$sheet->mergeCells("Z1:Z2");
+$sheet->setCellValue('AA1', $date);
+$sheet->mergeCells("AA1:AB2");
+$sheet->getStyle("Z1:AB2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
+$sheet->getStyle("A1:AB2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle("A1:AB4")->getFont()->setBold(true);
 
 $sheet->setCellValue('A3', "COMPANY");
 $sheet->setCellValue('B3', "NO.");
@@ -287,6 +292,7 @@ if($responseResult->ResultType = "Success") {
     }
 }
 
+
 // 들여쓰기
 $sheet->getStyle('C5:C'.$rowCnt)->getAlignment()->setIndent(1);
 $sheet->getStyle('E5:E'.$rowCnt)->getAlignment()->setIndent(1);
@@ -296,10 +302,15 @@ $sheet->getStyle('AB5:AB'.$rowCnt)->getAlignment()->setIndent(1);
 
 // 표 그리기
 $rowCnt--;
-$sheet->getStyle("A3:AB{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("A1:AB{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("Z1:Z2")->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE);
+$sheet->getStyle("AA1:AA2")->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE);
 $sheet->getStyle("A3:AB3")->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
 $sheet->getStyle("AB3:AB{$rowCnt}")->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
 $sheet->getStyle("A{$rowCnt}:AB{$rowCnt}")->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+
+// TEST DATE 항목 배경색 
+$sheet->getStyle("V5:AB{$rowCnt}")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('E7F3FF');
 
 // 행 가운데 정렬
 $sheet->getStyle('A5:B'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -356,10 +367,11 @@ $sheet->getRowDimension(4)->setRowHeight(30);
 $sheet->freezePane("D5");
 
 // 파일명
-$title = "pkg_list_report";
+$title = "PKG LIST_{$jobName}_{$date}";
+$title = rawurlencode($title);
 
 // Rename worksheet
-$sheet->setTitle($title);
+$sheet->setTitle("PKG LIST");
 setcookie("fileDownload", true, 0, "/");
 // Redirect output to a client’s web browser (Excel2007)
 @header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

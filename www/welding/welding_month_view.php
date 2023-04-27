@@ -12,10 +12,12 @@
     background-color:#F4B084;
 }
 .materialGrp {
-    background-color: #E2EFDA;
+    /* background-color: #E2EFDA; */
+    background-color: white;
 }
 .areaColor {
-    background-color: #A9D08E;
+    /* background-color: #A9D08E; */
+    background-color: white;
     text-align: center;
 }
 .weldingSum {

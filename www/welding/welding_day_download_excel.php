@@ -42,22 +42,21 @@ $weldingDate = $_GET["weldingDate"];
 $group = $_GET["group"];
 
 // 헤더
-// $today = new DateTime();
-// $dateTime = $today->format('Y-m-d H:i');
-$sheet->setCellValue('A1', $jobName);
-$sheet->mergeCells("A1:J1");
-$sheet->getStyle('A1')->getFont()->setSize(16);
-$sheet->setCellValue('A2', "Daily Report");
-$sheet->mergeCells("A2:B2");
-$sheet->getStyle("A1:A2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("A1:A2")->getFont()->setBold(true);
-$sheet->setCellValue('H2', "날짜 Date");
-$sheet->getStyle('H2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-$sheet->setCellValue('I2', $weldingDate);
-$sheet->mergeCells("I2:J2");
-$sheet->getStyle("I2")->getFont()->setBold(true);
-$sheet->getStyle("I1:I2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("I2:I2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
+$today = new DateTime();
+$dateTime = $today->format('Y-m-d');
+$sheet->setCellValue('A1', "Welding Day");
+$sheet->mergeCells("A1:B2");
+$sheet->setCellValue('C1', $jobName);
+$sheet->mergeCells("C1:H2");
+$sheet->getStyle('C1')->getFont()->setSize(16);
+$sheet->getStyle("A1:H2")->getFont()->setBold(true);
+$sheet->setCellValue('I1', "Print Date");
+$sheet->setCellValue('J1', $dateTime);
+$sheet->setCellValue('I2', "날짜 Date");
+$sheet->setCellValue('J2', $weldingDate);
+$sheet->getStyle("I2:J2")->getFont()->setBold(true);
+$sheet->getStyle("I2:J2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
+$sheet->getStyle("A1:J2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
 if($group == "Area") {
     $grpTitle = "구역";
@@ -146,7 +145,7 @@ if($responseResult->ResultType = "Success") {
             } else {
                 $sheet->setCellValue('B'.$rowCnt, $weldingData[$i]->{$group});
             }
-            $sheet->getStyle('B'.$rowCnt)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A9D08E');
+            // $sheet->getStyle('B'.$rowCnt)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A9D08E');
             $areaStRow = $rowCnt;
         }
         $isSameArea = $weldingData[$i]->{$group};
@@ -154,7 +153,7 @@ if($responseResult->ResultType = "Success") {
         if($weldingData[$i]->Step > 2 || !$weldingData[$i]->Step) {
             $sheet->setCellValue('C'.$rowCnt, $weldingData[$i]->{'Material Group'});
         }
-        $sheet->getStyle('C'.$rowCnt)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('E2EFDA');
+        // $sheet->getStyle('C'.$rowCnt)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('E2EFDA');
         if($weldingData[$i]->Step == 3) {
             $sheet->getStyle("C{$rowCnt}:J{$rowCnt}")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFF2CC');
         } else if($weldingData[$i]->Step == 2) {
@@ -227,7 +226,9 @@ $sheet->getStyle('B4:J'.$rowCnt)->getAlignment()->setIndent(1);
 
 // 표 그리기
 $rowCnt--;
-$sheet->getStyle("A3:J{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("A1:J{$rowCnt}")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("I1:I2")->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE);
+$sheet->getStyle("J1:J2")->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE);
 
 // 행 가운데 정렬
 $sheet->getStyle('A4:A'.$rowCnt)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -243,6 +244,9 @@ for($i = 1; $i <= $rowCnt; $i++) {
 // 텍스트 맞춤
 $sheet->getStyle("A1:J{$rowCnt}")->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
+// 흐림 효과 방지
+$sheet->getStyle("Z{$rowCnt}")->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
 // 칼럼 사이즈
 $sheet->getColumnDimension('A')->setAutoSize(true);
 $sheet->getColumnDimension('B')->setWidth(15);
@@ -257,10 +261,11 @@ $sheet->getColumnDimension('J')->setWidth(15);
 $sheet->getRowDimension(3)->setRowHeight(40);
 
 // 파일명
-$title = "welding_day_report";
+$title = "WELDING DAY_{$jobName}_{$weldingDate}";
+$title = rawurlencode($title);
 
 // Rename worksheet
-$sheet->setTitle($title);
+$sheet->setTitle("WELDING DAY");
 setcookie("fileDownload", true, 0, "/");
 // Redirect output to a client’s web browser (Excel2007)
 @header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

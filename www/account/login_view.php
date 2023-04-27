@@ -37,7 +37,7 @@ $(document).ready(function(){
     } else if(menuRight == "vp") {
         $("#loginLabel").text("VDCS Web");
     } else if(menuRight == "cm") {
-        $("#loginLabel").text("공사관리 시스템");
+        $("#loginLabel").text("CMS");
     }
 });
 
