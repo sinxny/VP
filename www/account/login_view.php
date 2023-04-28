@@ -30,7 +30,7 @@ $(document).ready(function(){
     //로그인 버튼 클릭
     $("#btnLogin").on("click", doLogin);
 
-    var menuRight = '<?php echo $menuRight?>';
+    var menuRight = '<?php if(isset($menuRight) && $menuRight) { echo $menuRight; } ?>';
 
     if(menuRight == "all") {
 

@@ -10,13 +10,14 @@ if($domain == "DOCS.HTENC.CO.KR" || $domain == "DOCS.SEPARK2111" || $domain == "
 } else if($domain == "CM.HTENC.CO.KR" || $domain == "CM.SEPARK2111.HTENC.CO.KR") {
 	$menuRight = "cm";
 }
-
+if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
+{
+	//echo "aaa";
+	//var_dump($_REQUEST);
+	//exit;
+}
 if(isset($_REQUEST) && array_key_exists("sid", $_REQUEST) && isset($_REQUEST["sid"]) && is_null($_REQUEST["sid"]) != true && $_REQUEST["sid"] != ""){
-	if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
-	{
-		//echo "aaa";
-		//exit;
-	}
+	
     if(!$isLogin) //isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221" && $_REQUEST["sid"] == "62810vlt58ssctcdode2s6au93"
 	{
 		//echo $_REQUEST["sid"];
