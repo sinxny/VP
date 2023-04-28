@@ -116,8 +116,8 @@ $(document).ready(function() {
         sessionStorage.setItem("cmRight", false);
     } else if(menuRight == "cm") {
         $("#vdcs").remove();
-        document.title = "CMS";
-        $("#headerTitle").text("CMS");
+        document.title = "공사관리시스템";
+        $("#headerTitle").text("공사관리시스템");
         $("#btnStaffOnly").hide();
 
         // 사장님, 부사장님, 기술연구소, 관리자계정
