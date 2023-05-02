@@ -104,7 +104,7 @@ $(document).ready(function() {
 
     if(menuRight == "all") {
         $("#vdcs").show();
-        $("#welding").show();
+        // $("#welding").show();
         $("#btnStaffOnly").show();
         $("#jobFilter").val($("input[name='jobCondition']:checked").val());
         sessionStorage.setItem("cmRight", true);
@@ -179,21 +179,24 @@ $(document).ready(function() {
     //jobCondition 초기값
     var IsInterStaff = '<?php echo $_SESSION["user"]["is_attend"] ?>';
     sessionStorage.setItem("isStaff", IsInterStaff);
-    if(menuRight == "vp") {
-        if(IsInterStaff == "Y") {
-            $("#jobFilter").val($("input[name='jobCondition']:checked").val());
-            $("#btnStaffOnly").show();
-        } else if(IsInterStaff == "N") {
-            $("#jobFilter").val("STAFF");
-            $("#selJobFilter").hide();
-            $("#btnStaffOnly").show();
-        } 
-        // LG
-        else if(IsInterStaff == "LG") {
-            $("#btnStaffOnly").hide();
-            $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
-        }
-    } else if(menuRight == "cm") {
+
+    // 하이테크 직원 유무에 따른 잡선택
+    if(IsInterStaff == "Y") {
+        $("#jobFilter").val($("input[name='jobCondition']:checked").val());
+        $("#btnStaffOnly").show();
+    } else if(IsInterStaff == "N") {
+        $("#jobFilter").val("STAFF");
+        $("#selJobFilter").hide();
+        $("#btnStaffOnly").show();
+    } 
+    // LG
+    else if(IsInterStaff == "LG") {
+        $("#btnStaffOnly").hide();
+        $("#btnStaffOnly").closest(".selJob").removeClass("input-group");
+    }
+
+    // CM
+    if(menuRight == "cm") {
         $("#vdcsOnly").hide();
         // 관리자는 ALL
         if($("#uno").val() == 10065) {
@@ -203,8 +206,8 @@ $(document).ready(function() {
             $("#jobFilter").val("STAFF");
             $("input[name='jobCondition'][value='STAFF']").prop("checked", true);
         }
-        $("#btnStaffOnly").show();
-        $("#selJobFilter").show();
+        // $("#btnStaffOnly").show();
+        // $("#selJobFilter").show();
     }
 
     // 비밀번호 변경 버튼
@@ -881,7 +884,7 @@ function validatePwdInputs() {
 <!-- </nav> -->
 <div id="subMenu" style="padding-top: 0.5rem;font-size:14px !important">
     <ul class="tree">
-        <li class="branch" id="vdcs">
+        <li class="branch" id="vdcs" style="display:none">
             <span style="width:min-content" onclick="collapseTree(this)"><i class="indicator fas fa-minus-circle"></i>Document</span>
             <ul>
                 <li>
