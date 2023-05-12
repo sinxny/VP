@@ -381,12 +381,12 @@ var vm = new Vue({
                     <th class="responsiveTblRow fixLeft fixLeftFirst" rowspan="2">업체명<br />Company</th>
                     <th class="responsiveTblRow fixLeft fixLeftSecond" rowspan="2">구역<br />Area</th>
                     <th class="responsiveTblRow fixLeft fixLeftThird" rowspan="2">재질<br />Material<br />Group</th>
-                    <th class="responsiveTblRow fixLeft fixLeftFourth" rowspan="2">총 물량<br />Total</th>
-                    <th class="responsiveTblRow fixLeft fixLeftFiveth" rowspan="2">누계<br />Previous<br />(D/I)</th>
+                    <th class="responsiveTblRow fixLeft fixLeftFourth" rowspan="2">총 물량 (D/I)<br />Total</th>
+                    <th class="responsiveTblRow fixLeft fixLeftFiveth" rowspan="2">누계 (D/I)<br />Previous</th>
                     <th :colspan="dateCnt" class="dateTh">선택 기간 물량_Work Dia-inch for Date (D/I)</th>
-                    <th rowspan="2" class="responsiveTblRow fixRight fixRightFourth">합 계<br />Accumulative<br />(D/I)</th>
-                    <th rowspan="2" class="responsiveTblRow fixRight fixRightThird">잔여물량<br />Remain (D/I)</th>
-                    <th rowspan="2" class="responsiveTblRow fixRight fixRightSecond">진행률<br />Work<br />Progress(%)</th>
+                    <th rowspan="2" class="responsiveTblRow fixRight fixRightFourth">합 계 (D/I)<br />Accumulative</th>
+                    <th rowspan="2" class="responsiveTblRow fixRight fixRightThird">잔여물량 (D/I)<br />Remain</th>
+                    <th rowspan="2" class="responsiveTblRow fixRight fixRightSecond">진행률 (%)<br />Work Progress</th>
                     <th rowspan="2" class="responsiveTblRow fixRight fixRightFirst">비고<br />Remark</th>
                 </tr>
                 <tr class="table-primary">

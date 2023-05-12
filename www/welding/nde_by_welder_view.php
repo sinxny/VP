@@ -217,22 +217,22 @@ var vm = new Vue({
     <div style="height: 80vh;overflow:auto">
         <table class="table table-bordered fixHeadColumn" id="tblNdeWelder">
             <thead>
-                <tr class="table-welder">
+                <tr class="table-welder" style="height:47.5px">
                     <th rowspan="2" width="70px">No.</th>
                     <th rowspan="2" width="300px">WELDER</th>
-                    <th rowspan="2" width="100px">RTorPAUT<br />SELECTION</th>
-                    <th rowspan="2" width="100px">SHOOT</th>
-                    <th rowspan="2" width="100px">BALANCE</th>
-                    <th width="100px">RESULT</th>
-                    <th rowspan="2" width="100px">REPAIR<br />PROGRESS(%)</th>
-                    <th colspan="2">RT</th>
-                    <th rowspan="2" width="100px">REPAIR FILM<br />PROGRESS(%)</th>
+                    <th colspan="5" width="100px">RT & PAUT BY JOINT </th>
+                    <th colspan="3">RT BY FILM</th>
                     <th rowspan="2">REMARK</th>
                 </tr>
                 <tr class="table-welder">
-                    <th>REPAIR</th>
+                    <th width="100px">SELECTION</th>
+                    <th width="100px">SHOOT</th>
+                    <th width="100px">BALANCE</th>
+                    <th width="100px">REPAIR</th>
+                    <th width="100px">REPAIR<br />PROGRESS(%)</th>
                     <th width="100px">USED FILM</th>
                     <th width="100px">REPAIR FILM</th>
+                    <th width="100px">REPAIR FILM<br />PROGRESS(%)</th>
                 </tr>
             </thead>
             <tbody>

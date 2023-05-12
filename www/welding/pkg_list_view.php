@@ -247,7 +247,7 @@ var vm = new Vue({
                     <th class="responsiveTblRow punchColor" rowspan="2">인허가<br />항목</th>
                     <th class="responsiveTblRow punchColor" rowspan="2">TOTAL<br />WELDING<br />D/INCH</th>
                     <th class="responsiveTblRow punchColor" rowspan="2">COMPLETE<br />D/INCH</th>
-                    <th class="responsiveTblRow punchColor" rowspan="2">WELDING<br />PROGRESS<br />(%)</th>
+                    <th class="responsiveTblRow punchColor" rowspan="2">WELDING<br />PROGRESS (%)</th>
                     <th class="responsiveTblRow punchColor" rowspan="2">TOTAL<br />PWHT QTY</th>
                     <th class="responsiveTblRow punchColor" rowspan="2">PWHT<br />ON<br />PROGRESS<br />QTY</th>
                     <th class="responsiveTblRow punchColor" rowspan="2">PWHT<br />COMPLETE<br />QTY</th>

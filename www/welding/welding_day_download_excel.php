@@ -68,12 +68,12 @@ if($group == "Area") {
 $sheet->setCellValue('A3', "업체명\nCompany");
 $sheet->setCellValue('B3', $grpTitle. "\n" .$group);
 $sheet->setCellValue('C3', "재질\nMaterial Group");
-$sheet->setCellValue('D3', "총 물량\nTotal (D/I)");
-$sheet->setCellValue('E3', "누계\nPrevious\n(D/I)");
-$sheet->setCellValue('F3', "금일 물량\nTo Day Work\n(D/I)");
-$sheet->setCellValue('G3', "합 계\nAccumulative\n(D/I)");
-$sheet->setCellValue('H3', "잔여물량\nRemain (D/I)");
-$sheet->setCellValue('I3', "진행률\nWork\nProgress(%)");
+$sheet->setCellValue('D3', "총 물량 (D/I)\nTotal");
+$sheet->setCellValue('E3', "누계 (D/I)\nPrevious");
+$sheet->setCellValue('F3', "금일 물량 (D/I)\nTo Day Work");
+$sheet->setCellValue('G3', "합 계 (D/I)\nAccumulative");
+$sheet->setCellValue('H3', "잔여물량 (D/I)\nRemain");
+$sheet->setCellValue('I3', "진행률 (%)\nWork Progress");
 $sheet->setCellValue('J3', "비고\nRemark");
 
 // 줄바꿈
@@ -263,6 +263,8 @@ $sheet->getRowDimension(3)->setRowHeight(40);
 // 파일명
 $title = "WELDING DAY_{$jobName}_{$weldingDate}";
 $title = rawurlencode($title);
+// 쉼표 깨짐 현상
+$title = str_replace("%2C",',',$title);
 
 // Rename worksheet
 $sheet->setTitle("WELDING DAY");

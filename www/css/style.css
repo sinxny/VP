@@ -8,7 +8,7 @@
 }
 
 body {
-    font-family: Arial,"Malgun Gothic",sans-serif;/*,"AppleGothicNeoSD"*/
+    font-family: Arial,"Malgun Gothic",sans-serif !important;/*,"AppleGothicNeoSD"*/
     margin: 0;
 }
 .navbar-nav-main-menu .nav-link {

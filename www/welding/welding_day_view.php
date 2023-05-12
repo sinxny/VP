@@ -318,12 +318,12 @@ var vm = new Vue({
                     <th style="width:8%">업체명<br />Company</th>
                     <th style="width:8%">{{ grpTitle }}<br />{{ selectGrp }}</th>
                     <th style="width:8%">재질<br />Material Group</th>
-                    <th style="width:9%">총 물량<br />Total (D/I)</th>
-                    <th style="width:9%">누계<br />Previous<br />(D/I)</th>
-                    <th style="width:9%">금일 물량<br />To Day Work<br />(D/I)</th>
-                    <th style="width:9%">합 계<br />Accumulative<br />(D/I)</th>
-                    <th style="width:9%">잔여물량<br />Remain (D/I)</th>
-                    <th style="width:9%">진행률<br />Work<br />Progress(%)</th>
+                    <th style="width:9%">총 물량 (D/I)<br />Total</th>
+                    <th style="width:9%">누계 (D/I)<br />Previous</th>
+                    <th style="width:9%">금일 물량 (D/I)<br />To Day Work</th>
+                    <th style="width:9%">합 계 (D/I)<br />Accumulative</th>
+                    <th style="width:9%">잔여물량 (D/I)<br />Remain</th>
+                    <th style="width:9%">진행률 (%)<br />Work Progress</th>
                     <th>비고<br />Remark</th>
                 </tr>
             </thead>

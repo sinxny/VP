@@ -49,8 +49,8 @@ $sheet->getStyle("A1:C2")->getFont()->setBold(true);
 $sheet->setCellValue('A3', "업체명\nCompany");
 $sheet->setCellValue('B3', "구역\nArea");
 $sheet->setCellValue('C3', "재질\nMaterial\nGroup");
-$sheet->setCellValue('D3', "총 물량\nTotal (D/I)");
-$sheet->setCellValue('E3', "누계\nPrevious\n(D/I)");
+$sheet->setCellValue('D3', "총 물량 (D/I)\nTotal");
+$sheet->setCellValue('E3', "누계 (D/I)\nPrevious");
 $sheet->setCellValue('F3', "선택 기간 물량_Work Dia-inch for Date (D/I)");
 
 $sheet->mergeCells("A3:A4");
@@ -111,14 +111,14 @@ if($responseResult->ResultType = "Success") {
 
     $sheet->mergeCells("F3:{$col}3");
     $col++;
-    $sheet->setCellValue($col."3", "합 계\nAccumulative\n(D/I)");
+    $sheet->setCellValue($col."3", "합 계 (D/I)\nAccumulative");
     $sheet->mergeCells("{$col}3:{$col}4");
     $sheet->mergeCells("C1:{$col}2");
     $col++;
     $sheet->setCellValue($col."1", "Print Date");
     $sheet->setCellValue($col."2", "날짜 Date");
     $sheet->getStyle($col."2")->getFont()->setBold(true);
-    $sheet->setCellValue($col."3", "잔여물량\nRemain (D/I)");
+    $sheet->setCellValue($col."3", "잔여물량 (D/I)\nRemain");
     $sheet->mergeCells("{$col}3:{$col}4");
     $periodCol = $col;
     $col++;
@@ -126,7 +126,7 @@ if($responseResult->ResultType = "Success") {
     $sheet->setCellValue($col."2", $today . " ~ ". $nextday);
     $sheet->getStyle($col."2")->getFont()->setBold(true);
     $preCol = $col;
-    $sheet->setCellValue($col."3", "진행률\nWork\nProgress(%)");
+    $sheet->setCellValue($col."3", "진행률 (%)\nWork Progress");
     $sheet->mergeCells("{$col}3:{$col}4");
     $lastCol = ++$col;
     $sheet->mergeCells("{$preCol}1:{$lastCol}1");
@@ -302,6 +302,8 @@ $sheet->freezePane("F5");
 // 파일명
 $title = "WELDING MONTH_{$jobName}_{$today}-{$nextday}";
 $title = rawurlencode($title);
+// 쉼표 깨짐 현상
+$title = str_replace("%2C",',',$title);
 
 // Rename worksheet
 $sheet->setTitle("WELDING MONTH");

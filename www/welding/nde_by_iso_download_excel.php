@@ -295,6 +295,8 @@ $sheet->getColumnDimension('O')->setWidth(15);
 // 파일명
 $title = "NDE BY ISO_{$jobName}_{$dateTime}";
 $title = rawurlencode($title);
+// 쉼표 깨짐 현상
+$title = str_replace("%2C",',',$title);
 
 // Rename worksheet
 $sheet->setTitle("NDE BY ISO");

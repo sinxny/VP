@@ -55,34 +55,30 @@ $sheet->getStyle("A1:K2")->getFont()->setBold(true);
 
 $sheet->setCellValue('A3', "No.");
 $sheet->setCellValue('B3', "WELDER");
-$sheet->setCellValue('C3', "RTorPAUT\nSELECTION");
-$sheet->setCellValue('D3', "SHOOT");
-$sheet->setCellValue('E3', "BALANCE");
-$sheet->setCellValue('F3', "RESULT");
+$sheet->setCellValue('C3', "RT & PAUT BY JOINT");
+$sheet->setCellValue('C4', "SELECTION");
+$sheet->setCellValue('D4', "SHOOT");
+$sheet->setCellValue('E4', "BALANCE");
 $sheet->setCellValue('F4', "REPAIR");
-$sheet->setCellValue('G3', "REPAIR\nPROGRESS(%)");
-$sheet->setCellValue('H3', "RT");
+$sheet->setCellValue('G4', "REPAIR\nPROGRESS(%)");
+$sheet->setCellValue('H3', "RT BY FILM");
 $sheet->setCellValue('H4', "USED FILM");
 $sheet->setCellValue('I4', "REPAIR FILM");
-$sheet->setCellValue('J3', "REPAIR FILM\nPROGRESS(%)");
+$sheet->setCellValue('J4', "REPAIR FILM\nPROGRESS(%)");
 $sheet->setCellValue('K3', "REMARK");
 $sheet->getStyle("A3:K4")->getFont()->setSize(10);
 $sheet->getStyle("A3:K4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FCE4D6');
 $sheet->getStyle("A3:K4")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
 // 줄바꿈
-$sheet->getStyle("C3")->getAlignment()->setWrapText(true);
-$sheet->getStyle("G3")->getAlignment()->setWrapText(true);
-$sheet->getStyle("J3")->getAlignment()->setWrapText(true);
+$sheet->getStyle("C4")->getAlignment()->setWrapText(true);
+$sheet->getStyle("G4")->getAlignment()->setWrapText(true);
+$sheet->getStyle("J4")->getAlignment()->setWrapText(true);
 
 $sheet->mergeCells("A3:A4");
 $sheet->mergeCells("B3:B4");
-$sheet->mergeCells("C3:C4");
-$sheet->mergeCells("D3:D4");
-$sheet->mergeCells("E3:E4");
-$sheet->mergeCells("G3:G4");
-$sheet->mergeCells("H3:I3");
-$sheet->mergeCells("J3:J4");
+$sheet->mergeCells("C3:G3");
+$sheet->mergeCells("H3:J3");
 $sheet->mergeCells("K3:K4");
 
 $sheet->getRowDimension(3)->setRowHeight(33);
@@ -205,7 +201,7 @@ if($responseResult->ResultType = "Success") {
 }
 
 // 들여쓰기
-$sheet->getStyle('A5:K'.$rowCnt)->getAlignment()->setIndent(1);
+$sheet->getStyle('B5:K'.$rowCnt)->getAlignment()->setIndent(1);
 
 // 셀 높이
 for($i = 1; $i <= $rowCnt; $i++) {
@@ -219,6 +215,7 @@ for($i = 1; $i <= $rowCnt; $i++) {
 
 // 텍스트 맞춤
 $sheet->getStyle("A1:K{$rowCnt}")->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+$sheet->getStyle("A5:A{$rowCnt}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
 // 표 그리기
 $rowCnt--;
@@ -232,7 +229,7 @@ $sheet->getStyle("Z{$rowCnt}")->getAlignment()->setVertical(\PhpOffice\PhpSpread
 // 칼럼 사이즈
 $sheet->getColumnDimension('A')->setWidth(9);
 $sheet->getColumnDimension('B')->setWidth(22);
-$sheet->getColumnDimension('C')->setWidth(20);
+$sheet->getColumnDimension('C')->setWidth(15);
 $sheet->getColumnDimension('D')->setWidth(15);
 $sheet->getColumnDimension('E')->setWidth(15);
 $sheet->getColumnDimension('F')->setWidth(15);
@@ -245,6 +242,8 @@ $sheet->getColumnDimension('K')->setWidth(15);
 // 파일명
 $title = "NDE BY WELDER_{$jobName}_{$dateTime}";
 $title = rawurlencode($title);
+// 쉼표 깨짐 현상
+$title = str_replace("%2C",',',$title);
 
 // Rename worksheet
 $sheet->setTitle("NDE BY WELDER");

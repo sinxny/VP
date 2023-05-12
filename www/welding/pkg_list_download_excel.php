@@ -69,7 +69,7 @@ $sheet->setCellValue('J3', "Method\nCLIENT");
 $sheet->setCellValue('K3', "인허가\n항목");
 $sheet->setCellValue('L3', "TOTAL\nWELDING\nD/INCH");
 $sheet->setCellValue('M3', "COMPLETE\nD/INCH");
-$sheet->setCellValue('N3', "WELDING\nPROGRESS\n(%)");
+$sheet->setCellValue('N3', "WELDING\nPROGRESS (%)");
 $sheet->setCellValue('O3', "TOTAL\nPWHT QTY");
 $sheet->setCellValue('P3', "PWHT\nON\nPROGRESS\nQTY");
 $sheet->setCellValue('Q3', "PWHT\nCOMPLETE\nQTY");
@@ -343,23 +343,23 @@ $sheet->getColumnDimension('H')->setWidth(10);
 $sheet->getColumnDimension('I')->setWidth(10);
 $sheet->getColumnDimension('J')->setWidth(17);
 $sheet->getColumnDimension('K')->setWidth(17);
-$sheet->getColumnDimension('L')->setWidth(12);
-$sheet->getColumnDimension('M')->setWidth(12);
-$sheet->getColumnDimension('N')->setWidth(12);
-$sheet->getColumnDimension('O')->setWidth(12);
-$sheet->getColumnDimension('P')->setWidth(12);
-$sheet->getColumnDimension('Q')->setWidth(12);
-$sheet->getColumnDimension('R')->setWidth(12);
-$sheet->getColumnDimension('S')->setWidth(12);
-$sheet->getColumnDimension('T')->setWidth(12);
-$sheet->getColumnDimension('U')->setWidth(12);
-$sheet->getColumnDimension('V')->setWidth(12);
-$sheet->getColumnDimension('W')->setWidth(12);
-$sheet->getColumnDimension('X')->setWidth(12);
-$sheet->getColumnDimension('Y')->setWidth(12);
-$sheet->getColumnDimension('Z')->setWidth(12);
-$sheet->getColumnDimension('AA')->setWidth(12);
-$sheet->getColumnDimension('AB')->setWidth(12);
+$sheet->getColumnDimension('L')->setWidth(15);
+$sheet->getColumnDimension('M')->setWidth(15);
+$sheet->getColumnDimension('N')->setWidth(15);
+$sheet->getColumnDimension('O')->setWidth(15);
+$sheet->getColumnDimension('P')->setWidth(15);
+$sheet->getColumnDimension('Q')->setWidth(15);
+$sheet->getColumnDimension('R')->setWidth(15);
+$sheet->getColumnDimension('S')->setWidth(15);
+$sheet->getColumnDimension('T')->setWidth(15);
+$sheet->getColumnDimension('U')->setWidth(15);
+$sheet->getColumnDimension('V')->setWidth(15);
+$sheet->getColumnDimension('W')->setWidth(15);
+$sheet->getColumnDimension('X')->setWidth(15);
+$sheet->getColumnDimension('Y')->setWidth(15);
+$sheet->getColumnDimension('Z')->setWidth(15);
+$sheet->getColumnDimension('AA')->setWidth(15);
+$sheet->getColumnDimension('AB')->setWidth(15);
 $sheet->getRowDimension(3)->setRowHeight(30);
 $sheet->getRowDimension(4)->setRowHeight(30);
 
@@ -369,6 +369,8 @@ $sheet->freezePane("D5");
 // 파일명
 $title = "PKG LIST_{$jobName}_{$date}";
 $title = rawurlencode($title);
+// 쉼표 깨짐 현상
+$title = str_replace("%2C",',',$title);
 
 // Rename worksheet
 $sheet->setTitle("PKG LIST");
