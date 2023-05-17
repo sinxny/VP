@@ -70,6 +70,12 @@ $sheet->getStyle("A3:K4")->getFont()->setSize(10);
 $sheet->getStyle("A3:K4")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FCE4D6');
 $sheet->getStyle("A3:K4")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
+// 헤더 틀 고정
+$spreadsheet->getActiveSheet()->freezePane("A5");
+
+// 반복할 행
+$sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 4);
+
 // 줄바꿈
 $sheet->getStyle("C4")->getAlignment()->setWrapText(true);
 $sheet->getStyle("G4")->getAlignment()->setWrapText(true);

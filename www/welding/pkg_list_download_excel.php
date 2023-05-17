@@ -32,7 +32,8 @@ $sheet->getPageSetup()->setFitToHeight(0);
 $spreadsheet->getDefaultStyle()->getFont()->setSize(11);
 $spreadsheet->getDefaultStyle()->getFont()->setName('맑은 고딕');
 
-$sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(2, 2);
+// 반복할 행
+$sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 4);
 
 $jno = $_GET["jno"];
 $jobName = $_GET["jobName"];

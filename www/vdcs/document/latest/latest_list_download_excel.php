@@ -28,6 +28,7 @@ $sheet->getPageSetup()->setFitToHeight(0);
 // 폰트사이즈
 $spreadsheet->getDefaultStyle()->getFont()->setSize(10);
 
+// 반복할 행
 $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 3);
 
 $jno = $data["jno"];

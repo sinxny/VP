@@ -23,9 +23,9 @@ $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
 // 용지 방향
-$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_DEFAULT);
 // 용지 크기
-$sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A3);
+$sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
 // 자동 맞춤
 $sheet->getPageSetup()->setFitToWidth(1);
 $sheet->getPageSetup()->setFitToHeight(0);
@@ -94,6 +94,9 @@ $sheet->mergeCells("O3:O4");
 
 $sheet->getRowDimension(3)->setRowHeight(33);
 $sheet->getRowDimension(4)->setRowHeight(33);
+
+// 반복할 행
+$sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 4);
 
 $url = "http://wcfservice.hi-techeng.co.kr/apipwim/getndeiso?jno={$jno}";
 

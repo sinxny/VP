@@ -63,6 +63,9 @@ $sheet->mergeCells("E3:E4");
 $sheet->getRowDimension(3)->setRowHeight(25);
 $sheet->getRowDimension(4)->setRowHeight(25);
 
+// 반복할 행
+$sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 4);
+
 $url = "http://wcfservice.htenc.co.kr/apipwim/getweldingmonth?jno={$jno}&today={$today}&nextday={$nextday}";
 
 $curl = curl_init();

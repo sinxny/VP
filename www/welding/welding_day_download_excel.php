@@ -23,9 +23,9 @@ $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
 // 용지 방향
-$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_DEFAULT);
 // 용지 크기
-$sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A3);
+$sheet->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
 // 자동 맞춤
 $sheet->getPageSetup()->setFitToWidth(1);
 $sheet->getPageSetup()->setFitToHeight(0);
@@ -57,6 +57,12 @@ $sheet->setCellValue('J2', $weldingDate);
 $sheet->getStyle("I2:J2")->getFont()->setBold(true);
 $sheet->getStyle("I2:J2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
 $sheet->getStyle("A1:J2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+// 헤더 틀 고정
+$spreadsheet->getActiveSheet()->freezePane("A4");
+
+// 반복할 행
+$sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 3);
 
 if($group == "Area") {
     $grpTitle = "구역";
