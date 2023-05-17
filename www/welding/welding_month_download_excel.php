@@ -300,13 +300,13 @@ for($col='F'; true; $col++) {
 $sheet->freezePane("F5");
 
 // 파일명
-$title = "WELDING MONTH_{$jobName}_{$today}-{$nextday}";
+$title = "WELD(MONTH)_{$jobName}_{$today}-{$nextday}";
 $title = rawurlencode($title);
 // 쉼표 깨짐 현상
 $title = str_replace("%2C",',',$title);
 
 // Rename worksheet
-$sheet->setTitle("WELDING MONTH");
+$sheet->setTitle("WELD(MONTH)");
 setcookie("fileDownload", true, 0, "/");
 // Redirect output to a client’s web browser (Excel2007)
 @header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

@@ -896,16 +896,16 @@ function validatePwdInputs() {
             <span style="width:min-content" onclick="collapseTree(this)"><i class="indicator fas fa-minus-circle"></i>Welding</span>
             <ul>
                 <li>
-                    <a id="w_day" onclick="activeSubMenu(this)">WELDING DAY</span></a>
+                    <a id="w_day" onclick="activeSubMenu(this)">WELD(DAY)</span></a>
                 </li>
                 <li>
-                    <a id="w_month" onclick="activeSubMenu(this)">WELDING MONTH</span></a>
+                    <a id="w_month" onclick="activeSubMenu(this)">WELD(MONTH)</span></a>
                 </li>
                 <li>
-                    <a id="n_iso" onclick="activeSubMenu(this)">NDE BY ISO</span></a>
+                    <a id="n_iso" onclick="activeSubMenu(this)">NDE(By DWG)</span></a>
                 </li>
                 <li>
-                    <a id="n_welder" onclick="activeSubMenu(this)">NDE BY WELDER</span></a>
+                    <a id="n_welder" onclick="activeSubMenu(this)">NDE(By WELDER)</span></a>
                 </li>
                 <li>
                     <a id="pkg" onclick="activeSubMenu(this)">PKG LIST</span></a>

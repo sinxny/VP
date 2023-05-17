@@ -261,13 +261,13 @@ $sheet->getColumnDimension('J')->setWidth(15);
 $sheet->getRowDimension(3)->setRowHeight(40);
 
 // 파일명
-$title = "WELDING DAY_{$jobName}_{$weldingDate}";
+$title = "WELD(DAY)_{$jobName}_{$weldingDate}";
 $title = rawurlencode($title);
 // 쉼표 깨짐 현상
 $title = str_replace("%2C",',',$title);
 
 // Rename worksheet
-$sheet->setTitle("WELDING DAY");
+$sheet->setTitle("WELD(DAY)");
 setcookie("fileDownload", true, 0, "/");
 // Redirect output to a client’s web browser (Excel2007)
 @header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

@@ -1,6 +1,6 @@
 <style>
     #gridContainer {
-        height: 83.4vh;
+        height: 79.9vh;
         font-family: Arial,"Malgun Gothic",sans-serif !important; /*,"AppleGothicNeoSD"*/
     }
     .dx-header-row .dx-cell-focus-disabled {
@@ -80,7 +80,7 @@
                 })
 
                 if(this.noData == false) {
-                    var pageSize = 18;
+                    var pageSize = 17;
                     $(() => {
                         const dataGrid = $('#gridContainer').dxDataGrid({
                             dataSource: 'welding/nde_by_iso_data.php?jno=' + this.jno,

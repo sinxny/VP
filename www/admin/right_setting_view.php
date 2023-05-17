@@ -71,24 +71,24 @@ $(document).ready(function() {
                                                             <ul>`;
                                 var codeList = dbRightList[person["uno"]]["codeText"];
                                 if(codeList.includes("w_day")) {
-                                    html += '<li item-checked="true">WELDING DAY</li>';
+                                    html += '<li item-checked="true">WELD(DAY)</li>';
                                 } else {
-                                    html += '<li>WELDING DAY</li>';
+                                    html += '<li>WELD(DAY)</li>';
                                 }
                                 if(codeList.includes("w_month")) {
-                                    html += '<li item-checked="true">WELDING MONTH</li>';
+                                    html += '<li item-checked="true">WELD(MONTH)</li>';
                                 } else {
-                                    html += '<li>WELDING MONTH</li>';
+                                    html += '<li>WELD(MONTH)</li>';
                                 }
                                 if(codeList.includes("n_iso")) {
-                                    html += '<li item-checked="true">NDE BY ISO</li>';
+                                    html += '<li item-checked="true">NDE(By DWG)</li>';
                                 } else {
-                                    html += '<li>NDE BY ISO</li>';
+                                    html += '<li>NDE(By DWG)</li>';
                                 }
                                 if(codeList.includes("n_welder")) {
-                                    html += '<li item-checked="true">NDE BY WELDER</li>';
+                                    html += '<li item-checked="true">NDE(By WELDER)</li>';
                                 } else {
-                                    html += '<li>NDE BY WELDER</li>';
+                                    html += '<li>NDE(By WELDER)</li>';
                                 }
                                 if(codeList.includes("pkg")) {
                                     html += '<li item-checked="true">PKG LIST</li>';
@@ -115,10 +115,10 @@ $(document).ready(function() {
                                                     <ul>
                                                         <li item-expanded='true'>Welding
                                                             <ul>
-                                                                <li item-checked="true">WELDING DAY</li>
-                                                                <li item-checked="true">WELDING MONTH</li>
-                                                                <li>NDE BY ISO</li>
-                                                                <li>NDE BY WELDER</li>
+                                                                <li item-checked="true">WELD(DAY)</li>
+                                                                <li item-checked="true">WELD(MONTH)</li>
+                                                                <li>NDE(By DWG)</li>
+                                                                <li>NDE(By WELDER)</li>
                                                                 <li>PKG LIST</li>
                                                             </ul>
                                                         </li>
@@ -157,24 +157,24 @@ $(document).ready(function() {
                                                     <ul>`;
                         var codeList = dbRightList[user]["codeText"];
                         if(codeList.includes("w_day")) {
-                            html += '<li item-checked="true">WELDING DAY</li>';
+                            html += '<li item-checked="true">WELD(DAY)</li>';
                         } else {
-                            html += '<li>WELDING DAY</li>';
+                            html += '<li>WELD(DAY)</li>';
                         }
                         if(codeList.includes("w_month")) {
-                            html += '<li item-checked="true">WELDING MONTH</li>';
+                            html += '<li item-checked="true">WELD(MONTH)</li>';
                         } else {
-                            html += '<li>WELDING MONTH</li>';
+                            html += '<li>WELD(MONTH)</li>';
                         }
                         if(codeList.includes("n_iso")) {
-                            html += '<li item-checked="true">NDE BY ISO</li>';
+                            html += '<li item-checked="true">NDE(By DWG)</li>';
                         } else {
-                            html += '<li>NDE BY ISO</li>';
+                            html += '<li>NDE(By DWG)</li>';
                         }
                         if(codeList.includes("n_welder")) {
-                            html += '<li item-checked="true">NDE BY WELDER</li>';
+                            html += '<li item-checked="true">NDE(By WELDER)</li>';
                         } else {
-                            html += '<li>NDE BY WELDER</li>';
+                            html += '<li>NDE(By WELDER)</li>';
                         }
                         if(codeList.includes("pkg")) {
                             html += '<li item-checked="true">PKG LIST</li>';
@@ -321,10 +321,10 @@ function showUserList() {
                                 <ul>
                                     <li item-expanded='true'>Welding
                                         <ul>
-                                            <li>WELDING DAY</li>
-                                            <li>WELDING MONTH</li>
-                                            <li>NDE BY ISO</li>
-                                            <li>NDE BY WELDER</li>
+                                            <li>WELD(DAY)</li>
+                                            <li>WELD(MONTH)</li>
+                                            <li>NDE(By DWG)</li>
+                                            <li>NDE(By WELDER)</li>
                                             <li>PKG LIST</li>
                                         </ul>
                                     </li>
@@ -413,7 +413,7 @@ function menuRightText(obj) {
             var parent = item[0]["parentId"];
             var parentText = $("#" + parent).children(".jqx-tree-item").text();
             var labelText = labelList.join(", ");
-            $("#dropBtn_" + uno[1]).jqxDropDownButton('setContent', parentText + " (" + labelList + ")");
+            $("#dropBtn_" + uno[1]).jqxDropDownButton('setContent', parentText + " [" + labelList + "]");
         }
     }
 }
@@ -479,13 +479,13 @@ function menuRightSave(obj) {
 
 // 권한코드 생성
 function tranRightCode(label) {
-    if(label == "WELDING DAY") {
+    if(label == "WELD(DAY)") {
         return 'w_day';
-    } else if (label == "WELDING MONTH") {
+    } else if (label == "WELD(MONTH)") {
         return 'w_month';
-    } else if (label == "NDE BY ISO") {
+    } else if (label == "NDE(By DWG)") {
         return 'n_iso';
-    } else if (label == "NDE BY WELDER") {
+    } else if (label == "NDE(By WELDER)") {
         return 'n_welder';
     } else if (label == "PKG LIST") {
         return 'pkg';
