@@ -97,160 +97,168 @@ var vm = new Vue({
         },
         // 데이터 가져오기
         getLatestData() {
-        var data = this;
+            var data = this;
             var jno = data.jno;
             var searchCondition = '';
+            
+            if(jno) {
+                $("#modalLoading").modal('show');
 
-            if(this.isRebrowsing) {
-                $.each(this.searchList, function(i, condition) {
-                    searchCondition += "&" + i + "=" + condition;
+                if(this.isRebrowsing) {
+                    $.each(this.searchList, function(i, condition) {
+                        searchCondition += "&" + i + "=" + condition;
+                    });
+                } else {
+                    searchCondition = "&" + this.researchOption + "=" + this.researchSave;
+                }
+                searchCondition += "&sd_type=" + this.sdOption + "&sd_start_date=" + this.sd_start_date + "&sd_end_date=" + this.sd_end_date;
+                searchCondition += "&so_dc=" + this.so_dc + "&so_rc=" + this.so_rc;
+
+                var url = '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&mode=latest&jno='+ jno + '&navi_page='+ this.pageNo +'&navi_offset=' + this.naviOffset + searchCondition;
+                axios.get(url).then(
+                    function(response) {
+                        var latest = response["data"];
+                        if(latest["Message"] == "Success") {
+                            var latestList = latest["Value"];
+                            data.latestList = latestList;
+                            
+                            data.checkList = [];
+                            // 체크박스 리스트
+                            $.each(latestList, function(i, info) {
+                                data.checkList.push(info["doc_no"]);
+                            });
+                            
+                            // 페이지 요소 data에 저장
+                            data.totalPage = latest["Navigator"]["TotalPage"];
+                            data.totalCnt = latest["Navigator"]["TotalRow"];
+                            data.totalCntString = numberToCommas(latest["Navigator"]["TotalRow"].toString());
+    
+                            // 페이지 정보
+                            $("#pageInfo").show();
+    
+                            data.noData = false;
+                        } else if(latest["Value"] == null) {
+                            data.latestList = [];
+    
+                            data.pageNo = 1;
+                            data.totalPage = 1;
+                            data.totalCnt = 0;
+                            data.totalCntString = 0;
+    
+                            // history 목록, pdf 숨기기
+                            data.showHistory = false;
+                            data.selectDoc = null;
+                            data.noData = true;
+                        }
+                        // 페이징 바 가져오기
+                        data.getPagination();
+                        // 선택 박스 초기화
+                        data.selectList = [];
+                })
+                .finally(function () {
+                    $("#modalLoading").modal("hide");
+                    $("#modalLoading").hide();
+                    $(".modal-backdrop").hide();
+
+                    // 배경 초기화
+                    // $(".tblLatestList td").each(function() {
+                    //     var removeTag = $(this).html().replace("<span style=\"background-color:pink\">", "");
+                    //     var removeTag = removeTag.replace("</span>", "");
+                    //     $(this).html(removeTag);
+                    // });
+                    //  검색 배경
+                    // if(data.isRebrowsing == false) {
+                    //     if(data.researchOption == "so_all" && data.researchSave) {
+                    //         $(".tblLatestList td").each(function() {
+                    //             var tdText = $(this).text().toUpperCase();
+                    //             var upperSearch = data.researchSave.toUpperCase();
+                    //             if(tdText.match(upperSearch)) {
+                    //                 var indexOri = tdText.match(upperSearch).index;
+                    //                 var lengthOri = upperSearch.length;
+                    //                 var oriText = $(this).text().substr(indexOri, lengthOri);
+                    //                 const redRegExp = new RegExp(data.researchSave, 'gi');
+        
+                    //                 var ans = $(this).html().replace(redRegExp, "<span style=\"background-color:pink\">" + oriText + "</span>")
+                    //                 // 문서번호 일경우
+                    //                 if($(this).hasClass("doc_num")) {
+                    //                     $(this).find(".so_doc_no").html(ans);
+                    //                 } else {
+                    //                     $(this).html(ans);
+                    //                 }
+                    //             }
+                    //         });
+    
+                    //     } else if (data.researchOption != "so_all" && data.researchSave) {
+                    //         $(".tblLatestList ." + data.researchOption).each(function() {
+                    //             var tdText = $(this).text().toUpperCase();
+                    //             var upperSearch = data.researchSave.toUpperCase();
+                    //             if(tdText.match(upperSearch)) {
+                    //                 var indexOri = tdText.match(upperSearch).index;
+                    //                 var lengthOri = upperSearch.length;
+                    //                 var oriText = $(this).text().substr(indexOri, lengthOri);
+                    //                 const redRegExp = new RegExp(data.researchSave, 'gi');
+        
+                    //                 var ans = $(this).text().replace(redRegExp, "<span style='background-color:pink'>" + oriText + "</span>")
+                    //                 // 문서번호 일경우
+                    //                 if($(this).hasClass("doc_num")) {
+                    //                     $(this).find(".so_doc_no").html(ans);
+                    //                 } else {
+                    //                     $(this).html(ans);
+                    //                 }
+                    //             }
+                    //         });
+                    //     }
+                    // } 
+                    // else {
+                    //     if(Object.keys(data.searchList).length > 0) {
+                    //         for (var key in data.searchList) {
+                    //             var wordList = data.searchList[key].split("♡");
+                    //             $(wordList).each(function(i, word) {
+                    //                 if(key == "so_all") {
+                    //                     $(".tblLatestList td").each(function() {
+                    //                         var tdText = $(this).text().toUpperCase();
+                    //                         var upperSearch = word.toUpperCase();
+                    //                         if(tdText.match(upperSearch)) {
+                    //                             var indexOri = tdText.match(upperSearch).index;
+                    //                             var lengthOri = upperSearch.length;
+                    //                             var oriText = $(this).text().substr(indexOri, lengthOri);
+                    //                             const redRegExp = new RegExp(word, 'gi');
+                    
+                    //                             var ans = $(this).html().replace(redRegExp, "<span style=\"background-color:pink\">" + oriText + "</span>")
+                    //                             // 문서번호 일경우
+                    //                             if($(this).hasClass("doc_num")) {
+                    //                                 $(this).find(".so_doc_no").html(ans);
+                    //                             } else {
+                    //                                 $(this).html(ans);
+                    //                             }
+                    //                         }
+                    //                     });
+                    //                 } else {
+                    //                     $(".tblLatestList ." + key).each(function() {
+                    //                         var tdText = $(this).text().toUpperCase();
+                    //                         var upperSearch = word.toUpperCase();
+                    //                         if(tdText.match(upperSearch)) {
+                    //                             var indexOri = tdText.match(upperSearch).index;
+                    //                             var lengthOri = upperSearch.length;
+                    //                             var oriText = $(this).text().substr(indexOri, lengthOri);
+                    //                             const redRegExp = new RegExp(word, 'gi');
+                    
+                    //                             var ans = $(this).text().replace(redRegExp, "<span style='background-color:pink'>" + oriText + "</span>")
+                    //                             // 문서번호 일경우
+                    //                             if($(this).hasClass("doc_num")) {
+                    //                                 $(this).find(".so_doc_no").html(ans);
+                    //                             } else {
+                    //                                 $(this).html(ans);
+                    //                             }
+                    //                         }
+                    //                     });
+                    //                 }
+                    //             });
+                    //         }
+                    //     }
+                    // }
                 });
-            } else {
-                searchCondition = "&" + this.researchOption + "=" + this.researchSave;
             }
-            searchCondition += "&sd_type=" + this.sdOption + "&sd_start_date=" + this.sd_start_date + "&sd_end_date=" + this.sd_end_date;
-            searchCondition += "&so_dc=" + this.so_dc + "&so_rc=" + this.so_rc;
-
-            var url = '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&mode=latest&jno='+ jno + '&navi_page='+ this.pageNo +'&navi_offset=' + this.naviOffset + searchCondition;
-            axios.get(url).then(
-                function(response) {
-                    var latest = response["data"];
-                    if(latest["Message"] == "Success") {
-                        var latestList = latest["Value"];
-                        data.latestList = latestList;
-                        
-                        data.checkList = [];
-                        // 체크박스 리스트
-                        $.each(latestList, function(i, info) {
-                            data.checkList.push(info["doc_no"]);
-                        });
-                        
-                        // 페이지 요소 data에 저장
-                        data.totalPage = latest["Navigator"]["TotalPage"];
-                        data.totalCnt = latest["Navigator"]["TotalRow"];
-                        data.totalCntString = numberToCommas(latest["Navigator"]["TotalRow"].toString());
-
-                        // 페이지 정보
-                        $("#pageInfo").show();
-
-                        data.noData = false;
-                    } else if(latest["Value"] == null) {
-                        data.latestList = [];
-
-                        data.pageNo = 1;
-                        data.totalPage = 1;
-                        data.totalCnt = 0;
-                        data.totalCntString = 0;
-
-                        // history 목록, pdf 숨기기
-                        data.showHistory = false;
-                        data.selectDoc = null;
-                        data.noData = true;
-                    }
-                    // 페이징 바 가져오기
-                    data.getPagination();
-                    // 선택 박스 초기화
-                    data.selectList = [];
-            })
-            .finally(function () {
-                // 배경 초기화
-                // $(".tblLatestList td").each(function() {
-                //     var removeTag = $(this).html().replace("<span style=\"background-color:pink\">", "");
-                //     var removeTag = removeTag.replace("</span>", "");
-                //     $(this).html(removeTag);
-                // });
-                //  검색 배경
-                // if(data.isRebrowsing == false) {
-                //     if(data.researchOption == "so_all" && data.researchSave) {
-                //         $(".tblLatestList td").each(function() {
-                //             var tdText = $(this).text().toUpperCase();
-                //             var upperSearch = data.researchSave.toUpperCase();
-                //             if(tdText.match(upperSearch)) {
-                //                 var indexOri = tdText.match(upperSearch).index;
-                //                 var lengthOri = upperSearch.length;
-                //                 var oriText = $(this).text().substr(indexOri, lengthOri);
-                //                 const redRegExp = new RegExp(data.researchSave, 'gi');
-    
-                //                 var ans = $(this).html().replace(redRegExp, "<span style=\"background-color:pink\">" + oriText + "</span>")
-                //                 // 문서번호 일경우
-                //                 if($(this).hasClass("doc_num")) {
-                //                     $(this).find(".so_doc_no").html(ans);
-                //                 } else {
-                //                     $(this).html(ans);
-                //                 }
-                //             }
-                //         });
-
-                //     } else if (data.researchOption != "so_all" && data.researchSave) {
-                //         $(".tblLatestList ." + data.researchOption).each(function() {
-                //             var tdText = $(this).text().toUpperCase();
-                //             var upperSearch = data.researchSave.toUpperCase();
-                //             if(tdText.match(upperSearch)) {
-                //                 var indexOri = tdText.match(upperSearch).index;
-                //                 var lengthOri = upperSearch.length;
-                //                 var oriText = $(this).text().substr(indexOri, lengthOri);
-                //                 const redRegExp = new RegExp(data.researchSave, 'gi');
-    
-                //                 var ans = $(this).text().replace(redRegExp, "<span style='background-color:pink'>" + oriText + "</span>")
-                //                 // 문서번호 일경우
-                //                 if($(this).hasClass("doc_num")) {
-                //                     $(this).find(".so_doc_no").html(ans);
-                //                 } else {
-                //                     $(this).html(ans);
-                //                 }
-                //             }
-                //         });
-                //     }
-                // } 
-                // else {
-                //     if(Object.keys(data.searchList).length > 0) {
-                //         for (var key in data.searchList) {
-                //             var wordList = data.searchList[key].split("♡");
-                //             $(wordList).each(function(i, word) {
-                //                 if(key == "so_all") {
-                //                     $(".tblLatestList td").each(function() {
-                //                         var tdText = $(this).text().toUpperCase();
-                //                         var upperSearch = word.toUpperCase();
-                //                         if(tdText.match(upperSearch)) {
-                //                             var indexOri = tdText.match(upperSearch).index;
-                //                             var lengthOri = upperSearch.length;
-                //                             var oriText = $(this).text().substr(indexOri, lengthOri);
-                //                             const redRegExp = new RegExp(word, 'gi');
-                
-                //                             var ans = $(this).html().replace(redRegExp, "<span style=\"background-color:pink\">" + oriText + "</span>")
-                //                             // 문서번호 일경우
-                //                             if($(this).hasClass("doc_num")) {
-                //                                 $(this).find(".so_doc_no").html(ans);
-                //                             } else {
-                //                                 $(this).html(ans);
-                //                             }
-                //                         }
-                //                     });
-                //                 } else {
-                //                     $(".tblLatestList ." + key).each(function() {
-                //                         var tdText = $(this).text().toUpperCase();
-                //                         var upperSearch = word.toUpperCase();
-                //                         if(tdText.match(upperSearch)) {
-                //                             var indexOri = tdText.match(upperSearch).index;
-                //                             var lengthOri = upperSearch.length;
-                //                             var oriText = $(this).text().substr(indexOri, lengthOri);
-                //                             const redRegExp = new RegExp(word, 'gi');
-                
-                //                             var ans = $(this).text().replace(redRegExp, "<span style='background-color:pink'>" + oriText + "</span>")
-                //                             // 문서번호 일경우
-                //                             if($(this).hasClass("doc_num")) {
-                //                                 $(this).find(".so_doc_no").html(ans);
-                //                             } else {
-                //                                 $(this).html(ans);
-                //                             }
-                //                         }
-                //                     });
-                //                 }
-                //             });
-                //         }
-                //     }
-                // }
-            });
         },
         // 행 클릭
         docRowClick(docNum) {
@@ -732,7 +740,7 @@ var vm = new Vue({
                 </div>
                 <div class="col-md-2" style="padding-left:0 !important">
                     <div class="row" style="float:right">
-                        <select class="form-control mr-2" style="width:min-content" v-model="so_dc" @click="btnSearchClick">
+                        <select class="form-control mr-2" style="width:min-content" v-model="so_dc" @change="btnSearchClick">
                             <option value="">공종(Disc.)</option>
                             <option value="PROC">PROC(공정)</option>
                             <option value="STAT">STAT(고정기기)</option>
@@ -744,7 +752,7 @@ var vm = new Vue({
                             <option value="PERM">PERM(인허가)</option>
                             <option value="PM">PM(사업관리)</option>
                         </select>
-                        <select class="form-control" style="width:min-content" v-model="so_rc" @click="btnSearchClick">
+                        <select class="form-control" style="width:min-content" v-model="so_rc" @change="btnSearchClick">
                             <option value="">Result#</option>
                             <option value="A">A</option>
                             <option value="N">N</option>
