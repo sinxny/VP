@@ -514,24 +514,6 @@ var vm = new Vue({
                 console.log(error);
                 $("#modalLoading").modal("hide");
             });
-            
-            // var url = '/vdcs/document/latest/latest_list_download_excel.php?jno=' + this.jno + "&jobName=" + this.jobName;
-            // location.href = url;
-            // var data = this;
-
-            // $("#modalLoading").modal("show");
-
-            // var loadingBar = setInterval(function() {
-            //     var name = "fileDownload";
-            //     var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-            //     if(value) {
-            //         if(value[2] == 1) {
-            //             $("#modalLoading").modal("hide");
-            //             data.deleteCookie(name);
-            //             clearInterval(loadingBar);
-            //         }
-            //     }
-            // }, 1000)
         },
         // 전체 다운로드
         allDocDownload() {
@@ -752,10 +734,15 @@ var vm = new Vue({
                     <div class="row" style="float:right">
                         <select class="form-control mr-2" style="width:min-content" v-model="so_dc" @click="btnSearchClick">
                             <option value="">공종(Disc.)</option>
+                            <option value="PROC">PROC(공정)</option>
                             <option value="STAT">STAT(고정기기)</option>
                             <option value="ROTA">ROTA(회전기계)</option>
+                            <option value="PIPE">PIPE(배관)</option>
                             <option value="INST">INST(계기)</option>
                             <option value="ELEC">ELEC(전기)</option>
+                            <option value="CAS">CAS(토건)</option>
+                            <option value="PERM">PERM(인허가)</option>
+                            <option value="PM">PM(사업관리)</option>
                         </select>
                         <select class="form-control" style="width:min-content" v-model="so_rc" @click="btnSearchClick">
                             <option value="">Result#</option>
