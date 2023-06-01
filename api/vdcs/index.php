@@ -28,8 +28,8 @@ try
         default :
             if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
             {
-                //require_once __DIR__ . '/vdcs_info_test.php';
-                require_once __DIR__ . '/vdcs_info.php';
+                require_once __DIR__ . '/vdcs_info_test.php';
+                //require_once __DIR__ . '/vdcs_info.php';
             }
             else 
             {

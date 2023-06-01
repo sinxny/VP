@@ -89,6 +89,7 @@ enum RequestVdcsModelType : string
     case LatestMultiDownload = "LATEST_MULTI_DOWNLOAD";
     case LatestZipDownload = "LATEST_ZIP_DOWNLOAD";
     case LatestZipInfo = "LATEST_ZIP_INFO";
+    case LatestHistoryInfo = "LATEST_HISTORY_INFO";
 }
 
 $Value = null;

@@ -277,6 +277,11 @@ class DB extends DB_PDO_OCI
                     $strQueryString .= "  WHERE rownum <= " . $nEndRow . ") ";
                     $strQueryString .= "WHERE rnum > " . $nStartRow;
                     //echo $strQueryString;
+if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
+{
+	//echo $strQueryString;
+	//exit;
+}
                     break;
                 default:
                     $strQueryString = $SQL;
