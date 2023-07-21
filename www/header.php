@@ -935,7 +935,7 @@ function validatePwdInputs() {
             </ul>
         </li>
         <li class="branch" id="equip" style="display:none">
-            <span style="width:min-content" onclick="collapseTree(this)"><i class="indicator fas fa-minus-circle"></i>Equipment</span>
+            <span style="width:min-content" onclick="collapseTree(this)"><i class="indicator fas fa-minus-circle"></i>Equipment List</span>
         </li>
         <li class="branch" id="welding" style="display:none">
             <span style="width:min-content" onclick="collapseTree(this)"><i class="indicator fas fa-minus-circle"></i>Welding</span>

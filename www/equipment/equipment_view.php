@@ -1,13 +1,4 @@
 <style>
-@media (max-width: 1900px) {
-    #sheet0 {
-        width: 70% !important;
-    }
-}
-#sheet0 {
-    width: 50%;
-}
-
 #sheet0 th, #sheet0 td {
     border-color: #aaa !important;
 }
@@ -69,10 +60,18 @@ var vm = new Vue({
     
                             $(this).css("fontSize", fontValue + 'px');
                         }
+
+                        $(this).css("padding-left", "5px");
                     });
     
                     $("colgroup").remove();
-                    $("body").removeClass("modal-open");
+                    // $("body").removeClass("modal-open");
+
+                    // 전체적인 크기 확장
+                    var tblWidth = $("#sheet0").outerWidth();
+                    tblWidth = Number(tblWidth) + Number((tblWidth * 0.4));
+                    $("#sheet0").css("width", tblWidth + 'px');
+
                 } else {
                     vueData.noData = true;
                 }
