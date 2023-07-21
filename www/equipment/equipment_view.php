@@ -7,6 +7,10 @@
 #sheet0 {
     width: 50%;
 }
+
+#sheet0 th, #sheet0 td {
+    border-color: #aaa !important;
+}
 </style>
 <script>
 var vm = new Vue({
@@ -46,19 +50,33 @@ var vm = new Vue({
                 if(html) {
                     $("#app").append(html);
                     
-                    $("td, th").not(".column0").each(function() {
+                    $("#sheet0 td, #sheet0 th").not(".column0").each(function() {
                         var text = $(this).html();
                         var tbClass = $(this).attr("class");
             
                         if(text == "&nbsp;") {
                             $(this).remove();
                         }
+
+                    });
+                    
+                    // 폰트 10% 증가
+                    $("#sheet0 td, #sheet0 th").each(function() {
+                        var fontSize = $(this).css("fontSize");
+                        if(fontSize) {
+                            fontValue = fontSize.replace("px", "");
+                            fontValue = Number(fontValue) + Number((fontValue * 0.1));
+    
+                            $(this).css("fontSize", fontValue + 'px');
+                        }
                     });
     
                     $("colgroup").remove();
+                    $("body").removeClass("modal-open");
                 } else {
                     vueData.noData = true;
                 }
+
             })
             .catch(function(error){
                 console.log(error);
@@ -67,7 +85,7 @@ var vm = new Vue({
     }
 })
 </script>
-<div id="app" style="margin-bottom:30px">
+<div id="app" style="margin-bottom:30px;margin-top:0.65rem;overflow: auto">
     <div class="alert alert-warning" v-show="noData">
         <strong>조건에 맞는 결과가 없습니다.</strong>
     </div>

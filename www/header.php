@@ -89,96 +89,90 @@ $(document).ready(function() {
     var teamId = '<?php echo @$_SESSION["user"]["team_id"] ?>';
     $("#teamId").val(teamId);
 
-    sessionStorage.setItem("subMenu", '');
-
-    if(menuRight == "vp" || menuRight == "all") {
-        if (sessionStorage.getItem("subMenu")) {
-            subMenu = sessionStorage.getItem("subMenu");
-        } else {
-            subMenu = "vpLatest";
-        }
-        activeSubMenu($("#" + subMenu));
-    }
-
     if(jno) {
         $("#noPjtHeader").hide();
 
         $.ajax({
-        type: "POST",
-        url: "/equipment/equip_menu_list.php",
-        data: {jno: jno},
-        dataType: "json",
-        success: function(result) {
-            var resultType = result["ResultType"];
+            type: "POST",
+            url: "/equipment/equip_menu_list.php",
+            data: {jno: jno},
+            dataType: "json",
+            success: function(result) {
+                var resultType = result["ResultType"];
 
-            if(resultType == "Success") {
-                var equipMenuList = result["Value"];
+                if(resultType == "Success") {
+                    var equipMenuList = result["Value"];
 
-                var html = '';
-                html += '<ul>';
-                $(equipMenuList).each(function(i, menu) {
-                    html += '<li>';
-                    html += '<a id="equipment_'+ menu["CNO"] +'" onclick="activeSubMenu(this)">'+ menu["EQLISTTITLE"] +'</span></a>';
-                    html += '</li>';
-                });
-                html += '</ul>';
-
-                $("#equip").append(html);
-            }
-        },
-        complete: function() {
-            // 화면 보이기
-            var subMenu = '';
-
-            if(menuRight == "vp" || menuRight == "all") {
-                if (sessionStorage.getItem("subMenu")) {
-                    subMenu = sessionStorage.getItem("subMenu");
-                } else {
-                    subMenu = "vpLatest";
-                }
-                activeSubMenu($("#" + subMenu));
-            } else if(menuRight == "cm") {
-                var cmRight = sessionStorage.getItem("cmRight");
-                if(sessionStorage.getItem("jno")) {
-                    var menuList = [];
-                    $($("#welding").find("a")).each(function() {
-                        menuList.push($(this).attr("id"));
+                    var html = '';
+                    html += '<ul>';
+                    $(equipMenuList).each(function(i, menu) {
+                        html += '<li>';
+                        html += '<a id="equipment_'+ menu["CNO"] +'" onclick="activeSubMenu(this)">'+ menu["EQLISTTITLE"] +'</span></a>';
+                        html += '</li>';
                     });
-                    var subMenu = sessionStorage.getItem("subMenu");
-                    if (cmRight == "true" && menuList.includes(subMenu)) {
-                        if(subMenu != "noRight" && $("#welding").find("a").length != 0) {
-                            $("#welding").find("a").eq()
+                    html += '</ul>';
+
+                    $("#equip").append(html);
+                }
+            },
+            complete: function() {
+                // 화면 보이기
+                var subMenu = '';
+
+                if(menuRight == "vp" || menuRight == "all") {
+                    if (sessionStorage.getItem("subMenu")) {
+                        subMenu = sessionStorage.getItem("subMenu");
+                    } else {
+                        subMenu = "vpLatest";
+                    }
+                    activeSubMenu($("#" + subMenu));
+                } else if(menuRight == "cm") {
+                    var cmRight = sessionStorage.getItem("cmRight");
+                    if(sessionStorage.getItem("jno")) {
+                        var menuList = [];
+                        $($("#welding").find("a")).each(function() {
+                            menuList.push($(this).attr("id"));
+                        });
+                        var subMenu = sessionStorage.getItem("subMenu");
+                        if (cmRight == "true" && menuList.includes(subMenu)) {
+                            if(subMenu != "noRight" && $("#welding").find("a").length != 0) {
+                                $("#welding").find("a").eq()
+                                $("#smMenu").css("visibility", "visible");
+                                activeSubMenu($("#" + subMenu));
+                            } else {
+                                $("#vdcsContent").load("no_right.php");
+                                $("#smMenu").css("visibility", "hidden");
+                                sessionStorage.setItem("subMenu", "noRight");
+                            }
+                        }
+                        else if($("#welding").find("a").length > 0) {
+                            var elementId = $("#welding").find("a").eq(0).attr("id");
+                            subMenu = elementId
                             $("#smMenu").css("visibility", "visible");
                             activeSubMenu($("#" + subMenu));
-                        } else {
+                        }
+                        else {
                             $("#vdcsContent").load("no_right.php");
                             $("#smMenu").css("visibility", "hidden");
                             sessionStorage.setItem("subMenu", "noRight");
+                            subMenu = "noRight";
                         }
-                    }
-                    else if($("#welding").find("a").length > 0) {
-                        var elementId = $("#welding").find("a").eq(0).attr("id");
-                        subMenu = elementId
-                        $("#smMenu").css("visibility", "visible");
-                        activeSubMenu($("#" + subMenu));
-                    }
-                    else {
-                        $("#vdcsContent").load("no_right.php");
+                    } else {
                         $("#smMenu").css("visibility", "hidden");
-                        sessionStorage.setItem("subMenu", "noRight");
-                        subMenu = "noRight";
                     }
-                } else {
-                    $("#smMenu").css("visibility", "hidden");
                 }
+            },
+            error: function (request, status, error) {
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
-        },
-        error: function (request, status, error) {
-            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-        }
-    });
+        });
     } else {
         $("#noPjtHeader").show();
+        if(menuRight == "vp" || menuRight == "all") {
+            $("#vpLatest").trigger("click");
+        } else {
+            $("#welding a").first().trigger('click');
+        }
     }
 
     // 조직도 표시
