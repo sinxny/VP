@@ -1,6 +1,10 @@
 <?php
 $subMenu = $_POST["subMenu"];
 
+if(strpos($subMenu, "equipment") === 0) {
+    list($subMenu, $cno) = explode("_", $subMenu);
+}
+
 switch($subMenu) {
     //최신문서(Latest)
     case "vpLatest" :
@@ -20,6 +24,9 @@ switch($subMenu) {
         break;
     case "pkg" :
         $pageUrl = "welding/pkg_list_view.php";
+        break;
+    case "equipment" :
+        $pageUrl = "equipment/equipment_view.php";
         break;
     // cm 권한 없음
     case "noRight" :

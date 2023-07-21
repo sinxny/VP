@@ -397,7 +397,7 @@ class Html extends BaseWriter
      *
      * @return string
      */
-    public function generateSheetData()
+    public function generateSheetData($maxRow = 0)
     {
         // Ensure that Spans have been calculated?
         if ($this->sheetIndex !== null || !$this->spansAreCalculated) {
@@ -429,8 +429,11 @@ class Html extends BaseWriter
             $dimension[1][0] = Coordinate::columnIndexFromString($dimension[1][0]);
 
             // row min,max
+            if($maxRow == 0) {
+                $maxRow = $dimension[1][1];
+            }
             $rowMin = $dimension[0][1];
-            $rowMax = $dimension[1][1];
+            $rowMax = $maxRow;
 
             // calculate start of <tbody>, <thead>
             $tbodyStart = $rowMin;

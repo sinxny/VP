@@ -9,7 +9,7 @@
 
 body {
     font-family: Arial,"Malgun Gothic",sans-serif !important;/*,"AppleGothicNeoSD"*/
-    margin: 0;
+    margin: 0 !important;
 }
 .navbar-nav-main-menu .nav-link {
     padding-left: 1rem!important;
