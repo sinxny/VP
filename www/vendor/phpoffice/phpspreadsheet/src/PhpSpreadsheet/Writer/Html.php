@@ -397,7 +397,7 @@ class Html extends BaseWriter
      *
      * @return string
      */
-    public function generateSheetData($maxRow = 0)
+    public function generateSheetData($maxRow = 0, $maxCol = 0)
     {
         // Ensure that Spans have been calculated?
         if ($this->sheetIndex !== null || !$this->spansAreCalculated) {
@@ -426,7 +426,11 @@ class Html extends BaseWriter
             $dimension[0] = Coordinate::coordinateFromString($dimension[0]);
             $dimension[0][0] = Coordinate::columnIndexFromString($dimension[0][0]);
             $dimension[1] = Coordinate::coordinateFromString($dimension[1]);
-            $dimension[1][0] = Coordinate::columnIndexFromString($dimension[1][0]);
+            if($maxCol != 0) {
+                $dimension[1][0] = $maxCol + 1;
+            } else {
+                $dimension[1][0] = Coordinate::columnIndexFromString($dimension[1][0]);
+            }
 
             // row min,max
             if($maxRow == 0) {

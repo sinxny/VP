@@ -74,14 +74,23 @@ $pageSetup = $sheet->getPageSetup();
 $printArea = $pageSetup->getPrintArea();
 
 $maxRow = preg_replace("/[A-Za-z]+\d+:[A-Za-z]+/", "", $printArea);
+$maxCol = preg_replace("/([A-Za-z]+\d+:)([A-Za-z]+)(\d+)/", "$2", $printArea);
+$maxCol = getAlphabetOrder($maxCol);
 
 // HTML 작성기 생성
 $htmlWriter = new Html($spreadsheet);
 
 $htmlContent = $htmlWriter->generateHTMLHeader();
 $htmlContent .= $htmlWriter->generateStyles(true);
-$htmlContent .= $htmlWriter->generateSheetData($maxRow);
+$htmlContent .= $htmlWriter->generateSheetData($maxRow, $maxCol);
 
 // HTML 출력
 echo $htmlContent;
+
+// 알파벳 순서 확인 함수
+function getAlphabetOrder($letter) {
+    $lowercaseLetter = strtolower($letter); // 대소문자 구분 없이 처리하기 위해 소문자로 변환
+    $order = ord($lowercaseLetter) - ord('a') + 1;
+    return $order;
+}
 ?>

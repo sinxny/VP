@@ -1158,6 +1158,7 @@ function validatePwdInputs() {
 <input type="hidden" id="uno" name="uno" />
 <input type="hidden" id="teamId" name="teamId" />
 <input type="hidden" id="userId" name="userId" />
-</form>
-</body>
-</html>
+
+<?php
+    require_once "footer.php";
+?>

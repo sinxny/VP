@@ -28,6 +28,7 @@ var vm = new Vue({
     methods: {
         // 엑셀 불러오기
         getExcelToHtml() {
+            $("#modalLoading").modal("show");
             url = 'equipment/excel_to_html.php';
             data = {
                 jno : this.jno,
@@ -41,37 +42,46 @@ var vm = new Vue({
                 if(html) {
                     $("#app").append(html);
                     
-                    $("#sheet0 td, #sheet0 th").not(".column0").each(function() {
-                        var text = $(this).html();
-                        var tbClass = $(this).attr("class");
-            
-                        if(text == "&nbsp;") {
-                            $(this).remove();
-                        }
-
-                    });
-                    
                     // 폰트 10% 증가
+                    var fontList = [];
                     $("#sheet0 td, #sheet0 th").each(function() {
                         var fontSize = $(this).css("fontSize");
-                        if(fontSize) {
+                        var text = $(this).html();
+                        if(fontSize && text != '&nbsp;') {
                             fontValue = fontSize.replace("px", "");
-                            fontValue = Number(fontValue) + Number((fontValue * 0.1));
-    
-                            $(this).css("fontSize", fontValue + 'px');
+                            fontList.push(fontValue);
                         }
 
                         $(this).css("padding-left", "5px");
                     });
-    
+                    minFont = Math.min.apply(null, fontList);
+                    if(minFont > 12) {
+                        var duRatio = 12 / minFont;
+
+                        $("#sheet0 td, #sheet0 th").each(function() {
+                            var fontSize = $(this).css("fontSize");
+
+                            if(fontSize) {
+                                fontValue = fontSize.replace("px", "");
+                                fontValue = fontValue * duRatio;
+
+                                $(this).css("fontSize", fontValue + 'px');
+                            }
+                        })
+                    }
                     $("colgroup").remove();
-                    // $("body").removeClass("modal-open");
+                    
+                    // 높이 고정
+                    var excelHeight = screen.height * 0.75;
+                    $("#app").css("height", excelHeight + 'px');
 
                     // 전체적인 크기 확장
                     var tblWidth = $("#sheet0").outerWidth();
                     tblWidth = Number(tblWidth) + Number((tblWidth * 0.4));
                     $("#sheet0").css("width", tblWidth + 'px');
 
+                    // 타이틀 삭제
+                    $("#app title").remove();
                 } else {
                     vueData.noData = true;
                 }
@@ -79,12 +89,15 @@ var vm = new Vue({
             })
             .catch(function(error){
                 console.log(error);
+            })
+            .finally(function() {
+                $("#modalLoading").modal("hide");
             });
         }
     }
 })
 </script>
-<div id="app" style="margin-bottom:30px;margin-top:0.65rem;overflow: auto">
+<div id="app" style="margin-top:0.65rem;overflow: auto">
     <div class="alert alert-warning" v-show="noData">
         <strong>조건에 맞는 결과가 없습니다.</strong>
     </div>
