@@ -84,6 +84,8 @@ $htmlContent = $htmlWriter->generateHTMLHeader();
 $htmlContent .= $htmlWriter->generateStyles(true);
 $htmlContent .= $htmlWriter->generateSheetData($maxRow, $maxCol);
 
+$htmlContent = str_replace('_x000d_', '', $htmlContent);
+
 // HTML 출력
 echo $htmlContent;
 
