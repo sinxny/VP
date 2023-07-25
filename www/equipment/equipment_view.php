@@ -55,8 +55,10 @@ var vm = new Vue({
                         $(this).css("padding-left", "5px");
                     });
                     minFont = Math.min.apply(null, fontList);
+                    
+                    var duRatio = 1;
                     if(minFont > 12) {
-                        var duRatio = 12 / minFont;
+                        duRatio = 12 / minFont;
 
                         $("#sheet0 td, #sheet0 th").each(function() {
                             var fontSize = $(this).css("fontSize");
@@ -77,7 +79,7 @@ var vm = new Vue({
 
                     // 전체적인 크기 확장
                     var tblWidth = $("#sheet0").outerWidth();
-                    tblWidth = Number(tblWidth) + Number((tblWidth * 0.4));
+                    tblWidth = (Number(tblWidth) + Number((tblWidth * 0.4))) * duRatio;
                     $("#sheet0").css("width", tblWidth + 'px');
 
                     // 타이틀 삭제

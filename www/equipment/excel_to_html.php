@@ -56,6 +56,7 @@ if($responseResult->ResultType == "Success") {
     $decodedData = base64_decode($fileValue);
 
     $tempFilePath = tempnam(sys_get_temp_dir(), 'excel');
+
     file_put_contents($tempFilePath, $decodedData);
 } else {
     exit;
