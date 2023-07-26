@@ -24,6 +24,11 @@ var vm = new Vue({
         } else {
             this.noRight = true;
         }
+
+        var data = this;
+        $(window).resize(function() {
+            data.resizeHeight();
+        });
     },
     methods: {
         // 엑셀 불러오기
@@ -57,7 +62,7 @@ var vm = new Vue({
                     minFont = Math.min.apply(null, fontList);
                     
                     var duRatio = 1;
-                    if(minFont > 12) {
+                    if(minFont != 0) {
                         duRatio = 12 / minFont;
 
                         $("#sheet0 td, #sheet0 th").each(function() {
@@ -74,8 +79,7 @@ var vm = new Vue({
                     $("colgroup").remove();
                     
                     // 높이 고정
-                    var excelHeight = screen.height * 0.75;
-                    $("#app").css("height", excelHeight + 'px');
+                    vueData.resizeHeight();
 
                     // 전체적인 크기 확장
                     var tblWidth = $("#sheet0").outerWidth();
@@ -87,7 +91,6 @@ var vm = new Vue({
                 } else {
                     vueData.noData = true;
                 }
-
             })
             .catch(function(error){
                 console.log(error);
@@ -95,6 +98,12 @@ var vm = new Vue({
             .finally(function() {
                 $("#modalLoading").modal("hide");
             });
+        },
+        // 스크롤 조정
+        resizeHeight() {
+            var windowHeight = window.outerHeight * 0.7;
+
+            $("#app").css("height", windowHeight + 'px');
         }
     }
 })
