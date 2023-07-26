@@ -13,7 +13,8 @@ var vm = new Vue({
         noData : false,
         uno : $("#uno").val(),
         teamId : $("#teamId").val(),
-        noRight : false
+        noRight : false,
+        tblWidth : 0
     },
     created() {
         // 조직도 인원 가져오기
@@ -27,7 +28,16 @@ var vm = new Vue({
 
         var data = this;
         $(window).resize(function() {
-            data.resizeHeight();
+            if(data.tblWidth != 0) {
+                var scrollWidth = $("html").prop("scrollWidth");
+                var clientWidth = $("html").prop("clientWidth");
+                
+                if(scrollWidth > clientWidth) {
+                    $("ol").css("width", data.tblWidth+30 + 'px');
+                } else {
+                    $("ol").css("width", 'auto');
+                }
+            }
         });
     },
     methods: {
@@ -58,6 +68,7 @@ var vm = new Vue({
                         }
 
                         $(this).css("padding-left", "5px");
+                        $(this).css("padding-right", "5px");
                     });
                     minFont = Math.min.apply(null, fontList);
                     
@@ -79,12 +90,21 @@ var vm = new Vue({
                     $("colgroup").remove();
                     
                     // 높이 고정
-                    vueData.resizeHeight();
+                    // vueData.resizeHeight();
 
                     // 전체적인 크기 확장
                     var tblWidth = $("#sheet0").outerWidth();
                     tblWidth = (Number(tblWidth) + Number((tblWidth * 0.4))) * duRatio;
+                    vueData.tblWidth = tblWidth;
+
                     $("#sheet0").css("width", tblWidth + 'px');
+
+                    var scrollWidth = $("html").prop("scrollWidth");
+                    var clientWidth = $("html").prop("clientWidth");
+
+                    if(scrollWidth > clientWidth) {
+                        $("ol").css("width", tblWidth+30 + 'px');
+                    }
 
                     // 타이틀 삭제
                     $("#app title").remove();
@@ -108,7 +128,7 @@ var vm = new Vue({
     }
 })
 </script>
-<div id="app" style="margin-top:0.65rem;overflow: auto">
+<div id="app" style="margin-top:0.65rem;">
     <div class="alert alert-warning" v-show="noData">
         <strong>조건에 맞는 결과가 없습니다.</strong>
     </div>
