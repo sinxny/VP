@@ -623,7 +623,7 @@ var vm = new Vue({
                 url: url,
                 type : 'GET',
                 xhrFields: {  //response 데이터를 바이너리로 처리한다.
-                responseType: 'blob'
+                    responseType: 'blob'
                 },
                 beforeSend: function() {
                     $("#modalLoading").modal("show");
