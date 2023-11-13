@@ -1,8 +1,5 @@
 <?php include __DIR__ . "/_inc.php";
-if(!$isLogin)
-{
-	$isLogin = @$_SESSION["user"]["user_id"];
-}
+$isLogin = @$_SESSION["user"]["user_id"];
 
 // 도메인
 $domain = strtoupper($_SERVER["HTTP_HOST"]);
@@ -19,15 +16,10 @@ if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
 	//var_dump($_REQUEST);
 	//exit;
 }
-if(isset($_REQUEST) 
-	&& array_key_exists("sid", $_REQUEST) && isset($_REQUEST["sid"]) && is_null($_REQUEST["sid"]) != true && $_REQUEST["sid"] != ""
-	&& array_key_exists("user_id", $_REQUEST) && isset($_REQUEST["user_id"]) && is_null($_REQUEST["user_id"]) != true && $_REQUEST["user_id"] != ""
-  )
-{
+if(isset($_REQUEST) && array_key_exists("sid", $_REQUEST) && isset($_REQUEST["sid"]) && is_null($_REQUEST["sid"]) != true && $_REQUEST["sid"] != ""){
 	
-    if(!$isLogin && isset($db) && $db) //isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221" && $_REQUEST["sid"] == "62810vlt58ssctcdode2s6au93"
+    if(!$isLogin) //isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221" && $_REQUEST["sid"] == "62810vlt58ssctcdode2s6au93"
 	{
-		/** 이전 방식 (2023.11.09)
 		//echo $_REQUEST["sid"];
 		//exit;
 		$curl = curl_init();
@@ -76,9 +68,22 @@ if(isset($_REQUEST)
 			}
 			
 		}
-		*/
+		$isLogin = @$_SESSION["user"]["user_id"];
 		
-		$isLogin = $user->setGroupwareSSO($db, $_REQUEST["sid"], $_REQUEST["user_id"], true);
+		if($isLogin)
+		{
+			if(isset($_SERVER) && $_SERVER["HTTPS"] == "on")
+			{
+				$location = "https://";
+			}
+			else
+			{
+				$location = "http://";
+			}
+			$location .= $_SERVER['HTTP_HOST'];
+			header('HTTP/1.1 301 Moved Permanently');
+			header('Location: ' . $location);
+		}
 	}
 }
 
