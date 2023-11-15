@@ -975,5 +975,11 @@ var vm = new Vue({
 <div class="alert alert-success text-center" v-show="!jno">
   <strong>PROJECT를 선택하세요.</strong>
 </div>
+<div class="alert border text-center" v-show="!jno">
+    <div class="mb-4 text-center p-2" style="font-weight:bold;">문서관리(VDCS)</div>
+    <div class="m-2">TR / 문서 관련 문의 : 프로젝트 공종 별 LE</div>
+    <div class="m-2">프로젝트 정보 및 조직도 관련 문의 : 프로젝트 PM / PE</div>
+    <div class="m-2">시스템 운영 및 에러 관련 문의 : 박시은 사원(☎1074)</div>
+</div>
 </form>
 </div>
